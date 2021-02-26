@@ -6,7 +6,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<footer class="navbar navbar-dark bg-dark">
+<footer class="navbar fixed-bottom navbar-dark bg-dark">
     <div class="container-fluid d-flex justify-content-center">
         <p class="text-light ">© Alpes Communication Systèmes - Chambéry 2021</p>
     </div>

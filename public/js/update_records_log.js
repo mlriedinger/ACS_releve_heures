@@ -15,21 +15,19 @@ function appendLine(tableID, data){
     var newWorkSite = newRow.insertCell(0);
     var newStartTime = newRow.insertCell(1);
     var newEndTime = newRow.insertCell(2);
-    var newDuration = newRow.insertCell(3);
-    var newComment = newRow.insertCell(4);
-    var newStatus = newRow.insertCell(5);
-    // var newCreationDate = newRow.insertCell(6);
-    // var newUpdateDate = newRow.insertCell(7);
+    var newComment = newRow.insertCell(3);
+    var newStatus = newRow.insertCell(4);
+    // var newCreationDate = newRow.insertCell(5);
+    // var newUpdateDate = newRow.insertCell(6);
 
     // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
     newWorkSite.innerHTML += data[0];
     newStartTime.innerHTML += data[1];
     newEndTime.innerHTML += data[2];
-    newDuration.innerHTML += data[3]
-    newComment.innerHTML += data[4];
-    data[5] == 0 ? newStatus.innerHTML += "En attente" : newStatus.innerHTML += "Validé";
-    // newCreationDate.innerHTML += data[6];
-    // newUpdateDate.innerHTML += data[7];
+    newComment.innerHTML += data[3];
+    data[4] == 0 ? newStatus.innerHTML += "En attente" : newStatus.innerHTML += "Validé";
+    // newCreationDate.innerHTML += data[5];
+    // newUpdateDate.innerHTML += data[6];
 }
 
 

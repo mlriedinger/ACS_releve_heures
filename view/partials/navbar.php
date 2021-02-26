@@ -21,7 +21,7 @@
                                 <a class="nav-link" href="#">Validation</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=showRecordsLog">Historique</a>
+                                <a class="nav-link" href="index.php?action=showPersonnalRecordsLog">Historique</a>
                             </li>
                         </ul>
                     </div>

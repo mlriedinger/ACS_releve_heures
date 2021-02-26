@@ -35,22 +35,6 @@
                         <small class="form-text text-muted">255 caractères maximum</small>
                     </div>
 
-                    <script src="dist/simplepicker.js"></script>
-                    <script>
-                        const picker = new SimplePicker(); 
-                        picker.open();
-                        picker.on('submit', (date, readableDate) => {
-                            console.log(readableDate);
-                            var dateConvertedToMillis = Date.parse(date)
-                            var localTime = new Date(date).toLocaleTimeString('fr-FR');
-
-                            var dateFormat = new Date(dateConvertedToMillis).toISOString();
-                            var dateFormatShort = dateFormat.slice(0, dateFormat.length - 13);
-
-                            var dateToRecord = dateFormatShort.concat(localTime);
-                            document.getElementById("datetime_start").value = dateToRecord;
-                        });
-                    </script>
                 </div>
 
                 <div class="row mb-3 justify-content-md-center">
@@ -61,6 +45,7 @@
                         <input type="submit" value="Valider" class="btn btn-dark"/>
 
                     </div>
+                    
                 </div>
             </form>
 

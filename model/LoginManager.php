@@ -1,5 +1,5 @@
 <?php
-require_once('database.php');
+require_once('DatabaseConnection.php');
 
 class LoginManager extends DatabaseConnection
 {

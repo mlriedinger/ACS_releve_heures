@@ -1,6 +1,11 @@
 <?php
 
+/* On appelle le modèle correspondant pour accéder à ses méthodes */
+
 require_once('model/LoginManager.php');
+
+
+/* Fonction pour gérer l'affichage des pages de connexion et d'accueil */
 
 function displayHomePage() {
     $loginManager = new LoginManager();
@@ -22,6 +27,5 @@ function displayHomePage() {
         $_SESSION['isDeleted'] = $dauserDatata['Supprimer'];
 
         require('view/home.php');
-
     }
 }
