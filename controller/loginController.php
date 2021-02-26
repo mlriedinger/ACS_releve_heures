@@ -6,7 +6,6 @@ function displayHomePage() {
     $loginManager = new LoginManager();
 
     $userData = $loginManager->getUserData($_POST['login'], $_POST['password']);
-    //var_dump($userData);
 
     if (!isset($_POST['password']) || !$userData) {
         require('view/login.php');
