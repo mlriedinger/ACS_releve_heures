@@ -1,0 +1,90 @@
+<?php session_start(); ?>
+
+<!DOCTYPE html>
+<html lang="fr">
+
+    <?php include('partials/head.php'); ?>
+
+    <body>
+    <?php include('partials/navbar.php'); ?>
+
+        <div class="bd-cheatsheet container-fluid bg-body">
+            <h2 class="display-6 mt-5 mb-5 text-center">Nouveau relevé</h2>
+
+            <form action="index.php?action=addNewRecord" method="POST">
+
+                <div class="row mb-3 justify-content-md-center">
+
+                    <div class="col-lg-2 mb-3">
+                        <span class="input-group-text" id="date_selector">Sélectionnez une date</span>
+                        <input type="date" id="date" name="date" class="form-control" aria-label="Sélectionnez une date" aria-describedby="date_selector" />
+                    </div>
+
+                    <div class="col-lg-2 mb-3">
+                        <span class="input-group-text" id="start_time_selector">Heure de début</span>
+                        <input type="time" id="start_time" name="start_time" step="900" class="form-control" aria-label="Heure de début" aria-describedby="start_time_selector"/>
+                    </div>  
+
+                    <div class="col-lg-2 mb-3">
+                        <span class="input-group-text" id="end_time_selector">Heure de fin</span>
+                        <input type="time" id="end_time" name="end_time" step="900" class="form-control" aria-label="Heure de fin" aria-describedby="end_time_selector"/>
+                    </div>  
+
+                </div>
+
+                <div class="row mb-3 justify-content-md-center">
+
+                    <div class="col-lg-3 mb-3">
+                        <span class="input-group-text" id="datetime_start_selector">Date et heure de début</span>
+                        <input type="datetime-local" name="datetime_start" id="datetime_start" class="form-control" aria-label="Sélectionnez une date et une heure de début" aria-describedby="datetime_start_selector" />
+                    </div>
+
+                    <div class="col-lg-3 mb-3">
+                        <span class="input-group-text" id="datetime_end_selector">Date et heure de fin</span>
+                        <input type="datetime-local" name="datetime_end" id="datetime_end" class="form-control" aria-label="Sélectionnez une date et une heure de fin" aria-describedby="datetime_end_selector" />
+                    </div>
+
+                </div>
+
+                <div class="row mb-3 justify-content-md-center">
+
+                    <div class="col-lg-6 mb-3">
+                        <span class="input-group-text" id="comment_section">Commentaire</span>
+                        <textarea autocapitalize="sentences" maxlength="255" name="datetime_start" id="datetime_start" class="form-control" aria-label="Commentaire" aria-describedby="comment_section"></textarea>
+                        <small class="form-text text-muted">255 caractères maximum</small>
+                    </div>
+
+                    <script src="dist/simplepicker.js"></script>
+                    <script>
+                        const picker = new SimplePicker(); 
+                        picker.open();
+                        picker.on('submit', (date, readableDate) => {
+                            var dateConvertedToMillis = Date.parse(date)
+                            var localTime = new Date(date).toLocaleTimeString('fr-FR');
+
+                            var dateFormat = new Date(dateConvertedToMillis).toISOString();
+                            var dateFormatShort = dateFormat.slice(0, dateFormat.length - 13);
+
+                            var dateToRecord = dateFormatShort.concat(localTime);
+                            document.getElementById("datetime_start").value = dateToRecord;
+                        });
+                    </script>
+                </div>
+
+                <div class="row mb-3 justify-content-md-center">
+                    
+                    <div class="col-lg-6 mb-3 text-center">
+                        <input type="hidden" value="<?php echo $user['id_utilisateurs']?>" name="user_id"/>
+                        <input type="button" value="Annuler" class="btn btn-light"/>
+                        <input type="submit" value="Valider" class="btn btn-dark"/>
+
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+
+        <?php include('partials/footer.php'); ?>
+    </body>
+</html>

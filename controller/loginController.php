@@ -1,18 +1,28 @@
 <?php
 
-/* On appelle le modèle pour avoir accès à ses méthodes */
-require('model/loginManager.php');
+require_once('model/LoginManager.php');
 
 function displayHomePage() {
-    /* On récupère les données du modèle */
-    $userData = getUserData($_POST['login']);
-    $isPasswordCorrect = password_verify($_POST['password'], $data['password']);
+    $loginManager = new LoginManager();
 
-    if (!isset($_POST['password']) || !$isPasswordCorrect || !$data) {
+    $userData = $loginManager->getUserData($_POST['login'], $_POST['password']);
+    //var_dump($userData);
+
+    if (!isset($_POST['password']) || !$userData) {
         require('view/login.php');
     } else {
-        require('view/home.php');
-    }
+        session_start();
 
-    
+        $_SESSION['login'] = $userData['Utilisateur'];
+        $_SESSION['id'] = $userData['ID'];
+        $_SESSION['id_group'] = $userData['id_groupe'];
+        $_SESSION['name'] = $userData['Nom'];
+        $_SESSION['firstname'] = $userData['Prenom'];
+        $_SESSION['isAdmin'] = $userData['Administrateur'];
+        $_SESSION['isActive'] = $userData['CompteActif'];
+        $_SESSION['isDeleted'] = $dauserDatata['Supprimer'];
+
+        require('view/home.php');
+
+    }
 }
