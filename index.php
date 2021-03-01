@@ -28,7 +28,7 @@ if(isset($_GET['action'])){
         case "showPersonnalRecordsLog":
             displayPersonnalRecordsLog();
             break;
-        case "getRecordsLog":
+        case "getPersonnalRecordsLog":
             getUserRecords();
             break;
     }

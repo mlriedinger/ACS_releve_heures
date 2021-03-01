@@ -46,5 +46,6 @@
     </div>
         <?php include('partials/footer.php'); ?>
         <script src="public/js/update_records_log.js"></script>
+        <script>updatePersonnalRecordsLog();</script>
     </body>
 </html>

@@ -1,5 +1,9 @@
 <?php
 
+/* Classe qui gère la connexion à la base de données.
+    * dbConnect() initialise et renvoie un objet PDO
+*/
+
 class DatabaseConnection
 {
     private $dbHost = "192.168.1.2";

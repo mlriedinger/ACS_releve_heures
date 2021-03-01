@@ -69,8 +69,6 @@ function getDataFromPhp(data){
     * 'json' : format de données reçues
 */
 
-function updateRecordLog() {
-    $.post('index.php?action=getRecordsLog', {}, getDataFromPhp, 'json');
+function updatePersonnalRecordsLog() {
+    $.post('index.php?action=getPersonnalRecordsLog', {}, getDataFromPhp, 'json');
 ;}
-
-updateRecordLog();
