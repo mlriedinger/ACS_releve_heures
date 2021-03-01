@@ -15,6 +15,8 @@ if(isset($_GET['action'])){
     // if($_GET['action'] == 'showPersonnalRecordsLog') displayPersonnalRecordsLog();
     // if($_GET['action'] == 'getRecordsLog') getRecords();
 
+    //var_dump($_REQUEST);
+
     switch($_GET['action']){
         case "login":
             displayHomePage();
@@ -28,9 +30,22 @@ if(isset($_GET['action'])){
         case "showPersonnalRecordsLog":
             displayPersonnalRecordsLog();
             break;
-        case "getPersonnalRecordsLog":
-            getUserRecords();
+        case "showTeamRecordsLog":
+            displayRecordsLog();
             break;
+        case "showAllRecordsLog":
+            displayRecordsLog();
+            break;
+        case "getPersonnalRecordsLog":
+            getUserRecords($_POST['typeOfRecords']);
+            break;
+        case "getTeamRecordsLog":
+            getTeamRecords($_POST['typeOfRecords']);
+            break;
+        case "getAllUsersRecordsLog":
+            getAllUsersRecords($_POST['typeOfRecords']);
+            break;
+
     }
 
 } else {

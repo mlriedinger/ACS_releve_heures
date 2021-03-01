@@ -9,7 +9,7 @@
     <?php include('partials/navbar.php');?>
     <div class="container">
     
-            <h2 class="display-6 mt-5 mb-5 text-center">Historique</h2>
+            <h2 class="display-6 mt-5 mb-5 text-center">Historique personnel</h2>
 
             <!-- <div class="alert alert-success alert-dismissible fade show" role="alert" style="display:'<?php $isSendingSuccessull ? 'block' : 'none';?>'">
                 Le relevé a bien été enregistré.
@@ -27,8 +27,7 @@
                         <th scope="col">Date et heure de fin</th>
                         <th scope="col">Commentaire</th>
                         <th scope="col">Statut</th>
-                        <!-- <th scope="col">Crée le</th>
-                        <th scope="col">Modifié le</th> -->
+                        <th scope="col">Modifié le</th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -40,12 +39,13 @@
 
         </div>
 
-
-
-
     </div>
         <?php include('partials/footer.php'); ?>
         <script src="public/js/update_records_log.js"></script>
-        <script>updatePersonnalRecordsLog();</script>
+        <script>
+        $(function() {
+            updatePersonnalRecordsLog('Personal');
+        });
+        </script>
     </body>
 </html>

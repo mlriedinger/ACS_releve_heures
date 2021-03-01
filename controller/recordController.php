@@ -17,7 +17,7 @@ function displayPersonnalRecordsLog(){
 }
 
 function displayRecordsLog(){
-    switch($_SESSION['id_groupe']){
+    switch($_SESSION['id_group']){
         case 1:
             require('view/allUsersRecordsLog.php');
             break;
@@ -31,7 +31,7 @@ function displayRecordsLog(){
 /* Fonction pour enregistrer un nouveau relevé en BDD */
 
 function registerNewRecord(){
-    $recordManager = new recordManager();
+    $recordManager = new RecordManager();
     $isSendingSuccessfull = $recordManager->sendNewRecord($_POST['user_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
     
     if($isSendingSuccessfull) require('view/personnalRecordsLog.php');
@@ -41,7 +41,17 @@ function registerNewRecord(){
 
 /* Fonctions pour récupérer des relevés */
 
-function getUserRecords(){
-    $recordManager = new recordManager();
-    $recordManager->getAllRecordsFromUser($_SESSION['id']);
+function getUserRecords($typeOfRecords){
+    $recordManager = new RecordManager();
+    $recordManager->getRecordsFromUser($_SESSION['id'], $typeOfRecords);   
+}
+
+function getTeamRecords($typeOfRecords){
+    $recordManager = new RecordManager();
+    $recordManager->getRecordsFromTeam($_SESSION['id'], $typeOfRecords);
+}
+
+function getAllUsersRecords($typeOfRecords){
+    $recordManager = new RecordManager();
+    $recordManager->getAllRecords($typeOfRecords);
 }

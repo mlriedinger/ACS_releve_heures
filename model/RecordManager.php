@@ -45,16 +45,24 @@ class RecordManager extends DatabaseConnection
         return $isSendingSuccessfull;
     }
 
-    public function getAllRecordsFromUser($id_user){
+    public function getRecordsFromUser($id_user, $type_of_records){
         header("Content-Type: text/json");
 
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT id_chantier, date_hrs_debut, date_hrs_fin, commentaire, statut_validation, date_hrs_creation, date_hrs_modif 
+        $query = $pdo->prepare('SELECT id_chantier, 
+        date_hrs_debut, 
+        date_hrs_fin, 
+        commentaire, 
+        statut_validation, 
+        date_hrs_creation, 
+        date_hrs_modif 
         FROM t_saisie_heure 
-        WHERE id_login = :id_user');
+        WHERE id_login = :id_user
+        ORDER BY date_hrs_debut');
         $query->execute(array('id_user' => $id_user));
-        $userRecords = $query->fetchAll(PDO::FETCH_ASSOC);
+        $userRecords["typeOfRecords"] = $type_of_records;
+        $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
         
         // Décommenter la ligne suivante pour débugger la requête
         // $query->debugDumpParams();
@@ -62,15 +70,59 @@ class RecordManager extends DatabaseConnection
         echo json_encode($userRecords);
     }
 
-    public function getAllRecords(){
+    public function getRecordsFromTeam($id_manager, $type_of_records){
         header("Content-Type: text/json");
 
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT id_login, id_chantier, date_hrs_debut, date_hrs_fin, commentaire, statut_validation, date_hrs_creation, date_hrs_modif 
-        FROM t_saisie_heure');
+        $query = $pdo->prepare('SELECT t_saisie_heure.id_chantier, 
+        t_login.Nom, 
+        t_login.Prenom, 
+        t_saisie_heure.date_hrs_debut, 
+        t_saisie_heure.date_hrs_fin, 
+        t_saisie_heure.commentaire, 
+        t_saisie_heure.statut_validation, 
+        t_saisie_heure.date_hrs_creation, 
+        t_saisie_heure.date_hrs_modif 
+        FROM t_equipe
+        INNER JOIN t_login
+        ON t_equipe.id_membre = t_login.ID
+        INNER JOIN t_saisie_heure
+        ON t_login.ID = t_saisie_heure.id_login
+        WHERE t_equipe.id_manager = :id_manager
+        ORDER BY date_hrs_debut');
+        $query->execute(array('id_manager' => $id_manager));
+        $teamRecords["typeOfRecords"] = $type_of_records;
+        $teamRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
+
+        echo json_encode($teamRecords);
+    }
+
+    public function getAllRecords($type_of_records){
+        header("Content-Type: text/json");
+
+        $pdo = $this->dbConnect();
+
+        $query = $pdo->prepare('SELECT 
+        t_saisie_heure.id_chantier, 
+        t_login.Nom, 
+        t_login.Prenom, 
+        t_saisie_heure.date_hrs_debut, 
+        t_saisie_heure.date_hrs_fin, 
+        t_saisie_heure.commentaire, 
+        t_saisie_heure.statut_validation, 
+        t_saisie_heure.date_hrs_creation, 
+        t_saisie_heure.date_hrs_modif 
+        FROM t_saisie_heure
+        INNER JOIN t_login
+        ON t_saisie_heure.id_login = t_login.ID
+        ORDER BY date_hrs_debut');
         $query->execute();
-        $records = $query->fetchAll(PDO::FETCH_ASSOC);
+        $records["typeOfRecords"] = $type_of_records;
+        $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
         
         // Décommenter la ligne suivante pour débugger la requête
         // $query->debugDumpParams();

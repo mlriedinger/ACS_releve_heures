@@ -39,16 +39,14 @@
 
                 <div class="row mb-3 justify-content-md-center">
                     
-                    <div class="col-lg-6 mb-3 text-center">
+                    <div class="col-lg-6 mb-5 text-center">
                         <input type="hidden" value="<?php echo $_SESSION['id']?>" name="user_id"/>
                         <input type="button" value="Annuler" class="btn btn-light"/>
                         <input type="submit" value="Valider" class="btn btn-dark"/>
-
                     </div>
                     
                 </div>
             </form>
-
 
         </div>
 
