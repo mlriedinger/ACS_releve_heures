@@ -4,8 +4,7 @@
         * data : un tableau de données
 */
 
-function appendLine(tableID, data, typeOfRecord){
-    console.log(typeOfRecord);
+function appendLine(tableID, data, typeOfRecord, counter){
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -29,7 +28,37 @@ function appendLine(tableID, data, typeOfRecord){
         newComment.innerHTML += data[3];
         data[4] == 0 ? newStatus.innerHTML += "En attente" : newStatus.innerHTML += "Validé";
         newUpdateDate.innerHTML += data[6];
-    } else {
+    } 
+    else if (typeOfRecord == 'Check'){        
+        // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
+        var newFirstName = newRow.insertCell(1);
+        var newLastName = newRow.insertCell(2);
+        var newStartTime = newRow.insertCell(3);
+        var newEndTime = newRow.insertCell(4);
+        var newComment = newRow.insertCell(5);
+        var newUpdateDate = newRow.insertCell(6);
+        var newIsValid = newRow.insertCell(7);
+        //var newRecordId = newRow.insertCell(8);
+        
+        // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
+        newFirstName.innerHTML += data[2];
+        newLastName.innerHTML += data[1];
+        newStartTime.innerHTML += data[3];
+        newEndTime.innerHTML += data[4];
+        newComment.innerHTML += data[5];
+        newUpdateDate.innerHTML += data[7];
+
+        var html = [
+            '<div class="form-check form-switch">',
+                '<input class="form-check-input" type="checkbox" name="check_list[' + counter +']" id="recordValidationCheck' + counter +'" value="' + data[8] +'"/>',
+                '<label class="form-check-label" for="recordValidationCheck' + counter +'">Sélectionner</label>',
+            '</div>'
+        ].join('');
+        newIsValid.innerHTML += html;
+
+        //newRecordId.innerHTML += '<input type="hidden" value="' + data[8] + '" name="record_id"/>';
+    } 
+    else {
         // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
         var newFirstName = newRow.insertCell(1);
         var newLastName = newRow.insertCell(2);
@@ -79,15 +108,15 @@ function getDataFromPhp(data){
             recordData.push(value);
         });
         // On appelle la fonction qui permet d'ajouter des lignes au tableau et on lui passe le tableau en paramètre
-        appendLine('records_log', recordData, typeOfRecords);
+        appendLine('records_log', recordData, typeOfRecords, i);
     }
 }
 
 
-/*  Appel AJAX pour récupèrer en JS le résultat de la requête PHP  
+/*  Appels AJAX pour récupèrer les résultats des requêtes PHP au format JSON
     Paramètres :
     * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête (ici, aucune)
+    * {} : données à envoyer dans la requête
     * getDataFromPhp : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
     * 'json' : format de données reçues
 */
@@ -102,4 +131,8 @@ function updateAllUsersRecordsLog(typeOfRecords) {
 
 function updateTeamRecordsLog(typeOfRecords) {
     $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, getDataFromPhp, 'json');
+}
+
+function displayRecordsToCheck(typeOfRecords) {
+    $.post('index.php?action=getRecordsToCheck', { 'typeOfRecords': typeOfRecords }, getDataFromPhp, 'json');
 }

@@ -5,9 +5,9 @@
 require_once('model/LoginManager.php');
 
 
-/* Fonction pour gérer l'affichage des pages de connexion et d'accueil */
+/* Fonctions pour gérer l'affichage des pages de connexion et d'accueil */
 
-function displayHomePage() {
+function verifyLogin() {
     $loginManager = new LoginManager();
 
     $userData = $loginManager->getUserData($_POST['login'], $_POST['password']);
@@ -28,4 +28,10 @@ function displayHomePage() {
 
         require('view/home.php');
     }
+}
+
+function displayHomePage(){
+    session_start();
+
+    if(isset($_SESSION['id'])) require('view/home.php');
 }

@@ -12,13 +12,13 @@
                     <div class="collapse navbar-collapse" id="navbarContent">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                                <a class="nav-link active" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=getNewRecordForm">Nouveau relevé</a>
+                                <a class="nav-link" href="index.php?action=showNewRecordForm">Nouveau relevé</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Validation</a>
+                                <a class="nav-link" href="index.php?action=showRecordsToCheck">Validation</a>
                             </li>
                             <?php if($_SESSION['id_group'] == 1 || $_SESSION['id_group'] == 2){
                                 echo '

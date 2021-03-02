@@ -6,14 +6,18 @@ session_start();
 require_once('model/RecordManager.php');
 
 
-/* Fonctions pour gérer l'affichage des pages de saisie et d'historique */
+/* Fonctions pour gérer l'affichage des pages de saisie, de validation et d'historique */
 
 function displayNewRecordForm(){
-    require('view/newRecordForm.php');
+    if(isset($_SESSION['id'])) require('view/newRecordForm.php');
+}
+
+function displayValidationForm(){
+    if(isset($_SESSION['id'])) require('view/recordsToCheck.php');
 }
 
 function displayPersonnalRecordsLog(){
-    require('view/personnalRecordsLog.php');
+    if(isset($_SESSION['id'])) require('view/personnalRecordsLog.php');
 }
 
 function displayRecordsLog(){
@@ -34,8 +38,30 @@ function registerNewRecord(){
     $recordManager = new RecordManager();
     $isSendingSuccessfull = $recordManager->sendNewRecord($_POST['user_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
     
-    if($isSendingSuccessfull) require('view/personnalRecordsLog.php');
+    if($isSendingSuccessfull) header('Location: index.php?action=showPersonnalRecordsLog');
     else require('view/newRecordform.php');
+}
+
+
+/* Fonction pour mettre à jour le statut des relevés (validation) */
+
+function updateRecordStatus(){
+    $recordManager = new RecordManager();
+    $isUpdateSuccessfull = false;
+
+    if(!empty($_POST['check_list'])){
+        try {
+            foreach($_POST['check_list'] as $lineChecked){
+                $recordManager->updateRecordStatus($lineChecked);  
+            }
+            $isUpdateSuccessfull = true;      
+        } catch(Exception $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+    }
+    if($isUpdateSuccessfull) header('Location: index.php?action=showHomePage');
+    else require('view/recordsToCheck');
+
 }
 
 
@@ -44,6 +70,11 @@ function registerNewRecord(){
 function getUserRecords($typeOfRecords){
     $recordManager = new RecordManager();
     $recordManager->getRecordsFromUser($_SESSION['id'], $typeOfRecords);   
+}
+
+function getTeamRecordsToCheck($typeOfRecords){
+    $recordManager = new RecordManager();
+    $recordManager->getTeamRecordsToCheck($_SESSION['id'], $typeOfRecords);
 }
 
 function getTeamRecords($typeOfRecords){

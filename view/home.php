@@ -9,7 +9,7 @@
     <?php include('partials/navbar.php'); ?>
 
         <div class="bd-cheatsheet container-fluid bg-body">
-            <h1>Bienvenue <?= $userData['Prenom'] . ' ' . $userData['Nom'] . ' ';?>!</h1>
+            <h1 class="display-5 text-center mt-5 mb-5">Accueil</h1>
         </div>
        
             
