@@ -58,6 +58,37 @@ class RecordManager extends DatabaseConnection
     }
 
 
+    /* Méthode qui permet de mettre à jour un relevé lorsqu'il n'a pas encore été validé par un N+1. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
+        Params:
+        * $id_record : id du relevé à mettre à jour
+        * $start_time : date et heure de début
+        * $end_time: date et heure de fin
+        * $comment : commentaire
+    */
+
+    public function updateRecord($id_record, $start_time, $end_time, $comment){
+
+        try{
+            $pdo = $this->dbConnect();
+            $query = $pdo->prepare('UPDATE t_saisie_heure
+            SET date_hrs_debut = :start_time, date_hrs_fin = :end_time, commentaire = :comment
+            WHERE ID = :id_record');
+            $query->execute(array(
+                'id_record' => $id_record,
+                'start_time' => $start_time,
+                'end_time' => $end_time,
+                'comment' => $comment
+            ));
+
+            // Décommenter la ligne suivante pour débugger la requête
+            // $query->debugDumpParams();
+
+        } catch(Exception $e) {
+            die('Erreur : ' . $e->getMessage());
+        }
+    }
+
+
     /* Méthode qui permet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
         * $id_record : id du relevé à mettre à jour
@@ -88,6 +119,27 @@ class RecordManager extends DatabaseConnection
     }
 
 
+    /* Méthode qui permet de récupérer tous les informations d'un relevé d'heures. Elle renvoie les données en JSON pour être exploitables par JS.
+        Params:
+        * $recordId : id relevé
+    */
+
+    public function getRecord($recordId){
+        header("Content-Type: text/json");
+
+        $pdo = $this->dbConnect();
+
+        $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE ID = :id_record');
+        $query->execute(array('id_record' => $recordId));
+        $recordData = $query->fetch(PDO::FETCH_ASSOC);
+
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
+
+        echo json_encode($recordData);
+    }
+
+
     /* Méthode qui permet de récupérer tous les relevés d'heures associés à un utilisateur. Elle renvoie les données en JSON pour être exploitables par JS.
         Params:
         * $id_user : id utilisateur
@@ -105,7 +157,8 @@ class RecordManager extends DatabaseConnection
         commentaire, 
         statut_validation, 
         date_hrs_creation, 
-        date_hrs_modif 
+        date_hrs_modif,
+        ID 
         FROM t_saisie_heure 
         WHERE id_login = :id_user
         ORDER BY date_hrs_debut');

@@ -48,12 +48,25 @@ if(isset($_GET['action'])){
         case "addNewRecord":
             registerNewRecord();
             break;
+        // Modification d'un relevé non validé
+        case "updateRecord":
+            updateRecord();
+            break;
         
         // Modification du statut du relevé
         case "updateRecordStatus":
             updateRecordStatus();
             break;
 
+        // Renvoyer le formulaire de saisie
+        case "getRecordForm":
+            getRecordForm();
+            break;
+
+        // Récupérer les données d'un relevé
+        case "getRecordData":
+            getRecordData($_POST['recordID']);
+            break;
         // Récupérer les données de l'historique personnel
         case "getPersonnalRecordsLog":
             getUserRecords($_POST['typeOfRecords']);

@@ -7,6 +7,7 @@
 */
 
 function appendLine(tableID, data, typeOfRecord, counter){
+
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -25,12 +26,18 @@ function appendLine(tableID, data, typeOfRecord, counter){
         var newComment = newRow.insertCell(3);
         var newStatus = newRow.insertCell(4);
         var newUpdateDate = newRow.insertCell(5);
+        var newEdit = newRow.insertCell(6);
 
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
         newStartTime.innerHTML += data[1];
         newEndTime.innerHTML += data[2];
         newComment.innerHTML += data[3];
-        data[4] == 0 ? newStatus.innerHTML += "En attente" : newStatus.innerHTML += "Validé";
+        if(data[4] == 0){
+            newStatus.innerHTML += "En attente";
+            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
+            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="display_record_form(' + data[7] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+
+        } else newStatus.innerHTML += "Validé";
         newUpdateDate.innerHTML += data[6];
     } 
 
@@ -85,12 +92,14 @@ function appendLine(tableID, data, typeOfRecord, counter){
 }
 
 
-/* Fonction qui permet de traiter les données reçues de PHP et de les insérer dans le tableau 
+
+/* Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie plusieurs lignes et de les insérer dans le tableau 
     Param :
     * data : contenu de la réponse à la requête AJAX
 */
 
-function getDataFromPhp(data){
+function parseMultipleLinesRequest(data){
+
     var tab_data = data.records;
     var typeOfRecords = data.typeOfRecords;
 
@@ -112,9 +121,44 @@ function getDataFromPhp(data){
             // On pousse uniquement les valeurs dans le tableau
             recordData.push(value);
         });
+
         // On appelle la fonction qui permet d'ajouter des lignes au tableau et on lui passe le tableau en paramètre
         appendLine('records_log', recordData, typeOfRecords, i);
     }
+}
+
+
+
+function updateFormInputs(data){
+    var inputDateTimeStart = document.getElementById('datetime_start');
+    var inputDateTimeEnd = document.getElementById('datetime_end');
+    var inputComment = document.getElementById('comment');
+
+    // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par l'input datetime-locale
+    var startTime = data[3].replace(" ", "T");
+    var endTime = data[4].replace(" ", "T");
+
+    inputDateTimeStart.setAttribute("value", startTime);
+    inputDateTimeEnd.setAttribute("value", endTime);
+    inputComment.innerHTML += data[6];
+}
+
+
+/* Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie une seule ligne, et de les insérer dans le tableau
+    Param :
+    * data : contenu de la réponse à la requête AJAX
+*/
+
+function parseUniqueLineRequest(data){
+    console.log(data);
+
+    var recordData = [];
+
+    $.each(data, function(key, value) {
+        recordData.push(value);
+    });
+    
+    updateFormInputs(recordData);
 }
 
 
@@ -122,22 +166,26 @@ function getDataFromPhp(data){
     Params :
     * 'url' : url sur laquelle faire la requête POST
     * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux)
-    * getDataFromPhp : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
+    * parseMultipleLinesRequest ou parseUniqueLineRequest : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
     * 'json' : format de données reçues par la requête AJAX
 */
 
 function updatePersonnalRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getPersonnalRecordsLog', { 'typeOfRecords': typeOfRecords }, getDataFromPhp, 'json');
+    $.post('index.php?action=getPersonnalRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
 ;}
 
 function updateAllUsersRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords }, getDataFromPhp, 'json');
+    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
 }
 
 function updateTeamRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, getDataFromPhp, 'json');
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
 }
 
 function displayRecordsToCheck(typeOfRecords) {
-    $.post('index.php?action=getRecordsToCheck', { 'typeOfRecords': typeOfRecords }, getDataFromPhp, 'json');
+    $.post('index.php?action=getRecordsToCheck', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
+}
+
+function getRecordData(recordId) {
+    $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
 }

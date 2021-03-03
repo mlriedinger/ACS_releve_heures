@@ -14,7 +14,7 @@ require_once('model/RecordManager.php');
 */
 
 function displayNewRecordForm(){
-    if(isset($_SESSION['id'])) require('view/newRecordForm.php');
+    if(isset($_SESSION['id'])) require('view/addNewRecord.php');
 }
 
 function displayValidationForm(){
@@ -37,6 +37,13 @@ function displayRecordsLog(){
 }
 
 
+/* Fonction pour récupérer le formulaire de saisie (uniquement le formulaire) */
+
+function getRecordForm(){
+    require('view/partials/recordForm.php');
+}
+
+
 /* Fonction pour enregistrer un nouveau relevé en BDD */
 
 function registerNewRecord(){
@@ -44,7 +51,17 @@ function registerNewRecord(){
     $isSendingSuccessfull = $recordManager->sendNewRecord($_POST['user_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
     
     if($isSendingSuccessfull) header('Location: index.php?action=showPersonnalRecordsLog');
-    else require('view/newRecordform.php');
+    else require('view/addNewRecord.php');
+}
+
+
+/* Fonction pour modifier un relevé qui n'a pas encore été validé */
+
+function updateRecord(){
+    $recordManager = new RecordManager();
+    $recordManager->updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
+    
+    require('view/personnalRecordsLog.php');
 }
 
 
@@ -66,11 +83,11 @@ function updateRecordStatus(){
     }
     if($isUpdateSuccessfull) header('Location: index.php?action=showHomePage');
     else require('view/recordsToCheck');
-
 }
 
 
 /* Fonctions pour récupérer les relevés :
+    * getRecordData() : informations d'un relevé unique,
     * getUserRecords() : relevés personnels,
     * getTeamRecordsToCheck() : relevés en attente de validation, 
     * getTeamRecords() : relevés de l'équipe, 
@@ -78,6 +95,11 @@ function updateRecordStatus(){
     Params :
     * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
 */
+
+function getRecordData($recordId){
+    $recordManager = new RecordManager();
+    $recordManager->getRecord($recordId);
+}
 
 function getUserRecords($typeOfRecords){
     $recordManager = new RecordManager();
