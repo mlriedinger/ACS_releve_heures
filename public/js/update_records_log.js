@@ -1,7 +1,9 @@
-/* Fonction qui ajoute une nouvelle ligne au tableau
-    Paramètres :
+/* Fonction qui ajoute une nouvelle ligne à un tableau cible
+    Params :
         * tableID : id associé à la balise <table>
         * data : un tableau de données
+        * typeOfRecord : type de relevés demandés (personnels, en attente, équipe ou globaux)
+        * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
 
 function appendLine(tableID, data, typeOfRecord, counter){
@@ -14,6 +16,8 @@ function appendLine(tableID, data, typeOfRecord, counter){
     var newWorkSite = newRow.insertCell(0);
     newWorkSite.innerHTML += data[0];
 
+
+    // Si on demande l'historique personnel
     if(typeOfRecord == 'Personal'){
         // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
         var newStartTime = newRow.insertCell(1);
@@ -29,6 +33,8 @@ function appendLine(tableID, data, typeOfRecord, counter){
         data[4] == 0 ? newStatus.innerHTML += "En attente" : newStatus.innerHTML += "Validé";
         newUpdateDate.innerHTML += data[6];
     } 
+
+    // Si on demande les relevés en attente de validation
     else if (typeOfRecord == 'Check'){        
         // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
         var newFirstName = newRow.insertCell(1);
@@ -38,7 +44,6 @@ function appendLine(tableID, data, typeOfRecord, counter){
         var newComment = newRow.insertCell(5);
         var newUpdateDate = newRow.insertCell(6);
         var newIsValid = newRow.insertCell(7);
-        //var newRecordId = newRow.insertCell(8);
         
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
         newFirstName.innerHTML += data[2];
@@ -55,9 +60,9 @@ function appendLine(tableID, data, typeOfRecord, counter){
             '</div>'
         ].join('');
         newIsValid.innerHTML += html;
-
-        //newRecordId.innerHTML += '<input type="hidden" value="' + data[8] + '" name="record_id"/>';
     } 
+
+    // Si on demande les relevés d'équipe ou l'intégralité des relevés
     else {
         // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
         var newFirstName = newRow.insertCell(1);
@@ -81,8 +86,8 @@ function appendLine(tableID, data, typeOfRecord, counter){
 
 
 /* Fonction qui permet de traiter les données reçues de PHP et de les insérer dans le tableau 
-    Paramètre :
-    * data : contenu de la réponse à la requête POST
+    Param :
+    * data : contenu de la réponse à la requête AJAX
 */
 
 function getDataFromPhp(data){
@@ -114,11 +119,11 @@ function getDataFromPhp(data){
 
 
 /*  Appels AJAX pour récupèrer les résultats des requêtes PHP au format JSON
-    Paramètres :
+    Params :
     * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête
+    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux)
     * getDataFromPhp : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
-    * 'json' : format de données reçues
+    * 'json' : format de données reçues par la requête AJAX
 */
 
 function updatePersonnalRecordsLog(typeOfRecords) {

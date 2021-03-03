@@ -7,51 +7,55 @@
 
     <body>
     <?php include('partials/navbar.php');?>
-    <div class="container">
-    
-        <h2 class="display-6 mt-5 mb-5 text-center">Historique de l'équipe</h2>
 
-        <div class="row mb-5">
+        <div class="container">
+        
+            <h2 class="display-6 mt-5 mb-5 text-center">Historique de l'équipe</h2>
 
-            <!-- Tableau qui affiche les informations de la BDD-->
-            <form name="validationForm" action="index.php?action=updateRecordStatus" method="POST">
-                <table class="table table-striped table-hover" id="records_log">
-                    <thead>
-                        <tr>
-                            <th scope="col">Chantier</th>
-                            <th scope="col">Prénom</th>
-                            <th scope="col">Nom</th>
-                            <th scope="col">Date et heure de début</th>
-                            <th scope="col">Date et heure de fin</th>
-                            <th scope="col">Commentaire</th>
-                            <th scope="col">Modifié le</th>
-                            <th scope="col">
-                                <button type="button" class="btn btn-dark btn-sm" onclick="selectAll();" id="selectAllButton">Sélectionner tout</button>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr></tr>
-                        <!-- Ici on insère dynamiquement les lignes du tableau avec Javascript-->
-                    </tbody>
-                </table> 
+            <div class="row mb-5">
 
-                <div class="row mb-3 justify-content-md-center">
-                    
-                    <div class="col-lg mb-5 text-end">
-                        <input type="button" value="Annuler" class="btn btn-light p-3"/>
-                        <input type="submit" value="Valider" class="btn btn-dark"/>
+                <!-- Tableau qui affiche les informations de la BDD-->
+                <form name="validationForm" action="index.php?action=updateRecordStatus" method="POST">
+                    <table class="table table-striped table-hover" id="records_log">
+                        <thead>
+                            <tr>
+                                <th scope="col">Chantier</th>
+                                <th scope="col">Prénom</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Date et heure de début</th>
+                                <th scope="col">Date et heure de fin</th>
+                                <th scope="col">Commentaire</th>
+                                <th scope="col">Modifié le</th>
+                                <th scope="col">
+                                    <button type="button" class="btn btn-dark btn-sm" onclick="selectAll();" id="selectAllButton">Sélectionner tout</button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr></tr>
+                            <!-- Ici on insère dynamiquement les lignes du tableau avec Javascript-->
+                        </tbody>
+                    </table> 
+
+                    <div class="row mb-3 justify-content-md-center">
+                        
+                        <div class="col-lg mb-5 text-end">
+                            <input type="button" value="Annuler" class="btn btn-light p-3"/>
+                            <input type="submit" value="Valider" class="btn btn-dark"/>
+                        </div>
+                        
                     </div>
-                    
-                </div>
 
-            </form>
+                </form>
+
+            </div>
 
         </div>
 
-    </div>
         <?php include('partials/footer.php'); ?>
+
         <script src="public/js/update_records_log.js"></script>
+
         <script>
             $(function() {
                 displayRecordsToCheck('Check');
@@ -68,5 +72,6 @@
                 document.getElementById('selectAllButton').innerHTML == 'Sélectionner tout' ? document.getElementById('selectAllButton').innerHTML = 'Désélectionner tout' : document.getElementById('selectAllButton').innerHTML = 'Sélectionner tout';
             }
         </script>
+        
     </body>
 </html>

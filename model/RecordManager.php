@@ -6,17 +6,26 @@ require_once('DatabaseConnection.php');
 
 /* Classe qui gère l'envoi et la récupération de données de la BDD 
     * [INFO] Classe-fille de DatabaseConnection pour pouvoir hériter de la méthode dbConnect()
-    * Méthodes de la classe :
-        * sendNewRecord() permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur
-        * updateRecordStatus() permet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur
-        * getAllRecordsFromUser() permet de récupérer tous les relevés d'heures associés à un utilisateur. Elle renvoie les données en JSON pour être exploitables par JS
-        * getRecordsToCheck() permet de récupérer les relevés d'heures dont le statut est en attente
-        * getRecordsFromTeam() permet de récupérer tous les relevés d'heures de salariés associés à un manager
-        * getAllRecords() permet de récupérer les relevés de tous les utilisateurs. Elle renvoie les données en JSON pour être exploitables par JS
+    * Méthodes de classe :
+        * sendNewRecord() 
+        * updateRecordStatus() 
+        * getAllRecordsFromUser() 
+        * getRecordsToCheck()
+        * getRecordsFromTeam()
+        * getAllRecords() 
 */
 
 class RecordManager extends DatabaseConnection
 {
+    /* Méthode qui permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
+        Params:
+        * $id_user : id utilisateur
+        * $start_time : date et heure de début
+        * $end_time: date et heure de fin
+        * $comment : commentaire
+
+    */
+
     public function sendNewRecord($id_user, $start_time, $end_time, $comment){
         $isSendingSuccessfull = false;
 
@@ -48,6 +57,12 @@ class RecordManager extends DatabaseConnection
         return $isSendingSuccessfull;
     }
 
+
+    /* Méthode qui permet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
+        Params:
+        * $id_record : id du relevé à mettre à jour
+    */
+
     public function updateRecordStatus($id_record){
         $isUpdateSuccessfull = false;
         
@@ -71,6 +86,13 @@ class RecordManager extends DatabaseConnection
         return $isUpdateSuccessfull;
         
     }
+
+
+    /* Méthode qui permet de récupérer tous les relevés d'heures associés à un utilisateur. Elle renvoie les données en JSON pour être exploitables par JS.
+        Params:
+        * $id_user : id utilisateur
+        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+    */
 
     public function getRecordsFromUser($id_user, $type_of_records){
         header("Content-Type: text/json");
@@ -96,6 +118,13 @@ class RecordManager extends DatabaseConnection
 
         echo json_encode($userRecords);
     }
+
+
+    /* Méthode qui permet de récupérer UNIQUEMENT les relevés d'heures dont le statut est en attente. Elle renvoie les données en JSON pour être exploitables par JS.
+        Params:
+        * $id_manager : id du chef d'équipe
+        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+    */
 
     public function getRecordsToCheck($id_manager, $type_of_records){
         header("Content-Type: text/json");
@@ -129,6 +158,13 @@ class RecordManager extends DatabaseConnection
         echo json_encode($recordsToCheck);
     }
 
+
+    /* Méthode qui permet de récupérer TOUS les relevés d'heures de salariés associés à un manager. Elle renvoie les données en JSON pour être exploitables par JS.
+        Params: 
+        * $id_manager : id du chef d'équipe
+        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+    */
+
     public function getRecordsFromTeam($id_manager, $type_of_records){
         header("Content-Type: text/json");
 
@@ -159,6 +195,12 @@ class RecordManager extends DatabaseConnection
 
         echo json_encode($teamRecords);
     }
+
+
+    /* Méthode qui permet de récupérer les relevés de tous les utilisateurs. Elle renvoie les données en JSON pour être exploitables par JS.
+         Params: 
+        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+    */
 
     public function getAllRecords($type_of_records){
         header("Content-Type: text/json");

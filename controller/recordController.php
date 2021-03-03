@@ -6,7 +6,12 @@ session_start();
 require_once('model/RecordManager.php');
 
 
-/* Fonctions pour gérer l'affichage des pages de saisie, de validation et d'historique */
+/* Fonctions pour gérer l'affichage des pages :
+    * displayNewRecordForm() : page de saisie d'un nouveau relevé, 
+    * displayValidationForm() : page de validation de relevés en attente
+    * displayPersonnalRecordsLog() : historique personnel, 
+    * displayRecordsLog() : historique équipe ou global en fonction du type d'utilisateur 
+*/
 
 function displayNewRecordForm(){
     if(isset($_SESSION['id'])) require('view/newRecordForm.php');
@@ -43,7 +48,7 @@ function registerNewRecord(){
 }
 
 
-/* Fonction pour mettre à jour le statut des relevés (validation) */
+/* Fonction pour mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager */
 
 function updateRecordStatus(){
     $recordManager = new RecordManager();
@@ -65,7 +70,14 @@ function updateRecordStatus(){
 }
 
 
-/* Fonctions pour récupérer des relevés */
+/* Fonctions pour récupérer les relevés :
+    * getUserRecords() : relevés personnels,
+    * getTeamRecordsToCheck() : relevés en attente de validation, 
+    * getTeamRecords() : relevés de l'équipe, 
+    * getAllUsersRecords() : tous les relevés) 
+    Params :
+    * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+*/
 
 function getUserRecords($typeOfRecords){
     $recordManager = new RecordManager();

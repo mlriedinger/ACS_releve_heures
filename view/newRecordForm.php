@@ -8,7 +8,7 @@
     <body>
     <?php include('partials/navbar.php'); ?>
 
-        <div class="bd-cheatsheet container-fluid bg-body">
+        <div class="container">
             <h2 class="display-6 mt-5 mb-5 text-center">Nouveau relevé</h2>
 
             <form action="index.php?action=addNewRecord" method="POST">

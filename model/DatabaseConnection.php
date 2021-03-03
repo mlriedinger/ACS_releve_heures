@@ -1,8 +1,6 @@
 <?php
 
-/* Classe qui gère la connexion à la base de données.
-    * dbConnect() initialise et renvoie un objet PDO
-*/
+/* Classe qui gère la connexion à la base de données. */
 
 class DatabaseConnection
 {
@@ -11,6 +9,17 @@ class DatabaseConnection
     private $dbName = "erp_acs";
     private $dbUser = "erpadmin";
     private $dbPassword = "Acs@73000";
+
+
+    /* Méthode qui initialise une connection à la base de données. Elle retourne un objet PDO en cas de succès, sinon une erreur.
+        Params:
+        * $dbUser : identifiant
+        * $dbPassword : mot de passe
+        * $dbHost : URL de l'hôte
+        * $dbPort : numéro de port pour accéder à la BDD
+        * $dbName : nom de la BDD
+    
+    */
 
     protected function dbConnect($dbUser = "", $dbPassword = "", $dbHost = "", $dbPort = "", $dbName = ""){
         if($dbUser != ""){
