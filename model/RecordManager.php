@@ -121,7 +121,30 @@ class RecordManager extends DatabaseConnection
         }
 
         return $isUpdateSuccessfull;
-        
+    }
+
+
+    /* Méthode qui permet de supprimer un relevé
+        Params: 
+        * $id_record : id du relevé à supprimer
+        * $comment : commentaire à mettre à jour dans la BDD (si justification de la suppression)
+    */
+
+    public function deleteRecord($id_record, $comment){
+        try{
+            $pdo = $this->dbConnect();
+
+            $query = $pdo->prepare('UPDATE t_saisie_heure
+            SET supprimer = 1, commentaire = :comment
+            WHERE ID=:id_record');
+            $query->execute(array(
+                'id_record' => $id_record,
+                'comment' => $comment
+            ));
+
+        } catch(Exception $e){
+            die('Erreur : ' . $e->getMessage());
+        }
     }
 
 
@@ -166,7 +189,7 @@ class RecordManager extends DatabaseConnection
         date_hrs_modif,
         ID 
         FROM t_saisie_heure 
-        WHERE id_login = :id_user
+        WHERE id_login = :id_user AND supprimer = 0
         ORDER BY date_hrs_creation DESC');
         $query->execute(array('id_user' => $id_user));
         $userRecords["typeOfRecords"] = $type_of_records;
@@ -206,6 +229,7 @@ class RecordManager extends DatabaseConnection
         ON t_login.ID = t_saisie_heure.id_login
         WHERE t_equipe.id_manager = :id_manager
         AND t_saisie_heure.statut_validation = 0
+        AND t_saisie_heure.supprimer = 0
         ORDER BY date_hrs_creation DESC');
         $query->execute(array('id_manager' => $id_manager));
         $recordsToCheck["typeOfRecords"] = $type_of_records;
@@ -237,13 +261,14 @@ class RecordManager extends DatabaseConnection
         t_saisie_heure.commentaire, 
         t_saisie_heure.statut_validation, 
         t_saisie_heure.date_hrs_creation, 
-        t_saisie_heure.date_hrs_modif 
+        t_saisie_heure.date_hrs_modif,
+        t_saisie_heure.ID
         FROM t_equipe
         INNER JOIN t_login
         ON t_equipe.id_membre = t_login.ID
         INNER JOIN t_saisie_heure
         ON t_login.ID = t_saisie_heure.id_login
-        WHERE t_equipe.id_manager = :id_manager
+        WHERE t_equipe.id_manager = :id_manager AND t_saisie_heure.supprimer = 0
         ORDER BY date_hrs_creation DESC');
         $query->execute(array('id_manager' => $id_manager));
         $teamRecords["typeOfRecords"] = $type_of_records;
@@ -280,6 +305,7 @@ class RecordManager extends DatabaseConnection
         FROM t_saisie_heure
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID
+        WHERE t_saisie_heure.supprimer = 0
         ORDER BY date_hrs_creation DESC');
         $query->execute();
         $records["typeOfRecords"] = $type_of_records;

@@ -36,8 +36,8 @@ function appendLine(tableID, data, typeOfRecord, counter){
         if(data[4] == 0){
             newStatus.innerHTML += "En attente";
             // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="display_record_form(' + data[7] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-            newDelete.innerHTML += '<button class="btn btn-light"><i class="far fa-trash-alt"></i></button>';
+            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[7] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[7] + ')"><i class="far fa-trash-alt"></i></button>';
         } else newStatus.innerHTML += "Validé";
         newUpdateDate.innerHTML += data[6];
     } 
@@ -70,7 +70,7 @@ function appendLine(tableID, data, typeOfRecord, counter){
         ].join('');
 
         newIsValid.innerHTML += html;
-        newDelete.innerHTML += '<button class="btn btn-light"><i class="far fa-trash-alt"></i></button>';
+        newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[8] + ')"><i class="far fa-trash-alt"></i></button>';
     } 
 
     // Si on demande les relevés d'équipe ou l'intégralité des relevés
@@ -96,8 +96,8 @@ function appendLine(tableID, data, typeOfRecord, counter){
         if(data[6] == '0'){
             newStatus.innerHTML += "En attente";
             // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="display_record_form(' + data[9] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-            newDelete.innerHTML += '<button class="btn btn-light"><i class="far fa-trash-alt"></i></button>';
+            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[9] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[9] + ')"><i class="far fa-trash-alt"></i></button>';
         } else newStatus.innerHTML += "Validé";
 
         newUpdateDate.innerHTML += data[8];
@@ -125,6 +125,25 @@ function appendLine(tableID, data, typeOfRecord, counter){
 }
 
 
+/* Fonction qui permet de mettre à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé
+    Param : 
+    * data : un tableau de données
+*/
+
+function updateFormInputs(data){
+    var inputDateTimeStart = document.getElementById('datetime_start');
+    var inputDateTimeEnd = document.getElementById('datetime_end');
+    var inputComment = document.getElementById('comment');
+
+    // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par l'input datetime-locale
+    var startTime = data[3].replace(" ", "T");
+    var endTime = data[4].replace(" ", "T");
+
+    inputDateTimeStart.setAttribute("value", startTime);
+    inputDateTimeEnd.setAttribute("value", endTime);
+    inputComment.innerHTML += data[6];
+}
+
 
 /* Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie plusieurs lignes et de les insérer dans le tableau 
     Param :
@@ -142,6 +161,9 @@ function parseMultipleLinesRequest(data){
     // Résultat : Le tableau est vidé à chaque fois que la fonction est appelée
     $("#records_log").children("tbody").html(tr_empty);
 
+    // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau
+    if(!tab_data.length) $("#records_log").after('<p class="lead text-center mt-5">Aucun relevé à afficher.</p>');
+
     // On boucle sur tab_data pour récupérer chaque objet (relevé d'heure)
     for (var i = 0; i < tab_data.length; i++) {
         // On initialise un tableau vide
@@ -158,22 +180,6 @@ function parseMultipleLinesRequest(data){
         // On appelle la fonction qui permet d'ajouter des lignes au tableau et on lui passe le tableau en paramètre
         appendLine('records_log', recordData, typeOfRecords, i);
     }
-}
-
-
-
-function updateFormInputs(data){
-    var inputDateTimeStart = document.getElementById('datetime_start');
-    var inputDateTimeEnd = document.getElementById('datetime_end');
-    var inputComment = document.getElementById('comment');
-
-    // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par l'input datetime-locale
-    var startTime = data[3].replace(" ", "T");
-    var endTime = data[4].replace(" ", "T");
-
-    inputDateTimeStart.setAttribute("value", startTime);
-    inputDateTimeEnd.setAttribute("value", endTime);
-    inputComment.innerHTML += data[6];
 }
 
 
@@ -210,7 +216,7 @@ function updateAllUsersRecordsLog(typeOfRecords) {
 }
 
 function updateTeamRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest/*, 'json'*/);
 }
 
 function displayRecordsToCheck(typeOfRecords) {
@@ -221,8 +227,22 @@ function getRecordData(recordId) {
     $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
 }
 
-function display_record_form(id_record){
+
+/* Appels AJAX pour récupérer le contenu qui va être inséré dans le corps de la fenêtre modale (édition ou suppression d'un relevé)
+    Params :
+    * 'url' : url sur laquelle faire la requête POST
+    * {} : données à envoyer dans la requête, ici 'idRecord' : identifiant du relevé à modifier ou à supprimer
+*/
+
+function displayRecordForm(id_record){
     $.post('index.php?action=getRecordForm', { 'idRecord': id_record }, function(content){
         $(".modal-body").html(content);
-    })
+    });
+}
+
+function displayDeleteConfirmation(id_record){
+    $.post('index.php?action=getDeleteConfirmationForm', { 'idRecord': id_record }, function(content){
+        $(".modal-title").html("Confirmation de suppression");
+        $(".modal-body").html(content);
+    });
 }

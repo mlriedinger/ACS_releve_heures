@@ -56,10 +56,18 @@ if(isset($_GET['action'])){
         case "updateRecordStatus":
             updateRecordStatus();
             break;
+        // Supprimer un relevé
+        case "deleteRecord":
+            deleteRecord();
+            break;
 
         // Renvoyer le formulaire de saisie
         case "getRecordForm":
             getRecordForm();
+            break;
+        // Renvoyer le formulaire de confirmation de suppression
+        case "getDeleteConfirmationForm":
+            getDeleteConfirmationForm();
             break;
 
         // Récupérer les données d'un relevé

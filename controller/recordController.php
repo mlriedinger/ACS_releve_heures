@@ -44,6 +44,13 @@ function getRecordForm(){
 }
 
 
+/* Fonction pour récupérer le formulaire de confirmation de suppression (uniquement le formulaire) */
+
+function getDeleteConfirmationForm(){
+    require('view/partials/deleteConfirmation.php');
+}
+
+
 /* Fonction pour enregistrer un nouveau relevé en BDD */
 
 function registerNewRecord(){
@@ -61,7 +68,7 @@ function updateRecord(){
     $recordManager = new RecordManager();
     $recordManager->updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
     
-    require('view/personnalRecordsLog.php');
+    header('Location: index.php?action=showPersonnalRecordsLog');
 }
 
 
@@ -83,6 +90,17 @@ function updateRecordStatus(){
     }
     if($isUpdateSuccessfull) header('Location: index.php?action=showHomePage');
     else require('view/recordsToCheck');
+}
+
+
+/* Fonction pour "supprimer" un relevé d'heure (en réalité le rendre inactif) */
+
+function deleteRecord(){
+    $recordManager = new RecordManager();
+    $recordManager->deleteRecord($_POST['record_id'], $_POST['comment']);
+
+    // Renvoie sur la dernière page visitée avant l'envoi du formulaire
+    echo '<script>window.history.go(-1);</script>';
 }
 
 

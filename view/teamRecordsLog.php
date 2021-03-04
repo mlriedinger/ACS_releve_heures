@@ -15,7 +15,7 @@
             <div class="row mb-5">
 
                 <!-- Tableau qui affiche les informations de la BDD-->
-                <table class="table table-striped table-hover" id="records_log">
+                <table class="table table-striped table-hover mt-4" id="records_log">
                     <thead>
                         <tr>
                             <th scope="col">Chantier</th>
@@ -36,6 +36,8 @@
                 </table> 
 
             </div>
+
+            <?php include('partials/modal.php'); ?>
 
         </div>
 
