@@ -42,5 +42,7 @@
 
 <script src="public/js/update_records_log.js"></script>
 <script>
-    getRecordData(<?=($_POST['idRecord']);?>);
+    $(function() {
+        getRecordData(<?=($_POST['idRecord']);?>);
+    });
 </script>

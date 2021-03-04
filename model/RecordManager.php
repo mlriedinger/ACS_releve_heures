@@ -31,8 +31,9 @@ class RecordManager extends DatabaseConnection
 
         try{
             $pdo = $this->dbConnect();
-     
-            $query = $pdo->prepare('INSERT INTO t_saisie_heure(id, id_login, date_hrs_debut, date_hrs_fin, commentaire) VALUES (
+
+            $query = $pdo->prepare('INSERT INTO t_saisie_heure(id, id_login, date_hrs_debut, date_hrs_fin, commentaire) 
+            VALUES (
                 :id,
                 :id_user, 
                 :start_time, 
@@ -45,7 +46,7 @@ class RecordManager extends DatabaseConnection
                 'end_time' => $end_time,
                 'comment' => $comment
             ));
-
+        
             // Décommenter la ligne suivante pour débugger la requête
             // $query->debugDumpParams();
 

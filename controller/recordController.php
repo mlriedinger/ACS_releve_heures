@@ -48,7 +48,7 @@ function getRecordForm(){
 
 function registerNewRecord(){
     $recordManager = new RecordManager();
-    $isSendingSuccessfull = $recordManager->sendNewRecord($_POST['user_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
+    $isSendingSuccessfull = $recordManager->sendNewRecord($_SESSION['id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
     
     if($isSendingSuccessfull) header('Location: index.php?action=showPersonnalRecordsLog');
     else require('view/addNewRecord.php');
