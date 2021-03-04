@@ -26,24 +26,29 @@ class RecordManager extends DatabaseConnection
 
     */
 
-    public function sendNewRecord($id_user, $start_time, $end_time, $comment){
+    public function sendNewRecord($id_user, $start_time, $end_time, $comment, $id_group){
         $isSendingSuccessfull = false;
+        $validation_status = 0;
 
         try{
             $pdo = $this->dbConnect();
 
-            $query = $pdo->prepare('INSERT INTO t_saisie_heure(id, id_login, date_hrs_debut, date_hrs_fin, commentaire) 
+            if($id_group == 1) $validation_status = 1;
+            
+            $query = $pdo->prepare('INSERT INTO t_saisie_heure(id, id_login, date_hrs_debut, date_hrs_fin, statut_validation, commentaire) 
             VALUES (
                 :id,
                 :id_user, 
                 :start_time, 
                 :end_time, 
+                :validation_status,
                 :comment)');
             $query->execute(array(
                 'id' => 0,
                 'id_user' => $id_user, 
                 'start_time' => $start_time,
                 'end_time' => $end_time,
+                'validation_status' => $validation_status,
                 'comment' => $comment
             ));
         
@@ -162,7 +167,7 @@ class RecordManager extends DatabaseConnection
         ID 
         FROM t_saisie_heure 
         WHERE id_login = :id_user
-        ORDER BY date_hrs_debut');
+        ORDER BY date_hrs_creation DESC');
         $query->execute(array('id_user' => $id_user));
         $userRecords["typeOfRecords"] = $type_of_records;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -201,7 +206,7 @@ class RecordManager extends DatabaseConnection
         ON t_login.ID = t_saisie_heure.id_login
         WHERE t_equipe.id_manager = :id_manager
         AND t_saisie_heure.statut_validation = 0
-        ORDER BY date_hrs_debut');
+        ORDER BY date_hrs_creation DESC');
         $query->execute(array('id_manager' => $id_manager));
         $recordsToCheck["typeOfRecords"] = $type_of_records;
         $recordsToCheck["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -239,7 +244,7 @@ class RecordManager extends DatabaseConnection
         INNER JOIN t_saisie_heure
         ON t_login.ID = t_saisie_heure.id_login
         WHERE t_equipe.id_manager = :id_manager
-        ORDER BY date_hrs_debut');
+        ORDER BY date_hrs_creation DESC');
         $query->execute(array('id_manager' => $id_manager));
         $teamRecords["typeOfRecords"] = $type_of_records;
         $teamRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -270,11 +275,12 @@ class RecordManager extends DatabaseConnection
         t_saisie_heure.commentaire, 
         t_saisie_heure.statut_validation, 
         t_saisie_heure.date_hrs_creation, 
-        t_saisie_heure.date_hrs_modif 
+        t_saisie_heure.date_hrs_modif,
+        t_saisie_heure.ID 
         FROM t_saisie_heure
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID
-        ORDER BY date_hrs_debut');
+        ORDER BY date_hrs_creation DESC');
         $query->execute();
         $records["typeOfRecords"] = $type_of_records;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);

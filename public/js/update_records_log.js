@@ -27,6 +27,7 @@ function appendLine(tableID, data, typeOfRecord, counter){
         var newStatus = newRow.insertCell(4);
         var newUpdateDate = newRow.insertCell(5);
         var newEdit = newRow.insertCell(6);
+        var newDelete = newRow.insertCell(7);
 
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
         newStartTime.innerHTML += data[1];
@@ -36,7 +37,7 @@ function appendLine(tableID, data, typeOfRecord, counter){
             newStatus.innerHTML += "En attente";
             // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
             newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="display_record_form(' + data[7] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-
+            newDelete.innerHTML += '<button class="btn btn-light"><i class="far fa-trash-alt"></i></button>';
         } else newStatus.innerHTML += "Validé";
         newUpdateDate.innerHTML += data[6];
     } 
@@ -51,6 +52,7 @@ function appendLine(tableID, data, typeOfRecord, counter){
         var newComment = newRow.insertCell(5);
         var newUpdateDate = newRow.insertCell(6);
         var newIsValid = newRow.insertCell(7);
+        var newDelete = newRow.insertCell(8);
         
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
         newFirstName.innerHTML += data[2];
@@ -66,10 +68,41 @@ function appendLine(tableID, data, typeOfRecord, counter){
                 '<label class="form-check-label" for="recordValidationCheck' + counter +'">Sélectionner</label>',
             '</div>'
         ].join('');
+
         newIsValid.innerHTML += html;
+        newDelete.innerHTML += '<button class="btn btn-light"><i class="far fa-trash-alt"></i></button>';
     } 
 
     // Si on demande les relevés d'équipe ou l'intégralité des relevés
+    else if (typeOfRecord == 'All'){
+        // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
+        var newFirstName = newRow.insertCell(1);
+        var newLastName = newRow.insertCell(2);
+        var newStartTime = newRow.insertCell(3);
+        var newEndTime = newRow.insertCell(4);
+        var newComment = newRow.insertCell(5);
+        var newStatus = newRow.insertCell(6);
+        var newUpdateDate = newRow.insertCell(7);
+        var newEdit = newRow.insertCell(8);
+        var newDelete = newRow.insertCell(9);
+
+        // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
+        newFirstName.innerHTML += data[2];
+        newLastName.innerHTML += data[1];
+        newStartTime.innerHTML += data[3];
+        newEndTime.innerHTML += data[4];
+        newComment.innerHTML += data[5];
+
+        if(data[6] == '0'){
+            newStatus.innerHTML += "En attente";
+            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
+            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="display_record_form(' + data[9] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+            newDelete.innerHTML += '<button class="btn btn-light"><i class="far fa-trash-alt"></i></button>';
+        } else newStatus.innerHTML += "Validé";
+
+        newUpdateDate.innerHTML += data[8];
+    }
+
     else {
         // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
         var newFirstName = newRow.insertCell(1);
@@ -150,8 +183,6 @@ function updateFormInputs(data){
 */
 
 function parseUniqueLineRequest(data){
-    console.log(data);
-
     var recordData = [];
 
     $.each(data, function(key, value) {
@@ -188,4 +219,10 @@ function displayRecordsToCheck(typeOfRecords) {
 
 function getRecordData(recordId) {
     $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
+}
+
+function display_record_form(id_record){
+    $.post('index.php?action=getRecordForm', { 'idRecord': id_record }, function(content){
+        $(".modal-body").html(content);
+    })
 }

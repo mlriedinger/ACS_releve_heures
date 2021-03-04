@@ -52,7 +52,6 @@ if(isset($_GET['action'])){
         case "updateRecord":
             updateRecord();
             break;
-        
         // Modification du statut du relevé
         case "updateRecordStatus":
             updateRecordStatus();
