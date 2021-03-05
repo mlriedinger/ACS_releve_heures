@@ -151,7 +151,7 @@ function updateFormInputs(data){
 */
 
 function parseMultipleLinesRequest(data){
-console.log(data);
+    //console.log(data);
     var tab_data = data.records;
     var typeOfRecords = data.typeOfRecords;
 

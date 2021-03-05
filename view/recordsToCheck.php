@@ -10,13 +10,13 @@
 
         <div class="container">
         
-            <h2 class="display-6 mt-5 mb-5 text-center">Historique de l'équipe</h2>
+            <h2 class="display-6 mt-5 mb-5 text-center">Validations en attente</h2>
 
             <div class="row mb-5">
 
                 <!-- Tableau qui affiche les informations de la BDD-->
                 <form name="validationForm" action="index.php?action=updateRecordStatus" method="POST">
-                    <table class="table table-striped table-hover" id="records_log">
+                    <table class="table table-striped table-hover mt-4" id="records_log">
                         <thead>
                             <tr>
                                 <th scope="col">Chantier</th>

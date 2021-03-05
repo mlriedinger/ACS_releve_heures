@@ -35,3 +35,9 @@ function displayHomePage(){
 
     if(isset($_SESSION['id'])) require('view/home.php');
 }
+
+function logout(){
+    session_destroy();
+    header('Location: index.php?action=login');
+    exit();
+}

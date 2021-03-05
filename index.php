@@ -18,6 +18,10 @@ if(isset($_GET['action'])){
         case "login":
             verifyLogin();
             break;
+        // Déconnexion
+        case "logout":
+            logout();
+            break;
 
         // Page d'accueil
         case "showHomePage":
