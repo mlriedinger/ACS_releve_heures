@@ -151,7 +151,7 @@ function updateFormInputs(data){
 */
 
 function parseMultipleLinesRequest(data){
-
+console.log(data);
     var tab_data = data.records;
     var typeOfRecords = data.typeOfRecords;
 
@@ -162,7 +162,7 @@ function parseMultipleLinesRequest(data){
     $("#records_log").children("tbody").html(tr_empty);
 
     // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau
-    if(!tab_data.length) $("#records_log").after('<p class="lead text-center mt-5">Aucun relevé à afficher.</p>');
+    if(!tab_data.length) $('<p class="lead text-center mt-5">Aucun relevé à afficher.</p>').insertAfter("#records_log");
 
     // On boucle sur tab_data pour récupérer chaque objet (relevé d'heure)
     for (var i = 0; i < tab_data.length; i++) {
@@ -216,7 +216,7 @@ function updateAllUsersRecordsLog(typeOfRecords) {
 }
 
 function updateTeamRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest/*, 'json'*/);
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
 }
 
 function displayRecordsToCheck(typeOfRecords) {

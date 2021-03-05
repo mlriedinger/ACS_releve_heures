@@ -208,7 +208,7 @@ class RecordManager extends DatabaseConnection
         * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getRecordsToCheck($id_manager, $type_of_records){
+    public function getTeamRecordsToCheck($id_manager, $type_of_records){
         header("Content-Type: text/json");
 
         $pdo = $this->dbConnect();
