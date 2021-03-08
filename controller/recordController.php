@@ -50,13 +50,13 @@ function getDeleteConfirmationForm(){
 
 /* Fonction pour enregistrer un nouveau relevé en BDD */
 
-function registerNewRecord(){
+function addNewRecord(){
     $recordManager = new RecordManager();
     $isSendingSuccessfull = $recordManager->sendNewRecord($_SESSION['id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment'], $_SESSION['id_group']);
     
     if($isSendingSuccessfull) {
         $_SESSION['success'] = true;
-        header('Location: index.php?action=showPersonnalRecordsLog');
+        header('Location: index.php?action=showPersonalRecordsLog');
     }
     else {
         $_SESSION['success'] = false;

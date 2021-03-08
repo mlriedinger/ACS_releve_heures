@@ -50,7 +50,7 @@ if(isset($_GET['action'])){
 
         // Ajout d'un nouveau relevé
         case "addNewRecord":
-            registerNewRecord();
+            addNewRecord();
             break;
         // Modification d'un relevé non validé
         case "updateRecord":
@@ -79,7 +79,7 @@ if(isset($_GET['action'])){
             getRecordData($_POST['recordID']);
             break;
         // Récupérer les données de l'historique personnel
-        case "getPersonnalRecordsLog":
+        case "getPersonalRecordsLog":
             getUserRecords($_POST['typeOfRecords']);
             break;
         // Récupérer les relevés en attente de validation

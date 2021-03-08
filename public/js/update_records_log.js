@@ -199,7 +199,7 @@ function parseUniqueLineRequest(data){
 */
 
 function updatePersonnalRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getPersonnalRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
 ;}
 
 function updateAllUsersRecordsLog(typeOfRecords) {
