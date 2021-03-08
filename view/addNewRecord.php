@@ -10,7 +10,7 @@
 
         <div class="container">
             <h2 class="display-6 mt-5 mb-5 text-center">Nouveau relevé</h2>
-
+            
             <?php include('partials/recordForm.php'); ?>
 
         </div>

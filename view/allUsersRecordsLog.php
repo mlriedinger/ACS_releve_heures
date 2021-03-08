@@ -27,6 +27,7 @@
                             <th scope="col">Statut</th>
                             <th scope="col">Modifié le</th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,13 @@
             </div>
 
             <?php include('partials/modal.php'); ?>
+
+            <?php 
+                if($_SESSION['success'] == 1) {
+                    include('partials/toastAlert.php');
+                    unset($_SESSION['success']);
+                }
+            ?>
             
         </div>
 
@@ -49,6 +57,8 @@
                 updateAllUsersRecordsLog('All');
             });
         </script>
+
+        <?php include('partials/initalizeToastScript.php'); ?>
         
     </body>
 </html>

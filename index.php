@@ -41,11 +41,11 @@ if(isset($_GET['action'])){
             break;
         // Page historique équipe
         case "showTeamRecordsLog":
-            displayRecordsLog();
+            displayTeamRecordsLog();
             break;
         // Page historique global
         case "showAllRecordsLog":
-            displayRecordsLog();
+            displayAllRecordsLog();
             break;
 
         // Ajout d'un nouveau relevé

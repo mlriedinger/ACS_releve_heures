@@ -25,15 +25,12 @@ function displayPersonnalRecordsLog(){
     if(isset($_SESSION['id'])) require('view/personnalRecordsLog.php');
 }
 
-function displayRecordsLog(){
-    switch($_SESSION['id_group']){
-        case 1:
-            require('view/allUsersRecordsLog.php');
-            break;
-        case 2:
-            require('view/teamRecordsLog.php');
-            break;
-    }
+function displayTeamRecordsLog(){
+    require('view/teamRecordsLog.php');
+}
+
+function displayAllRecordsLog(){
+    require('view/allUsersRecordsLog.php');
 }
 
 
@@ -57,8 +54,14 @@ function registerNewRecord(){
     $recordManager = new RecordManager();
     $isSendingSuccessfull = $recordManager->sendNewRecord($_SESSION['id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment'], $_SESSION['id_group']);
     
-    if($isSendingSuccessfull) header('Location: index.php?action=showPersonnalRecordsLog');
-    else require('view/addNewRecord.php');
+    if($isSendingSuccessfull) {
+        $_SESSION['success'] = true;
+        header('Location: index.php?action=showPersonnalRecordsLog');
+    }
+    else {
+        $_SESSION['success'] = false;
+        require('view/addNewRecord.php');
+    }
 }
 
 
@@ -66,9 +69,11 @@ function registerNewRecord(){
 
 function updateRecord(){
     $recordManager = new RecordManager();
-    $recordManager->updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
+    $isUpdateSuccessfull = $recordManager->updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
     
-    header('Location: index.php?action=showPersonnalRecordsLog');
+    $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
+    // Renvoie sur la dernière page visitée avant l'envoi du formulaire
+    echo '<script>window.history.go(-1);</script>';
 }
 
 
@@ -88,8 +93,16 @@ function updateRecordStatus(){
             die('Erreur : ' . $e->getMessage());
         }
     }
-    if($isUpdateSuccessfull) header('Location: index.php?action=showHomePage');
-    else require('view/recordsToCheck');
+    
+    if($isUpdateSuccessfull) {
+        $_SESSION['success'] = true;
+        // Renvoie sur la dernière page visitée avant l'envoi du formulaire
+        echo '<script>window.history.go(-1);</script>';
+    }
+    else {
+        $_SESSION['success'] = false;
+        require('view/recordsToCheck.php');
+    }
 }
 
 
@@ -97,8 +110,9 @@ function updateRecordStatus(){
 
 function deleteRecord(){
     $recordManager = new RecordManager();
-    $recordManager->deleteRecord($_POST['record_id'], $_POST['comment']);
+    $isDeleteSuccessfull = $recordManager->deleteRecord($_POST['record_id'], $_POST['comment']);
 
+    $isDeleteSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
     // Renvoie sur la dernière page visitée avant l'envoi du formulaire
     echo '<script>window.history.go(-1);</script>';
 }

@@ -71,10 +71,21 @@ function appendLine(tableID, data, typeOfRecord, counter){
 
         newIsValid.innerHTML += html;
         newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[8] + ')"><i class="far fa-trash-alt"></i></button>';
+    
+        var formControlButtons = [
+            '<div class="row mb-3 justify-content-md-center">',      
+                '<div class="col-lg mb-5 text-end">',
+                    '<input type="button" value="Annuler" class="btn btn-light p-3"/>',
+                    '<input type="submit" value="Valider" class="btn btn-dark"/>',
+                '</div>',
+            '</div>'
+        ].join('');
+    
+        $(formControlButtons).insertAfter("#records_log");
     } 
 
     // Si on demande les relevés d'équipe ou l'intégralité des relevés
-    else if (typeOfRecord == 'All'){
+    else {
         // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
         var newFirstName = newRow.insertCell(1);
         var newLastName = newRow.insertCell(2);
@@ -100,26 +111,6 @@ function appendLine(tableID, data, typeOfRecord, counter){
             newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[9] + ')"><i class="far fa-trash-alt"></i></button>';
         } else newStatus.innerHTML += "Validé";
 
-        newUpdateDate.innerHTML += data[8];
-    }
-
-    else {
-        // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
-        var newFirstName = newRow.insertCell(1);
-        var newLastName = newRow.insertCell(2);
-        var newStartTime = newRow.insertCell(3);
-        var newEndTime = newRow.insertCell(4);
-        var newComment = newRow.insertCell(5);
-        var newStatus = newRow.insertCell(6);
-        var newUpdateDate = newRow.insertCell(7);
-
-        // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
-        newFirstName.innerHTML += data[2];
-        newLastName.innerHTML += data[1];
-        newStartTime.innerHTML += data[3];
-        newEndTime.innerHTML += data[4];
-        newComment.innerHTML += data[5];
-        data[6] == 0 ? newStatus.innerHTML += "En attente" : newStatus.innerHTML += "Validé";
         newUpdateDate.innerHTML += data[8];
     }
 }
@@ -151,7 +142,7 @@ function updateFormInputs(data){
 */
 
 function parseMultipleLinesRequest(data){
-    //console.log(data);
+    console.log(data);
     var tab_data = data.records;
     var typeOfRecords = data.typeOfRecords;
 

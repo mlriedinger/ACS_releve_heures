@@ -29,22 +29,14 @@
                                 <th scope="col">
                                     <button type="button" class="btn btn-dark btn-sm" onclick="selectAll();" id="selectAllButton">Sélectionner tout</button>
                                 </th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr></tr>
                             <!-- Ici on insère dynamiquement les lignes du tableau avec Javascript-->
                         </tbody>
-                    </table> 
-
-                    <div class="row mb-3 justify-content-md-center">
-                        
-                        <div class="col-lg mb-5 text-end">
-                            <input type="button" value="Annuler" class="btn btn-light p-3"/>
-                            <input type="submit" value="Valider" class="btn btn-dark"/>
-                        </div>
-                        
-                    </div>
+                    </table>
 
                 </form>
 

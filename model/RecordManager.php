@@ -73,7 +73,7 @@ class RecordManager extends DatabaseConnection
     */
 
     public function updateRecord($id_record, $start_time, $end_time, $comment){
-
+        $isUpdateSuccessfull = false;
         try{
             $pdo = $this->dbConnect();
             $query = $pdo->prepare('UPDATE t_saisie_heure
@@ -89,9 +89,13 @@ class RecordManager extends DatabaseConnection
             // Décommenter la ligne suivante pour débugger la requête
             // $query->debugDumpParams();
 
+            $isUpdateSuccessfull = true;
+
         } catch(Exception $e) {
             die('Erreur : ' . $e->getMessage());
         }
+
+        return $isUpdateSuccessfull;
     }
 
 
@@ -112,7 +116,7 @@ class RecordManager extends DatabaseConnection
             $query->execute(array('id_record' => $id_record));
 
             // Décommenter la ligne suivante pour débugger la requête
-                // $query->debugDumpParams();
+            // $query->debugDumpParams();
 
             $isUpdateSuccessfull = true;
 
@@ -131,6 +135,7 @@ class RecordManager extends DatabaseConnection
     */
 
     public function deleteRecord($id_record, $comment){
+        $isDeleteSuccessfull = false;
         try{
             $pdo = $this->dbConnect();
 
@@ -142,9 +147,16 @@ class RecordManager extends DatabaseConnection
                 'comment' => $comment
             ));
 
+            // Décommenter la ligne suivante pour débugger la requête
+            // $query->debugDumpParams();
+
+            $isDeleteSuccessfull = true;
+
         } catch(Exception $e){
             die('Erreur : ' . $e->getMessage());
         }
+
+        return $isDeleteSuccessfull;
     }
 
 
@@ -253,7 +265,8 @@ class RecordManager extends DatabaseConnection
 
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT t_saisie_heure.id_chantier, 
+        $query = $pdo->prepare('SELECT 
+        t_saisie_heure.id_chantier, 
         t_login.Nom, 
         t_login.Prenom, 
         t_saisie_heure.date_hrs_debut, 
