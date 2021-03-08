@@ -22,7 +22,7 @@
                 } else {
                     echo ' 
                     <li class="nav-item ps-4">
-                        <a class="nav-link" href="index.php?action=showPersonnalRecordsLog">Historique</a>
+                        <a class="nav-link" href="index.php?action=showPersonalRecordsLog">Historique</a>
                     </li>';
                 } ?>
             </ul>

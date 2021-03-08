@@ -36,8 +36,8 @@ if(isset($_GET['action'])){
             displayValidationForm();
             break;
         // Page historique personnel
-        case "showPersonnalRecordsLog":
-            displayPersonnalRecordsLog();
+        case "showPersonalRecordsLog":
+            displayPersonalRecordsLog();
             break;
         // Page historique équipe
         case "showTeamRecordsLog":

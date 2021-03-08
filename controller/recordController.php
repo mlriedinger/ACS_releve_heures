@@ -9,7 +9,7 @@ require_once('model/RecordManager.php');
 /* Fonctions pour gérer l'affichage des pages :
     * displayNewRecordForm() : page de saisie d'un nouveau relevé, 
     * displayValidationForm() : page de validation de relevés en attente
-    * displayPersonnalRecordsLog() : historique personnel, 
+    * displayPersonalRecordsLog() : historique personnel, 
     * displayRecordsLog() : historique équipe ou global en fonction du type d'utilisateur 
 */
 
@@ -21,8 +21,8 @@ function displayValidationForm(){
     if(isset($_SESSION['id'])) require('view/recordsToCheck.php');
 }
 
-function displayPersonnalRecordsLog(){
-    if(isset($_SESSION['id'])) require('view/personnalRecordsLog.php');
+function displayPersonalRecordsLog(){
+    if(isset($_SESSION['id'])) require('view/personalRecordsLog.php');
 }
 
 function displayTeamRecordsLog(){
@@ -93,7 +93,7 @@ function updateRecordStatus(){
             die('Erreur : ' . $e->getMessage());
         }
     }
-    
+
     if($isUpdateSuccessfull) {
         $_SESSION['success'] = true;
         // Renvoie sur la dernière page visitée avant l'envoi du formulaire
