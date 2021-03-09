@@ -29,36 +29,31 @@ class RecordManager extends DatabaseConnection
     public function sendNewRecord($id_user, $start_time, $end_time, $comment, $id_group){
         $isSendingSuccessfull = false;
         $validation_status = 0;
-
-        try{
-            $pdo = $this->dbConnect();
-
-            if($id_group == 1) $validation_status = 1;
-            
-            $query = $pdo->prepare('INSERT INTO t_saisie_heure(id, id_login, date_hrs_debut, date_hrs_fin, statut_validation, commentaire) 
-            VALUES (
-                :id,
-                :id_user, 
-                :start_time, 
-                :end_time, 
-                :validation_status,
-                :comment)');
-            $query->execute(array(
-                'id' => 0,
-                'id_user' => $id_user, 
-                'start_time' => $start_time,
-                'end_time' => $end_time,
-                'validation_status' => $validation_status,
-                'comment' => $comment
-            ));
+        if($id_group == 1) $validation_status = 1;
         
-            // Décommenter la ligne suivante pour débugger la requête
-            // $query->debugDumpParams();
+        $pdo = $this->dbConnect();
+      
+        $query = $pdo->prepare('INSERT INTO t_saisie_heure(id, id_login, date_hrs_debut, date_hrs_fin, statut_validation, commentaire) 
+        VALUES (
+            :id,
+            :id_user, 
+            :start_time, 
+            :end_time, 
+            :validation_status,
+            :comment)');
+        $attempt = $query->execute(array(
+            'id' => 0,
+            'id_user' => $id_user, 
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'validation_status' => $validation_status,
+            'comment' => $comment
+        ));
+    
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
 
-            $isSendingSuccessfull = true;
-        } catch(Exception $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        if($attempt) $isSendingSuccessfull = true;
 
         return $isSendingSuccessfull;
     }
@@ -165,13 +160,13 @@ class RecordManager extends DatabaseConnection
         * $recordId : id relevé
     */
 
-    public function getRecord($recordId){
+    public function getRecord($id_record){
         header("Content-Type: text/json");
 
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE ID = :id_record');
-        $query->execute(array('id_record' => $recordId));
+        $query->execute(array('id_record' => $id_record));
         $recordData = $query->fetch(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête

@@ -7,13 +7,13 @@ require_once('model/LoginManager.php');
 
 /* Fonctions pour gérer l'affichage des pages de connexion et d'accueil */
 
-function verifyLogin() {
+function verifyLogin($login, $password) {
     $loginManager = new LoginManager();
+    $userData = $loginManager->getUserData($login, $password);
 
-    $userData = $loginManager->getUserData($_POST['login'], $_POST['password']);
-
-    if (!isset($_POST['password']) || !$userData) {
+    if (!isset($password) || !$userData) {
         require('view/login.php');
+        
     } else {
         session_start();
 
@@ -24,20 +24,25 @@ function verifyLogin() {
         $_SESSION['firstname'] = $userData['Prenom'];
         $_SESSION['isAdmin'] = $userData['Administrateur'];
         $_SESSION['isActive'] = $userData['CompteActif'];
-        $_SESSION['isDeleted'] = $dauserDatata['Supprimer'];
+        $_SESSION['isDeleted'] = $userData['Supprimer'];
 
         require('view/home.php');
     }
 }
 
-function displayHomePage(){
-    session_start();
-
-    if(isset($_SESSION['id'])) require('view/home.php');
+function displayLoginPage(){
+    require('view/login.php');
 }
+
+function displayHomePage(){
+    require('view/home.php');
+}
+
+
+/* Fonction pour gérer la déconnexion de l'application */
 
 function logout(){
     session_destroy();
-    header('Location: index.php?action=login');
+    header('Location: index.php');
     exit();
 }

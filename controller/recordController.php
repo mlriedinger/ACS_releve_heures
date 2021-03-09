@@ -14,15 +14,15 @@ require_once('model/RecordManager.php');
 */
 
 function displayNewRecordForm(){
-    if(isset($_SESSION['id'])) require('view/addNewRecord.php');
+    require('view/addNewRecord.php');
 }
 
 function displayValidationForm(){
-    if(isset($_SESSION['id'])) require('view/recordsToCheck.php');
+    require('view/recordsToCheck.php');
 }
 
 function displayPersonalRecordsLog(){
-    if(isset($_SESSION['id'])) require('view/personalRecordsLog.php');
+    require('view/personalRecordsLog.php');
 }
 
 function displayTeamRecordsLog(){
@@ -50,10 +50,10 @@ function getDeleteConfirmationForm(){
 
 /* Fonction pour enregistrer un nouveau relevé en BDD */
 
-function addNewRecord(){
+function addNewRecord($id_user, $start_time, $end_time, $comment, $id_group){
     $recordManager = new RecordManager();
-    $isSendingSuccessfull = $recordManager->sendNewRecord($_SESSION['id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment'], $_SESSION['id_group']);
-    
+    $isSendingSuccessfull = $recordManager->sendNewRecord($id_user, $start_time, $end_time, $comment, $id_group);
+
     if($isSendingSuccessfull) {
         $_SESSION['success'] = true;
         header('Location: index.php?action=showPersonalRecordsLog');

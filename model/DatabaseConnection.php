@@ -42,12 +42,8 @@ class DatabaseConnection
             $this->dbName = $dbName;
         }
 
-        try{
-            $pdo = new PDO('mysql:host=' . $this->dbHost . ';port=' . $this->dbPort . ';dbname=' . $this->dbName . ';charset=utf8', $this->dbUser, $this->dbPassword);
-            // echo "Connexion réussie !";
-        } catch(Exception $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        $pdo = new PDO('mysql:host=' . $this->dbHost . ';port=' . $this->dbPort . ';dbname=' . $this->dbName . ';charset=utf8', $this->dbUser, $this->dbPassword);
+        // echo "Connexion réussie !";
 
         return $pdo;
     }

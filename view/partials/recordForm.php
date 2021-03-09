@@ -7,12 +7,12 @@
 
             <div class="col-sm-4 mb-3">
                 <span class="input-group-text" id="datetime_start_selector">Date et heure de début</span>
-                <input type="datetime-local" name="datetime_start" id="datetime_start" class="form-control" aria-label="Sélectionnez une date et une heure de début" aria-describedby="datetime_start_selector" />
+                <input type="datetime-local" name="datetime_start" id="datetime_start" class="form-control" aria-label="Sélectionnez une date et une heure de début" aria-describedby="datetime_start_selector" required/>
             </div>
 
             <div class="col-sm-4 mb-3">
                 <span class="input-group-text" id="datetime_end_selector">Date et heure de fin</span>
-                <input type="datetime-local" name="datetime_end" id="datetime_end" class="form-control" aria-label="Sélectionnez une date et une heure de fin" aria-describedby="datetime_end_selector" />
+                <input type="datetime-local" name="datetime_end" id="datetime_end" class="form-control" aria-label="Sélectionnez une date et une heure de fin" aria-describedby="datetime_end_selector" required/>
             </div>
 
         </div>
