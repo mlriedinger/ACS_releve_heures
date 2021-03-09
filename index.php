@@ -63,11 +63,14 @@ if(isset($_GET['action'])){
                     else throw new Exception('Les champs dates doivent être obligatoirement remplis.');
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
-                
                 break;
             // Modification d'un relevé non validé
             case "updateRecord":
-                updateRecord();
+                if(isset($_SESSION['id'])){
+                    if(isset($_POST['record_id']) && !empty($_POST['datetime_start']) && !empty($_POST['datetime_end'])) updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
+                    else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
+                } 
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
             // Modification du statut du relevé
             case "updateRecordStatus":

@@ -69,26 +69,23 @@ class RecordManager extends DatabaseConnection
 
     public function updateRecord($id_record, $start_time, $end_time, $comment){
         $isUpdateSuccessfull = false;
-        try{
-            $pdo = $this->dbConnect();
-            $query = $pdo->prepare('UPDATE t_saisie_heure
-            SET date_hrs_debut = :start_time, date_hrs_fin = :end_time, commentaire = :comment
-            WHERE ID = :id_record');
-            $query->execute(array(
-                'id_record' => $id_record,
-                'start_time' => $start_time,
-                'end_time' => $end_time,
-                'comment' => $comment
-            ));
 
-            // Décommenter la ligne suivante pour débugger la requête
-            // $query->debugDumpParams();
+        $pdo = $this->dbConnect();
 
-            $isUpdateSuccessfull = true;
+        $query = $pdo->prepare('UPDATE t_saisie_heure
+        SET date_hrs_debut = :start_time, date_hrs_fin = :end_time, commentaire = :comment
+        WHERE ID = :id_record');
+        $attempt = $query->execute(array(
+            'id_record' => $id_record,
+            'start_time' => $start_time,
+            'end_time' => $end_time,
+            'comment' => $comment
+        ));
 
-        } catch(Exception $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
+
+        if($attempt) $isUpdateSuccessfull = true;
 
         return $isUpdateSuccessfull;
     }

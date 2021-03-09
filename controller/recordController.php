@@ -67,9 +67,9 @@ function addNewRecord($id_user, $start_time, $end_time, $comment, $id_group){
 
 /* Fonction pour modifier un relevé qui n'a pas encore été validé */
 
-function updateRecord(){
+function updateRecord($id_record, $start_time, $end_time, $comment){
     $recordManager = new RecordManager();
-    $isUpdateSuccessfull = $recordManager->updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
+    $isUpdateSuccessfull = $recordManager->updateRecord($id_record, $start_time, $end_time, $comment);
     
     $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
     // Renvoie sur la dernière page visitée avant l'envoi du formulaire
