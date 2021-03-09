@@ -71,17 +71,6 @@ function appendLine(tableID, data, typeOfRecord, counter){
 
         newIsValid.innerHTML += html;
         newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[8] + ')"><i class="far fa-trash-alt"></i></button>';
-    
-        var formControlButtons = [
-            '<div class="row mb-3 justify-content-md-center">',      
-                '<div class="col-lg mb-5 text-end">',
-                    '<input type="button" value="Annuler" class="btn btn-light p-3"/>',
-                    '<input type="submit" value="Valider" class="btn btn-dark"/>',
-                '</div>',
-            '</div>'
-        ].join('');
-    
-        $(formControlButtons).insertAfter("#records_log");
     } 
 
     // Si on demande les relevés d'équipe ou l'intégralité des relevés
@@ -142,7 +131,7 @@ function updateFormInputs(data){
 */
 
 function parseMultipleLinesRequest(data){
-    console.log(data);
+    //console.log(data);
     var tab_data = data.records;
     var typeOfRecords = data.typeOfRecords;
 
@@ -154,6 +143,20 @@ function parseMultipleLinesRequest(data){
 
     // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau
     if(!tab_data.length) $('<p class="lead text-center mt-5">Aucun relevé à afficher.</p>').insertAfter("#records_log");
+
+    // Si la requête concerne une liste de relevés à valider, on insère les boutons de contrôledu formulaire de validation après le tableau
+    if(tab_data.length && typeOfRecords == 'Check') {
+        var formControlButtons = [
+            '<div class="row mb-3 justify-content-md-center">',      
+                '<div class="col-lg mb-5 text-end">',
+                    '<input type="button" value="Annuler" class="btn btn-light p-3"/>',
+                    '<input type="submit" value="Valider" class="btn btn-dark"/>',
+                '</div>',
+            '</div>'
+        ].join('');
+    
+        $(formControlButtons).insertAfter("#records_log");
+    }
 
     // On boucle sur tab_data pour récupérer chaque objet (relevé d'heure)
     for (var i = 0; i < tab_data.length; i++) {
