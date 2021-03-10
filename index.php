@@ -82,7 +82,16 @@ if(isset($_GET['action'])){
                 break;
             // Supprimer un relevé
             case "deleteRecord":
-                deleteRecord();
+                if(isset($_SESSION['id'])){
+                    if($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2'){
+                        if(isset($_POST['record_id']) && !empty($_POST['comment'])) deleteRecord($_POST['record_id'], $_POST['comment']);
+                        else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée. NB : Le champ "commentaire" est obligatoire.');
+                    } else {
+                        if(isset($_POST['record_id'])) deleteRecord($_POST['record_id'], $_POST['comment']); 
+                        else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
+                    }
+                }
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
 
             // Renvoyer le formulaire de saisie

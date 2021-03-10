@@ -123,25 +123,21 @@ class RecordManager extends DatabaseConnection
 
     public function deleteRecord($id_record, $comment){
         $isDeleteSuccessfull = false;
-        try{
-            $pdo = $this->dbConnect();
+    
+        $pdo = $this->dbConnect();
 
-            $query = $pdo->prepare('UPDATE t_saisie_heure
-            SET supprimer = 1, commentaire = :comment
-            WHERE ID=:id_record');
-            $query->execute(array(
-                'id_record' => $id_record,
-                'comment' => $comment
-            ));
+        $query = $pdo->prepare('UPDATE t_saisie_heure
+        SET supprimer = 1, commentaire = :comment
+        WHERE ID=:id_record');
+        $attempt = $query->execute(array(
+            'id_record' => $id_record,
+            'comment' => $comment
+        ));
 
-            // Décommenter la ligne suivante pour débugger la requête
-            // $query->debugDumpParams();
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
 
-            $isDeleteSuccessfull = true;
-
-        } catch(Exception $e){
-            die('Erreur : ' . $e->getMessage());
-        }
+        if($attempt) $isDeleteSuccessfull = true;
 
         return $isDeleteSuccessfull;
     }

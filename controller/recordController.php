@@ -98,9 +98,9 @@ function updateRecordStatus($check_list){
 
 /* Fonction pour "supprimer" un relevé d'heure (en réalité le rendre inactif) */
 
-function deleteRecord(){
+function deleteRecord($id_record, $comment){
     $recordManager = new RecordManager();
-    $isDeleteSuccessfull = $recordManager->deleteRecord($_POST['record_id'], $_POST['comment']);
+    $isDeleteSuccessfull = $recordManager->deleteRecord($id_record, $comment);
 
     $isDeleteSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
     // Renvoie sur la dernière page visitée avant l'envoi du formulaire
