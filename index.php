@@ -74,7 +74,11 @@ if(isset($_GET['action'])){
                 break;
             // Modification du statut du relevé
             case "updateRecordStatus":
-                updateRecordStatus();
+                if(isset($_SESSION['id'])){
+                    if(!empty($_POST['check_list'])) updateRecordStatus($_POST['check_list']);
+                    else throw new Exception('Veuillez sélectionner un ou plusieurs relevé(s) à valider.');
+                } 
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
             // Supprimer un relevé
             case "deleteRecord":

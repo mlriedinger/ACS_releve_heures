@@ -79,30 +79,20 @@ function updateRecord($id_record, $start_time, $end_time, $comment){
 
 /* Fonction pour mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager */
 
-function updateRecordStatus(){
+function updateRecordStatus($check_list){   
     $recordManager = new RecordManager();
-    $isUpdateSuccessfull = false;
+    $updateResults = [];
 
-    if(!empty($_POST['check_list'])){
-        try {
-            foreach($_POST['check_list'] as $lineChecked){
-                $recordManager->updateRecordStatus($lineChecked);  
-            }
-            $isUpdateSuccessfull = true;      
-        } catch(Exception $e) {
-            die('Erreur : ' . $e->getMessage());
-        }
+    foreach($check_list as $lineChecked){
+        $updateAttempt = $recordManager->updateRecordStatus($lineChecked); 
+        if($updateAttempt) array_push($updateResults, $updateAttempt);
     }
 
-    if($isUpdateSuccessfull) {
-        $_SESSION['success'] = true;
-        // Renvoie sur la dernière page visitée avant l'envoi du formulaire
-        echo '<script>window.history.go(-1);</script>';
-    }
-    else {
-        $_SESSION['success'] = false;
-        require('view/recordsToCheck.php');
-    }
+    if(count($check_list) == count($updateResults)) $isUpdateSuccessfull = true;      
+
+    $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
+    // Renvoie sur la dernière page visitée avant l'envoi du formulaire
+    echo '<script>window.history.go(-1);</script>';
 }
 
 
