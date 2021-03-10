@@ -15,46 +15,55 @@ if(isset($_GET['action'])){
 
     try {
         switch($_GET['action']){
+
             // Page de connexion
             case "login":
                 if(isset($_POST['login']) && isset($_POST['password'])) verifyLogin($_POST['login'], $_POST['password']);
                 else throw new Exception('Veuillez remplir tous les champs.');
                 break;
+
             // Déconnexion
             case "logout":
                 logout();
                 break;
+
 
             // Page d'accueil
             case "showHomePage":
                 if(isset($_SESSION['id'])) displayHomePage();
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Page "Nouveau Relevé"
             case "showNewRecordForm":
                 if(isset($_SESSION['id'])) displayNewRecordForm();
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Page de validation
             case "showRecordsToCheck":
                 if(isset($_SESSION['id']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) displayValidationForm();
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
+
             // Page historique personnel
             case "showPersonalRecordsLog":
                 if(isset($_SESSION['id'])) displayPersonalRecordsLog();
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Page historique équipe
             case "showTeamRecordsLog":
                 if(isset($_SESSION['id']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) displayTeamRecordsLog();
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
+
             // Page historique global
             case "showAllRecordsLog":
                 if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') displayAllRecordsLog();
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
+
 
             // Ajout d'un nouveau relevé
             case "addNewRecord":
@@ -64,14 +73,16 @@ if(isset($_GET['action'])){
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Modification d'un relevé non validé
             case "updateRecord":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['record_id']) && !empty($_POST['datetime_start']) && !empty($_POST['datetime_end'])) updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
+                    if(isset($_POST['record_id']) && is_numeric($_POST['record_id']) && !empty($_POST['datetime_start']) && !empty($_POST['datetime_end'])) updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
                     else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+                
             // Modification du statut du relevé
             case "updateRecordStatus":
                 if(isset($_SESSION['id'])){
@@ -80,48 +91,78 @@ if(isset($_GET['action'])){
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Supprimer un relevé
             case "deleteRecord":
                 if(isset($_SESSION['id'])){
                     if($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2'){
-                        if(isset($_POST['record_id']) && !empty($_POST['comment'])) deleteRecord($_POST['record_id'], $_POST['comment']);
+                        if(isset($_POST['record_id']) && is_numeric($_POST['record_id']) && !empty($_POST['comment'])) deleteRecord($_POST['record_id'], $_POST['comment']);
                         else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée. NB : Le champ "commentaire" est obligatoire.');
                     } else {
-                        if(isset($_POST['record_id'])) deleteRecord($_POST['record_id'], $_POST['comment']); 
+                        if(isset($_POST['record_id']) && is_numeric($_POST['record_id'])) deleteRecord($_POST['record_id'], $_POST['comment']); 
                         else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
                     }
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
 
+
             // Renvoyer le formulaire de saisie
             case "getRecordForm":
-                getRecordForm();
+                if(isset($_SESSION['id'])) getRecordForm();
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Renvoyer le formulaire de confirmation de suppression
             case "getDeleteConfirmationForm":
-                getDeleteConfirmationForm();
+                if(isset($_SESSION['id'])) getDeleteConfirmationForm();
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
 
             // Récupérer les données d'un relevé
             case "getRecordData":
-                getRecordData($_POST['recordID']);
+                if(isset($_SESSION['id'])){
+                    if(isset($_POST['recordID']) && is_numeric($_POST['recordID'])) getRecordData($_POST['recordID']);
+                    else throw new Exception('Un problème est survenu.');
+                }
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Récupérer les données de l'historique personnel
             case "getPersonalRecordsLog":
-                getUserRecords($_POST['typeOfRecords']);
+                if(isset($_SESSION['id'])){
+                    if(isset($_POST['typeOfRecords'])) getUserRecords($_POST['typeOfRecords']);
+                    else throw new Exception('Un problème est survenu.');
+                }
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Récupérer les relevés en attente de validation
             case "getRecordsToCheck":
-                getTeamRecordsToCheck($_POST['typeOfRecords']);
+                if(isset($_SESSION['id'])){
+                    if(isset($_POST['typeOfRecords']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecordsToCheck($_POST['typeOfRecords']);
+                    else throw new Exception('Un problème est survenu.');
+                }
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Récupérer les données de l'historique équipe
             case "getTeamRecordsLog":
-                getTeamRecords($_POST['typeOfRecords']);
+                if(isset($_SESSION['id'])){
+                    if(isset($_POST['typeOfRecords']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecords($_POST['typeOfRecords']);
+                    else throw new Exception('Un problème est survenu.');
+                }
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
+
             // Récupérer les données de l'historique global
             case "getAllUsersRecordsLog":
-                getAllUsersRecords($_POST['typeOfRecords']);
+                if(isset($_SESSION['id'])){
+                    if(isset($_POST['typeOfRecords']) && $_SESSION['id_group'] == '1') getAllUsersRecords($_POST['typeOfRecords']);
+                    else throw new Exception('Un problème est survenu.');
+                }
+                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
         }
     }catch (Exception $e){
