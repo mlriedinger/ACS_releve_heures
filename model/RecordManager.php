@@ -262,12 +262,12 @@ class RecordManager extends DatabaseConnection
         * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getRecordsFromTeam($id_manager, $type_of_records){
+    public function getRecordsFromTeam($id_manager, $type_of_records, $scope){
         header("Content-Type: text/json");
 
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT 
+        $sql = "SELECT 
         t_saisie_heure.id_chantier, 
         t_login.Nom, 
         t_login.Prenom, 
@@ -277,14 +277,30 @@ class RecordManager extends DatabaseConnection
         t_saisie_heure.statut_validation, 
         t_saisie_heure.date_hrs_creation, 
         t_saisie_heure.date_hrs_modif,
-        t_saisie_heure.ID
+        t_saisie_heure.ID,
+        t_saisie_heure.supprimer
         FROM t_equipe
         INNER JOIN t_login
         ON t_equipe.id_membre = t_login.ID
         INNER JOIN t_saisie_heure
         ON t_login.ID = t_saisie_heure.id_login
-        WHERE t_equipe.id_manager = :id_manager AND t_saisie_heure.supprimer = 0
-        ORDER BY date_hrs_creation DESC');
+        WHERE t_equipe.id_manager = :id_manager";
+
+        switch($scope) {
+            case "all":
+                $sql .= " AND t_saisie_heure.supprimer = 0";
+                break;
+            case "valid":
+                $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
+                break;
+            case "deleted":
+                $sql .= " AND t_saisie_heure.supprimer = 1";
+                break;
+        }
+
+        $sql .= " ORDER BY date_hrs_creation DESC";
+
+        $query = $pdo->prepare($sql);
         $query->execute(array('id_manager' => $id_manager));
         $teamRecords["typeOfRecords"] = $type_of_records;
         $teamRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -301,12 +317,12 @@ class RecordManager extends DatabaseConnection
         * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getAllRecords($type_of_records){
+    public function getAllRecords($type_of_records, $scope){
         header("Content-Type: text/json");
 
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT 
+        $sql = "SELECT 
         t_saisie_heure.id_chantier, 
         t_login.Nom, 
         t_login.Prenom, 
@@ -316,12 +332,27 @@ class RecordManager extends DatabaseConnection
         t_saisie_heure.statut_validation, 
         t_saisie_heure.date_hrs_creation, 
         t_saisie_heure.date_hrs_modif,
-        t_saisie_heure.ID 
+        t_saisie_heure.ID,
+        t_saisie_heure.supprimer
         FROM t_saisie_heure
         INNER JOIN t_login
-        ON t_saisie_heure.id_login = t_login.ID
-        WHERE t_saisie_heure.supprimer = 0
-        ORDER BY date_hrs_creation DESC');
+        ON t_saisie_heure.id_login = t_login.ID";
+
+        switch($scope) {
+            case "all":
+                $sql .= " AND t_saisie_heure.supprimer = 0";
+                break;
+            case "valid":
+                $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
+                break;
+            case "deleted":
+                $sql .= " AND t_saisie_heure.supprimer = 1";
+                break;
+        }
+
+        $sql .= " ORDER BY date_hrs_creation DESC";
+
+        $query = $pdo->prepare($sql);
         $query->execute();
         $records["typeOfRecords"] = $type_of_records;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);

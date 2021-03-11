@@ -40,6 +40,8 @@
 
                 </form>
 
+                <p id="no_record_message" class="lead text-center mt-5" hidden>Aucun relevé à afficher.</p>
+
             </div>
 
             <?php include('partials/modal.php'); ?>

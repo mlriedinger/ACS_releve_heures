@@ -150,7 +150,7 @@ if(isset($_GET['action'])){
             // Récupérer les données de l'historique équipe
             case "getTeamRecordsLog":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecords($_POST['typeOfRecords']);
+                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecords($_SESSION['id'], $_POST['typeOfRecords'], $_POST['scope']);
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -159,7 +159,7 @@ if(isset($_GET['action'])){
             // Récupérer les données de l'historique global
             case "getAllUsersRecordsLog":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords']) && $_SESSION['id_group'] == '1') getAllUsersRecords($_POST['typeOfRecords']);
+                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && $_SESSION['id_group'] == '1') getAllUsersRecords($_POST['typeOfRecords'], $_POST['scope']);
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');

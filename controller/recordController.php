@@ -133,12 +133,12 @@ function getTeamRecordsToCheck($typeOfRecords){
     $recordManager->getTeamRecordsToCheck($_SESSION['id'], $typeOfRecords);
 }
 
-function getTeamRecords($typeOfRecords){
+function getTeamRecords($id_manager, $typeOfRecords, $scope){
     $recordManager = new RecordManager();
-    $recordManager->getRecordsFromTeam($_SESSION['id'], $typeOfRecords);
+    $recordManager->getRecordsFromTeam($id_manager, $typeOfRecords, $scope);
 }
 
-function getAllUsersRecords($typeOfRecords){
+function getAllUsersRecords($typeOfRecords, $scope){
     $recordManager = new RecordManager();
-    $recordManager->getAllRecords($typeOfRecords);
+    $recordManager->getAllRecords($typeOfRecords, $scope);
 }

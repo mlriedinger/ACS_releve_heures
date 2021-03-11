@@ -18,3 +18,10 @@ h1{
     background-color: #0388A6;
     border-color: #0388A6;
   }
+
+  .nav-tabs .nav-link.active,
+  .nav-tabs .nav-item.show .nav-link {
+    color:#fff;
+    background-color: #212529;
+    border-color:#dee2e6 #dee2e6 #fff;
+  }
