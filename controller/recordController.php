@@ -123,9 +123,9 @@ function getRecordData($recordId){
     $recordManager->getRecord($recordId);
 }
 
-function getUserRecords($typeOfRecords){
+function getUserRecords($id_user, $typeOfRecords, $scope){
     $recordManager = new RecordManager();
-    $recordManager->getRecordsFromUser($_SESSION['id'], $typeOfRecords);   
+    $recordManager->getRecordsFromUser($id_user, $typeOfRecords, $scope);   
 }
 
 function getTeamRecordsToCheck($typeOfRecords){

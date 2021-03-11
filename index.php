@@ -132,7 +132,7 @@ if(isset($_GET['action'])){
             // Récupérer les données de l'historique personnel
             case "getPersonalRecordsLog":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords'])) getUserRecords($_POST['typeOfRecords']);
+                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope'])) getUserRecords($_SESSION['id'], $_POST['typeOfRecords'], $_POST['scope']);
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -165,6 +165,8 @@ if(isset($_GET['action'])){
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
         }
+    } catch(PDOException $e){
+        echo 'Connexion impossible : ' . $e->getMessage();
     }catch (Exception $e){
         $errorMessage = $e->getMessage();
         echo $errorMessage;

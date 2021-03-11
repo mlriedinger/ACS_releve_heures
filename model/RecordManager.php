@@ -170,22 +170,41 @@ class RecordManager extends DatabaseConnection
         * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getRecordsFromUser($id_user, $type_of_records){
+    public function getRecordsFromUser($id_user, $type_of_records, $scope){
         header("Content-Type: text/json");
 
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT id_chantier, 
+        $sql = "SELECT id_chantier, 
         date_hrs_debut, 
         date_hrs_fin, 
         commentaire, 
         statut_validation, 
         date_hrs_creation, 
         date_hrs_modif,
-        ID 
+        ID,
+        supprimer 
         FROM t_saisie_heure 
-        WHERE id_login = :id_user AND supprimer = 0
-        ORDER BY date_hrs_creation DESC');
+        WHERE id_login = :id_user";
+
+        switch($scope) {
+            case "all":
+                $sql .= " AND supprimer = 0";
+                break;
+            case "valid":
+                $sql .= " AND statut_validation = 1 AND supprimer = 0";
+                break;
+            case "unchecked":
+                $sql .= " AND statut_validation = 0 AND supprimer = 0";
+                break;
+            case "deleted":
+                $sql .= " AND supprimer = 1";
+                break;
+        }
+
+        $sql .= " ORDER BY date_hrs_creation DESC";
+
+        $query = $pdo->prepare($sql);
         $query->execute(array('id_user' => $id_user));
         $userRecords["typeOfRecords"] = $type_of_records;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);

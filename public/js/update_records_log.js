@@ -7,7 +7,8 @@
 */
 
 function appendLine(tableID, data, typeOfRecord, counter){
-
+    console.log(data);
+    console.log(typeOfRecord);
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -35,9 +36,11 @@ function appendLine(tableID, data, typeOfRecord, counter){
         newComment.innerHTML += data[3];
         if(data[4] == 0){
             newStatus.innerHTML += "En attente";
-            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[7] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[7] + ')"><i class="far fa-trash-alt"></i></button>';
+            if(data[8] == 0){
+                // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
+                newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[7] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+                newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[7] + ')"><i class="far fa-trash-alt"></i></button>';
+            }
         } else newStatus.innerHTML += "Validé";
         newUpdateDate.innerHTML += data[6];
     } 
@@ -131,8 +134,9 @@ function updateFormInputs(data){
 */
 
 function parseMultipleLinesRequest(data){
-    //console.log(data);
+    // console.log(data.records);
     var tab_data = data.records;
+    //console.log(tab_data);
     var typeOfRecords = data.typeOfRecords;
 
     // On récupère la ligne vide du tableau
@@ -170,7 +174,7 @@ function parseMultipleLinesRequest(data){
             // On pousse uniquement les valeurs dans le tableau
             recordData.push(value);
         });
-
+        // console.log(recordData);
         // On appelle la fonction qui permet d'ajouter des lignes au tableau et on lui passe le tableau en paramètre
         appendLine('records_log', recordData, typeOfRecords, i);
     }
@@ -201,16 +205,16 @@ function parseUniqueLineRequest(data){
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function updatePersonnalRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
+function updatePersonalRecordsLog(typeOfRecords, scope) {
+    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
 ;}
 
 function updateAllUsersRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
 function updateTeamRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
 function displayRecordsToCheck(typeOfRecords) {
