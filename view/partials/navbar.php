@@ -26,20 +26,17 @@
                     </li>';
                 } ?>
             </ul>
+            
             <div class="navbar-text ps-4 pe-5">
                 <i class="fas fa-user pe-3"></i><?= $_SESSION['firstname'] . ' ' . $_SESSION['name']?>
             </div>
 
-            <div class="navbar-item ps-4 mt-2 mb-2 mb-lg-0">
-            <button type="button" class="btn btn-outline-dark" onclick="logOut()"><i class="fas fa-sign-out-alt"></i></button>
-            </div>
+            <ul class="navbar-nav ps-4 mb-2 mb-lg-0">
+                <li class="nav-item ps-4">
+                    <a class="nav-link active" aria-current="page" href="index.php?action=logout">Déconnexion</a>    
+                </li>
+            </ul>
             
         </div>
     </div>
 </nav>
-
-<script>
-    function logOut(){
-        window.location = 'index.php?action=logout';
-    }
-</script>
