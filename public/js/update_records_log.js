@@ -7,8 +7,6 @@
 */
 
 function appendLine(tableID, data, typeOfRecord, counter){
-    console.log(data);
-    console.log(typeOfRecord);
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -16,7 +14,7 @@ function appendLine(tableID, data, typeOfRecord, counter){
     var newRow = table.insertRow(-1);
 
     var newWorkSite = newRow.insertCell(0);
-    newWorkSite.innerHTML += data[0];
+    newWorkSite.innerHTML += data[counter].id_chantier;
 
 
     // Si on demande l'historique personnel
@@ -31,18 +29,18 @@ function appendLine(tableID, data, typeOfRecord, counter){
         var newDelete = newRow.insertCell(7);
 
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
-        newStartTime.innerHTML += data[1];
-        newEndTime.innerHTML += data[2];
-        newComment.innerHTML += data[3];
-        if(data[4] == 0){
+        newStartTime.innerHTML += data[counter].date_hrs_debut;
+        newEndTime.innerHTML += data[counter].date_hrs_fin;
+        newComment.innerHTML += data[counter].commentaire;
+        if(data[counter].statut_validation == 0){
             newStatus.innerHTML += "En attente";
-            if(data[8] == 0){
+            if(data[counter].supprimer == 0){
                 // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-                newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[7] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-                newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[7] + ')"><i class="far fa-trash-alt"></i></button>';
+                newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+                newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
             }
         } else newStatus.innerHTML += "Validé";
-        newUpdateDate.innerHTML += data[6];
+        newUpdateDate.innerHTML += data[counter].date_hrs_modif;
     } 
 
     // Si on demande les relevés en attente de validation
@@ -58,22 +56,22 @@ function appendLine(tableID, data, typeOfRecord, counter){
         var newDelete = newRow.insertCell(8);
         
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
-        newFirstName.innerHTML += data[2];
-        newLastName.innerHTML += data[1];
-        newStartTime.innerHTML += data[3];
-        newEndTime.innerHTML += data[4];
-        newComment.innerHTML += data[5];
-        newUpdateDate.innerHTML += data[7];
+        newFirstName.innerHTML += data[counter].Prenom;
+        newLastName.innerHTML += data[counter].Nom;
+        newStartTime.innerHTML += data[counter].date_hrs_debut;
+        newEndTime.innerHTML += data[counter].date_hrs_fin;
+        newComment.innerHTML += data[counter].commentaire;
+        newUpdateDate.innerHTML += data[counter].date_hrs_modif;
 
         var html = [
             '<div class="form-check form-switch">',
-                '<input class="form-check-input" type="checkbox" name="check_list[' + counter +']" id="recordValidationCheck' + counter +'" value="' + data[8] +'"/>',
+                '<input class="form-check-input" type="checkbox" name="check_list[' + counter +']" id="recordValidationCheck' + counter +'" value="' + data[counter].ID +'"/>',
                 '<label class="form-check-label" for="recordValidationCheck' + counter +'">Sélectionner</label>',
             '</div>'
         ].join('');
 
         newIsValid.innerHTML += html;
-        newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[8] + ')"><i class="far fa-trash-alt"></i></button>';
+        newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
     } 
 
     // Si on demande les relevés d'équipe ou l'intégralité des relevés
@@ -90,20 +88,22 @@ function appendLine(tableID, data, typeOfRecord, counter){
         var newDelete = newRow.insertCell(9);
 
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
-        newFirstName.innerHTML += data[2];
-        newLastName.innerHTML += data[1];
-        newStartTime.innerHTML += data[3];
-        newEndTime.innerHTML += data[4];
-        newComment.innerHTML += data[5];
+        newFirstName.innerHTML += data[counter].Prenom;
+        newLastName.innerHTML += data[counter].Nom;
+        newStartTime.innerHTML += data[counter].date_hrs_debut;
+        newEndTime.innerHTML += data[counter].date_hrs_fin;
+        newComment.innerHTML += data[counter].commentaire;
 
-        if(data[6] == '0'){
+        if(data[counter].statut_validation == '0'){
             newStatus.innerHTML += "En attente";
-            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[9] + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[9] + ')"><i class="far fa-trash-alt"></i></button>';
+            if(data[counter].supprimer == 0){
+                // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
+                newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+                newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
+            }
         } else newStatus.innerHTML += "Validé";
 
-        newUpdateDate.innerHTML += data[8];
+        newUpdateDate.innerHTML += data[counter].date_hrs_modif;
     }
 }
 
@@ -134,9 +134,7 @@ function updateFormInputs(data){
 */
 
 function parseMultipleLinesRequest(data){
-    // console.log(data.records);
     var tab_data = data.records;
-    //console.log(tab_data);
     var typeOfRecords = data.typeOfRecords;
 
     // On récupère la ligne vide du tableau
@@ -146,9 +144,10 @@ function parseMultipleLinesRequest(data){
     $("#records_log").children("tbody").html(tr_empty);
 
     // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau
-    if(!tab_data.length) $('<p class="lead text-center mt-5">Aucun relevé à afficher.</p>').insertAfter("#records_log");
+    if(!tab_data.length) document.getElementById("no_record_message").hidden = false;
+    else document.getElementById("no_record_message").hidden = true;
 
-    // Si la requête concerne une liste de relevés à valider, on insère les boutons de contrôledu formulaire de validation après le tableau
+    // Si la requête concerne une liste de relevés à valider, on insère les boutons de contrôle du formulaire de validation après le tableau
     if(tab_data.length && typeOfRecords == 'Check') {
         var formControlButtons = [
             '<div class="row mb-3 justify-content-md-center">',      
@@ -162,21 +161,12 @@ function parseMultipleLinesRequest(data){
         $(formControlButtons).insertAfter("#records_log");
     }
 
-    // On boucle sur tab_data pour récupérer chaque objet (relevé d'heure)
-    for (var i = 0; i < tab_data.length; i++) {
-        // On initialise un tableau vide
-        var recordData = [];
-
-         // On itère sur chaque objet (relevé d'heure) pour récupérer toutes les clés (noms de colonne BDD) /valeurs
-         $.each(tab_data[i], function(key, value) {
-            // console.log(key, value);
-
-            // On pousse uniquement les valeurs dans le tableau
-            recordData.push(value);
-        });
-        // console.log(recordData);
-        // On appelle la fonction qui permet d'ajouter des lignes au tableau et on lui passe le tableau en paramètre
-        appendLine('records_log', recordData, typeOfRecords, i);
+    if(tab_data.length){
+        //On boucle sur tab_data pour récupérer chaque objet (relevé d'heure)
+        for (var i = 0; i < tab_data.length; i++) {
+            // On appelle la fonction qui permet d'ajouter des lignes au tableau et on lui passe le tableau en paramètre
+            appendLine('records_log', tab_data, typeOfRecords, i);
+        }
     }
 }
 
@@ -206,15 +196,15 @@ function parseUniqueLineRequest(data){
 */
 
 function updatePersonalRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
+    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 ;}
 
-function updateAllUsersRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+function updateTeamRecordsLog(typeOfRecords, scope) {
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
-function updateTeamRecordsLog(typeOfRecords) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+function updateAllUsersRecordsLog(typeOfRecords, scope) {
+    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
 function displayRecordsToCheck(typeOfRecords) {
