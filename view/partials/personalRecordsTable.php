@@ -5,9 +5,9 @@
             <th scope="col">Chantier</th>
             <th scope="col">Date et heure de début</th>
             <th scope="col">Date et heure de fin</th>
-            <th scope="col">Commentaire</th>
+            <th scope="col" class="records_log_comment">Commentaire</th>
             <th scope="col">Statut</th>
-            <th scope="col">Modifié le</th>
+            <th scope="col" class="records_log_last_modification">Modifié le</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>

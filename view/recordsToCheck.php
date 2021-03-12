@@ -54,6 +54,7 @@
 
         <script>
             $(function() {
+                getNumberOfRecordsToCheck('Check');
                 displayRecordsToCheck('Check');
             });
         </script>

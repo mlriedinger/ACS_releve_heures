@@ -48,6 +48,7 @@
         <script src="public/js/update_records_log.js"></script>
         <script>
             $(function() {
+                getNumberOfRecordsToCheck('Check');
                 updateTeamRecordsLog('Team', 'all');
             });
         </script>

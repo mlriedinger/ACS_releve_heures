@@ -22,7 +22,7 @@
                         <button class="nav-link" id="valid_records-tab" onclick="updateAllUsersRecordsLog('All', 'valid')" data-bs-toggle="tab" data-bs-target="#valid_records" type="button" role="tab" aria-controls="valid_records" aria-selected="false">Validés</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="unchecked_records-tab" onclick="updatePersonalRecordsLog('Personal', 'unchecked')" data-bs-toggle="tab" data-bs-target="#unchecked_records" type="button" role="tab" aria-controls="unchecked_records" aria-selected="false">En attente</button>
+                        <button class="nav-link" id="unchecked_records-tab" onclick="updatePersonalRecordsLog('Personal', 'unchecked')" data-bs-toggle="tab" data-bs-target="#unchecked_records" type="button" role="tab" aria-controls="unchecked_records" aria-selected="false" <?= $_SESSION['id_group'] == 1 ? "hidden" : "" ?>>En attente</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="deleted_records-tab" onclick="updateAllUsersRecordsLog('All', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records" aria-selected="false">Supprimés</button>
@@ -51,6 +51,7 @@
         <script src="public/js/update_records_log.js"></script>
         <script>
             $(function() {
+                getNumberOfRecordsToCheck('Check');
                 updateAllUsersRecordsLog('All', 'all');
             });
         </script>

@@ -25,3 +25,15 @@ h1{
     background-color: #212529;
     border-color:#dee2e6 #dee2e6 #fff;
   }
+
+
+/* Masquer des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
+
+@media (min-device-width: 320px) 
+and (max-device-width: 812px) 
+and (orientation: portrait){
+    .records_log_comment, .records_log_last_modification{
+      display:none;
+    }
+}
+

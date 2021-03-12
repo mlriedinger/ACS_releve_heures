@@ -1,5 +1,5 @@
 <li class="nav-item ps-4">
-    <a class="nav-link" href="index.php?action=showRecordsToCheck">Validation</a>
+    <a class="nav-link" href="index.php?action=showRecordsToCheck">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
 </li>
 
 <li class="nav-item dropdown ps-4">

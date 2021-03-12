@@ -31,6 +31,7 @@ function appendLine(tableID, data, typeOfRecord, counter){
         // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
         newStartTime.innerHTML += data[counter].date_hrs_debut;
         newEndTime.innerHTML += data[counter].date_hrs_fin;
+        newComment.classList.add("records_log_comment");
         newComment.innerHTML += data[counter].commentaire;
         if(data[counter].statut_validation == 0){
             newStatus.innerHTML += "En attente";
@@ -40,6 +41,8 @@ function appendLine(tableID, data, typeOfRecord, counter){
                 newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
             }
         } else newStatus.innerHTML += "Validé";
+        
+        newUpdateDate.classList.add("records_log_last_modification");
         newUpdateDate.innerHTML += data[counter].date_hrs_modif;
     } 
 
@@ -187,6 +190,15 @@ function parseUniqueLineRequest(data){
 }
 
 
+function displayNumberOfRecordsTocheck(data){
+    console.log(data.records.length);
+    var tab_data = data.records;
+
+    if(tab_data.length) document.getElementById("notificationIcon").innerHTML = tab_data.length;
+    else document.getElementById("notificationIcon").hidden = true;
+}
+
+
 /*  Appels AJAX pour récupèrer les résultats des requêtes PHP au format JSON
     Params :
     * 'url' : url sur laquelle faire la requête POST
@@ -213,6 +225,10 @@ function displayRecordsToCheck(typeOfRecords) {
 
 function getRecordData(recordId) {
     $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
+}
+
+function getNumberOfRecordsToCheck(typeOfRecords){
+    $.post('index.php?action=getRecordsToCheck', { 'typeOfRecords': typeOfRecords }, displayNumberOfRecordsTocheck, 'json');
 }
 
 
