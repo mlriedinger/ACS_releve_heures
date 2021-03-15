@@ -54,8 +54,8 @@
 
         <script>
             $(function() {
-                getNumberOfRecordsToCheck('Check');
-                displayRecordsToCheck('Check');
+                getNumberOfRecordsToCheck('Check', 'unchecked');
+                updateTeamRecordsLog('Check', 'unchecked');
             });
         </script>
 

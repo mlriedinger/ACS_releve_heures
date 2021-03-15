@@ -64,6 +64,12 @@ if(isset($_GET['action'])){
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
 
+            // Page export
+            case "showExportForm":
+                if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') displayExportForm();
+                else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
+                break;
+
 
             // Ajout d'un nouveau relevé
             case "addNewRecord":
@@ -139,13 +145,13 @@ if(isset($_GET['action'])){
                 break;
 
             // Récupérer les relevés en attente de validation
-            case "getRecordsToCheck":
-                if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecordsToCheck($_POST['typeOfRecords']);
-                    else throw new Exception('Un problème est survenu.');
-                }
-                else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
-                break;
+            // case "getRecordsToCheck":
+            //     if(isset($_SESSION['id'])){
+            //         if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecordsToCheck($_SESSION['id'], $_POST['typeOfRecords'], $_POST['scope']);
+            //         else throw new Exception('Un problème est survenu.');
+            //     }
+            //     else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+            //     break;
 
             // Récupérer les données de l'historique équipe
             case "getTeamRecordsLog":
@@ -163,6 +169,13 @@ if(isset($_GET['action'])){
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                break;
+
+            // Exporter les données en CSV
+            case "exportRecords":
+                if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
+                    if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') exportRecords($_GET['typeOfRecords'], $_GET['scope']);
+                }
                 break;
         }
     } catch(PDOException $e){

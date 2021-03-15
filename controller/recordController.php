@@ -33,6 +33,10 @@ function displayAllRecordsLog(){
     require('view/allUsersRecordsLog.php');
 }
 
+function displayExportForm(){
+    require('view/exportRecordsForm.php');
+}
+
 
 /* Fonction pour récupérer le formulaire de saisie (uniquement le formulaire) */
 
@@ -128,10 +132,10 @@ function getUserRecords($id_user, $typeOfRecords, $scope){
     $recordManager->getRecordsFromUser($id_user, $typeOfRecords, $scope);   
 }
 
-function getTeamRecordsToCheck($typeOfRecords){
-    $recordManager = new RecordManager();
-    $recordManager->getTeamRecordsToCheck($_SESSION['id'], $typeOfRecords);
-}
+// function getTeamRecordsToCheck($id_manager, $typeOfRecords, $scope){
+//     $recordManager = new RecordManager();
+//     $recordManager->getTeamRecordsToCheck($id_manager, $typeOfRecords, $scope);
+// }
 
 function getTeamRecords($id_manager, $typeOfRecords, $scope){
     $recordManager = new RecordManager();
@@ -141,4 +145,10 @@ function getTeamRecords($id_manager, $typeOfRecords, $scope){
 function getAllUsersRecords($typeOfRecords, $scope){
     $recordManager = new RecordManager();
     $recordManager->getAllRecords($typeOfRecords, $scope);
+}
+
+function exportRecords($typeOfRecords, $scope){
+    $recordManager = new RecordManager();
+    $recordManager->getAllRecords($typeOfRecords, $scope);
+    // Réutiliser la méthode getAllRecords ? Si oui, l'adapter pour ne pas renvoyer automatiquement du JSON
 }

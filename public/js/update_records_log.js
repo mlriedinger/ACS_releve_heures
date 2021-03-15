@@ -138,6 +138,8 @@ function updateFormInputs(data){
 
 function parseMultipleLinesRequest(data){
     var tab_data = data.records;
+    console.log(data);
+    console.log(tab_data);
     var typeOfRecords = data.typeOfRecords;
 
     // On récupère la ligne vide du tableau
@@ -191,7 +193,7 @@ function parseUniqueLineRequest(data){
 
 
 function displayNumberOfRecordsTocheck(data){
-    console.log(data.records.length);
+    console.log(data.records);
     var tab_data = data.records;
 
     if(tab_data.length) document.getElementById("notificationIcon").innerHTML = tab_data.length;
@@ -219,16 +221,12 @@ function updateAllUsersRecordsLog(typeOfRecords, scope) {
     $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
-function displayRecordsToCheck(typeOfRecords) {
-    $.post('index.php?action=getRecordsToCheck', { 'typeOfRecords': typeOfRecords }, parseMultipleLinesRequest, 'json');
-}
-
 function getRecordData(recordId) {
     $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
 }
 
-function getNumberOfRecordsToCheck(typeOfRecords){
-    $.post('index.php?action=getRecordsToCheck', { 'typeOfRecords': typeOfRecords }, displayNumberOfRecordsTocheck, 'json');
+function getNumberOfRecordsToCheck(typeOfRecords, scope){
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, displayNumberOfRecordsTocheck, 'json');
 }
 
 

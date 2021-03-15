@@ -149,8 +149,6 @@ class RecordManager extends DatabaseConnection
     */
 
     public function getRecord($id_record){
-        header("Content-Type: text/json");
-
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE ID = :id_record');
@@ -160,7 +158,41 @@ class RecordManager extends DatabaseConnection
         // Décommenter la ligne suivante pour débugger la requête
         // $query->debugDumpParams();
 
+        // Commenter la ligne suivante pour débugger la requête
+        header("Content-Type: text/json");
+
         echo json_encode($recordData);
+    }
+
+
+    /* Méthode qui permet d'ajouter des clauses dans le WHERE d'une requête et d'ajouter une clause ORDER BY
+        Params : 
+        * $sql : une chaîne de caractères contenant le début de la requête SQL
+        * $scope : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
+        Retourne la chaîne $sql complétée
+    */
+
+    public function addQueryScopeAndOrderByClause($sql, $scope){
+        switch($scope) {
+            case "all":
+                $sql .= " AND t_saisie_heure.supprimer = 0";
+                break;
+            case "valid":
+                $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
+                break;
+            case "unchecked":
+                $sql .= " AND t_saisie_heure.statut_validation = 0 AND t_saisie_heure.supprimer = 0";
+                break;
+            case "deleted":
+                $sql .= " AND t_saisie_heure.supprimer = 1";
+                break;
+            default:
+                break;
+        }
+
+        $sql .= " ORDER BY t_saisie_heure.date_hrs_creation DESC";
+
+        return $sql;
     }
 
 
@@ -168,41 +200,17 @@ class RecordManager extends DatabaseConnection
         Params:
         * $id_user : id utilisateur
         * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+        * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
     public function getRecordsFromUser($id_user, $type_of_records, $scope){
-        header("Content-Type: text/json");
-
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT id_chantier, 
-        date_hrs_debut, 
-        date_hrs_fin, 
-        commentaire, 
-        statut_validation, 
-        date_hrs_creation, 
-        date_hrs_modif,
-        ID,
-        supprimer 
+        $sql = "SELECT *
         FROM t_saisie_heure 
         WHERE id_login = :id_user";
 
-        switch($scope) {
-            case "all":
-                $sql .= " AND supprimer = 0";
-                break;
-            case "valid":
-                $sql .= " AND statut_validation = 1 AND supprimer = 0";
-                break;
-            case "unchecked":
-                $sql .= " AND statut_validation = 0 AND supprimer = 0";
-                break;
-            case "deleted":
-                $sql .= " AND supprimer = 1";
-                break;
-        }
-
-        $sql .= " ORDER BY date_hrs_creation DESC";
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_user' => $id_user));
@@ -212,47 +220,10 @@ class RecordManager extends DatabaseConnection
         // Décommenter la ligne suivante pour débugger la requête
         // $query->debugDumpParams();
 
-        echo json_encode($userRecords);
-    }
-
-
-    /* Méthode qui permet de récupérer UNIQUEMENT les relevés d'heures dont le statut est en attente. Elle renvoie les données en JSON pour être exploitables par JS.
-        Params:
-        * $id_manager : id du chef d'équipe
-        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
-    */
-
-    public function getTeamRecordsToCheck($id_manager, $type_of_records){
+        // Commenter la ligne suivante pour débugger la requête
         header("Content-Type: text/json");
-
-        $pdo = $this->dbConnect();
-
-        $query = $pdo->prepare('SELECT t_saisie_heure.id_chantier, 
-        t_login.Nom, 
-        t_login.Prenom, 
-        t_saisie_heure.date_hrs_debut, 
-        t_saisie_heure.date_hrs_fin, 
-        t_saisie_heure.commentaire,
-        t_saisie_heure.date_hrs_creation, 
-        t_saisie_heure.date_hrs_modif,
-        t_saisie_heure.ID 
-        FROM t_equipe
-        INNER JOIN t_login
-        ON t_equipe.id_membre = t_login.ID
-        INNER JOIN t_saisie_heure
-        ON t_login.ID = t_saisie_heure.id_login
-        WHERE t_equipe.id_manager = :id_manager
-        AND t_saisie_heure.statut_validation = 0
-        AND t_saisie_heure.supprimer = 0
-        ORDER BY date_hrs_creation DESC');
-        $query->execute(array('id_manager' => $id_manager));
-        $recordsToCheck["typeOfRecords"] = $type_of_records;
-        $recordsToCheck["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        // Décommenter la ligne suivante pour débugger la requête
-        // $query->debugDumpParams();
-
-        echo json_encode($recordsToCheck);
+        
+        echo json_encode($userRecords);
     }
 
 
@@ -260,25 +231,13 @@ class RecordManager extends DatabaseConnection
         Params: 
         * $id_manager : id du chef d'équipe
         * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+        * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
     public function getRecordsFromTeam($id_manager, $type_of_records, $scope){
-        header("Content-Type: text/json");
-
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT 
-        t_saisie_heure.id_chantier, 
-        t_login.Nom, 
-        t_login.Prenom, 
-        t_saisie_heure.date_hrs_debut, 
-        t_saisie_heure.date_hrs_fin, 
-        t_saisie_heure.commentaire, 
-        t_saisie_heure.statut_validation, 
-        t_saisie_heure.date_hrs_creation, 
-        t_saisie_heure.date_hrs_modif,
-        t_saisie_heure.ID,
-        t_saisie_heure.supprimer
+        $sql = "SELECT *
         FROM t_equipe
         INNER JOIN t_login
         ON t_equipe.id_membre = t_login.ID
@@ -286,19 +245,7 @@ class RecordManager extends DatabaseConnection
         ON t_login.ID = t_saisie_heure.id_login
         WHERE t_equipe.id_manager = :id_manager";
 
-        switch($scope) {
-            case "all":
-                $sql .= " AND t_saisie_heure.supprimer = 0";
-                break;
-            case "valid":
-                $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
-                break;
-            case "deleted":
-                $sql .= " AND t_saisie_heure.supprimer = 1";
-                break;
-        }
-
-        $sql .= " ORDER BY date_hrs_creation DESC";
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_manager' => $id_manager));
@@ -308,6 +255,9 @@ class RecordManager extends DatabaseConnection
         // Décommenter la ligne suivante pour débugger la requête
         // $query->debugDumpParams();
 
+        // Commenter la ligne suivante pour débugger la requête
+        header("Content-Type: text/json");
+
         echo json_encode($teamRecords);
     }
 
@@ -315,51 +265,72 @@ class RecordManager extends DatabaseConnection
     /* Méthode qui permet de récupérer les relevés de tous les utilisateurs. Elle renvoie les données en JSON pour être exploitables par JS.
          Params: 
         * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+        * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
     public function getAllRecords($type_of_records, $scope){
-        header("Content-Type: text/json");
-
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT 
-        t_saisie_heure.id_chantier, 
-        t_login.Nom, 
-        t_login.Prenom, 
-        t_saisie_heure.date_hrs_debut, 
-        t_saisie_heure.date_hrs_fin, 
-        t_saisie_heure.commentaire, 
-        t_saisie_heure.statut_validation, 
-        t_saisie_heure.date_hrs_creation, 
-        t_saisie_heure.date_hrs_modif,
-        t_saisie_heure.ID,
-        t_saisie_heure.supprimer
+        $sql = "SELECT *
         FROM t_saisie_heure
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID";
 
-        switch($scope) {
-            case "all":
-                $sql .= " AND t_saisie_heure.supprimer = 0";
-                break;
-            case "valid":
-                $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
-                break;
-            case "deleted":
-                $sql .= " AND t_saisie_heure.supprimer = 1";
-                break;
-        }
-
-        $sql .= " ORDER BY date_hrs_creation DESC";
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute();
-        $records["typeOfRecords"] = $type_of_records;
-        $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
         
+
+        if($type_of_records == "export"){
+            $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+            $this->writeCsvFile($rows);
+        }
+        else {
+            $records["typeOfRecords"] = $type_of_records;
+            $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            // Décommenter la ligne suivante pour débugger la requête
+            // $query->debugDumpParams();
+
+            // Commenter la ligne suivante pour débugger la requête
+            header("Content-Type: text/json");
+
+            echo json_encode($records);
+        }
+    }
+
+    public function writeCsvFile($rows){
+        $columnNames = array();
+        if(!empty($rows)){
+            // On boucle sur la première ligne pour récupérer les en-têtes des colonnes
+            $firstRow = $rows[0];
+            foreach($firstRow as $colName => $val){
+                $columnNames[] = $colName;
+            }
+        }
+
+        $fileName = date('Ymd') . '_export_releves_heure.csv';
+
         // Décommenter la ligne suivante pour débugger la requête
         // $query->debugDumpParams();
 
-        echo json_encode($records);
+        // Commenter les lignes suivantes pour débugger la requête
+        header("Content-type: text/csv ; charset=UTF-8");
+        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+
+        // On crée un pointeur de fichier dans le flux output pour envoyer le fichier directement au navigateur
+        $fp = fopen('php://output', 'w');
+
+        // On insère les en-têtes de colonnes au format CSV
+        fputcsv($fp, $columnNames);
+
+        // On boucle sur les lignes récupérées de la requête pour les insérer dans le fichier au format CSV
+        foreach ($rows as $row) {
+            fputcsv($fp, $row);
+        }
+
+        // On ferme le pointeur de fichier
+        fclose($fp);
     }
 }

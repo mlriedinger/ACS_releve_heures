@@ -52,7 +52,7 @@
   
         <script>
             $(function() {
-                getNumberOfRecordsToCheck('Check');
+                getNumberOfRecordsToCheck('Check', 'unchecked');
                 updatePersonalRecordsLog('Personal', 'all');
             });
         </script>

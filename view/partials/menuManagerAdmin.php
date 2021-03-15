@@ -11,3 +11,5 @@
         <?= $_SESSION['id_group'] == 1 ? '<li><a class="dropdown-item" href="index.php?action=showAllRecordsLog">Historique global</a></li>' : ''; ?>
     </ul>
 </li>
+
+<?= $_SESSION['id_group'] == 1 ? '<li class="nav-item ps-4"><a class="nav-link" href="index.php?action=showExportForm">Export</a></li>' : ''; ?>
