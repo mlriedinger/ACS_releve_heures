@@ -287,9 +287,9 @@ class RecordManager extends DatabaseConnection
         $sql = "SELECT *
         FROM t_saisie_heure
         INNER JOIN t_login
-        ON t_saisie_heure.id_login = t_login.ID
-        INNER JOIN t_equipe
-        ON t_login.ID = t_equipe.id_membre";
+        ON t_saisie_heure.id_login = t_login.ID";
+
+        if($id_manager != "") $sql .= " INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
 
         $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start, $date_end, $id_manager, $id_user);
 
@@ -308,9 +308,9 @@ class RecordManager extends DatabaseConnection
             $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
             // Décommenter la ligne suivante pour débugger la requête
-            $query->debugDumpParams();
+            // $query->debugDumpParams();
 
-            //$this->writeCsvFile($rows);
+            $this->writeCsvFile($rows);
         }
         else {
             $records["typeOfRecords"] = $type_of_records;
