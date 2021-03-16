@@ -172,10 +172,10 @@ class RecordManager extends DatabaseConnection
         Retourne la chaîne $sql complétée
     */
 
-    public function addQueryScopeAndOrderByClause($sql, $scope){
+    public function addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start, $date_end, $id_manager, $id_user){
         switch($scope) {
             case "all":
-                $sql .= " AND t_saisie_heure.supprimer = 0";
+                if($type_of_records != "export") $sql .= " AND t_saisie_heure.supprimer = 0";
                 break;
             case "valid":
                 $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
@@ -190,6 +190,19 @@ class RecordManager extends DatabaseConnection
                 break;
         }
 
+        if($date_start != "" && $date_end != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :date_start AND t_saisie_heure.date_hrs_fin <= :date_end";
+        if($manager != "") $sql .= " AND t_equipe.id_manager = :id_manager";
+        if($user != "") $sql .= " AND t_saisie_heure.id_login = :id_user";
+
+        if($type_of_records == "export" || $type_of_records == "all"){
+            $pos = strpos($sql, "AND");
+            if($pos !== false) {
+                $search = "AND";
+                $replace = "WHERE";
+                $sql = substr_replace($sql, $replace, $pos, strlen("AND"));
+            }
+        }
+        
         $sql .= " ORDER BY t_saisie_heure.date_hrs_creation DESC";
 
         return $sql;
@@ -268,7 +281,7 @@ class RecordManager extends DatabaseConnection
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getAllRecords($type_of_records, $scope){
+    public function getAllRecords($type_of_records, $scope, $date_start="", $date_end="", $id_manager="", $id_user=""){
         $pdo = $this->dbConnect();
 
         $sql = "SELECT *
@@ -276,14 +289,25 @@ class RecordManager extends DatabaseConnection
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start, $date_end, $id_manager, $id_user);
 
         $query = $pdo->prepare($sql);
-        $query->execute();
+
+        $queryParams = array();
+
+        if($id_manager != "") $queryParams['id_manager'] = $id_manager;
+        if($id_user != "")  $queryParams['id_user'] = $id_user;
+        if($date_start != "") $queryParams['date_start'] = $date_start;
+        if($date_end != "") $queryParams['date_end'] = $date_end;
         
+        $query->execute($queryParams);
 
         if($type_of_records == "export"){
             $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            // Décommenter la ligne suivante pour débugger la requête
+            // $query->debugDumpParams();
+
             $this->writeCsvFile($rows);
         }
         else {
@@ -312,9 +336,6 @@ class RecordManager extends DatabaseConnection
 
         $fileName = date('Ymd') . '_export_releves_heure.csv';
 
-        // Décommenter la ligne suivante pour débugger la requête
-        // $query->debugDumpParams();
-
         // Commenter les lignes suivantes pour débugger la requête
         header("Content-type: text/csv ; charset=UTF-8");
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
@@ -333,4 +354,38 @@ class RecordManager extends DatabaseConnection
         // On ferme le pointeur de fichier
         fclose($fp);
     }
+
+
+    public function getDataForOptionSelect($type){
+        $pdo = $this->dbConnect();
+
+        $sql ="";
+
+        switch($type){
+            case "managers":
+                $sql .= "SELECT * FROM t_equipe INNER JOIN t_login ON t_equipe.id_manager = t_login.ID GROUP BY t_equipe.id_manager";
+                break;
+            case "users":
+                $sql .= "SELECT * FROM t_login";
+                break;
+        }
+
+        $sql .= " ORDER BY t_login.Nom ASC";
+
+        $query = $pdo->prepare($sql);
+        $query->execute();
+        $data["typeOfData"] = $type;
+        $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
+
+        // Commenter la ligne suivante pour débugger la requête
+        header("Content-Type: text/json");
+
+        echo json_encode($data);
+    }
 }
+
+
+    

@@ -11,7 +11,7 @@
         <div class="container">
             <h2 class="display-6 mt-5 mb-5 text-center">Exporter des relevés</h2>
 
-                <form action="index.php?action=exportRecords&typeOfRecords=export&scope=all" method="POST">
+                <form action="index.php?action=exportRecords&typeOfRecords=export" method="POST">
 
                     <div class="row mt-5 mb-3 justify-content-md-center">   
 
@@ -56,9 +56,9 @@
 
                         <div class="col-sm-6">
 
-                            <p class="fs-5 text fw-light mb-3">Souhaitez-vous sélectionner une période ?</p>
+                            <p class="fs-5 text fw-light mb-3">Souhaitez-vous sélectionner une période ? (facultatif)</p>
 
-                            <div class="accordion" id="accordionExample">
+                            <div class="accordion" id="exportFormAccordion">
                                 <div class="accordion-item">
 
                                     <h2 class="accordion-header" id="headingOne">
@@ -67,17 +67,17 @@
                                         </button>
                                     </h2>
 
-                                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#exportFormAccordion">
 
                                         <div class="accordion-body">
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text" id="period_start_selector">Du</span>
-                                                <input type="date" name="period_start" id="period_start" class="form-control" aria-label="Sélectionnez une date de début" aria-describedby="period_start_selector" required/>
+                                                <input type="date" name="period_start" id="period_start" class="form-control" aria-label="Sélectionnez une date de début" aria-describedby="period_start_selector"/>
                                             </div>
 
                                             <div class="input-group mb-3">
                                                     <span class="input-group-text" id="period_end_selector">Au</span>
-                                                    <input type="date" name="period_end" id="period_end" class="form-control" aria-label="Sélectionnez une date de fin" aria-describedby="period_end_selector" required/>
+                                                    <input type="date" name="period_end" id="period_end" class="form-control" aria-label="Sélectionnez une date de fin" aria-describedby="period_end_selector"/>
                                             </div>
                                         </div>
 
@@ -94,39 +94,26 @@
 
                         <div class="col-sm-6">
 
-                            <p class="fs-5 text fw-light mb-3">Souhaitez-vous sélectionner d'autres options ?</p>
+                            <p class="fs-5 text fw-light mb-3">Souhaitez-vous sélectionner d'autres options ? (facultatif)</p>
 
-                            <div class="accordion" id="accordionExample">
+                            <div class="accordion" id="exportFormAccordion">
                                 <div class="accordion-item">
 
                                     <h2 class="accordion-header" id="headingOne">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">
-                                            Cliquez ici pour sélectionner un manager, un utilisateur et/ou un chantier.
+                                            Cliquez ici pour sélectionner un manager ou un utilisateur.
                                         </button>
                                     </h2>
 
-                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#exportFormAccordion">
 
                                         <div class="accordion-body">
-                                            <select class="form-select mb-3" aria-label="Default select example">
-                                                <option selected>Open this select menu</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select name="manager" id="selectManager" class="form-select mb-3" aria-label="Default select example">
+                                                <option value ="" selected>Sélectionner un manager</option>
                                             </select>
 
-                                            <select class="form-select mb-3" aria-label="Default select example">
-                                                <option selected>Open this select menu</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-
-                                            <select class="form-select mb-3" aria-label="Default select example">
-                                                <option selected>Open this select menu</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select name="user" id="selectUser" class="form-select mb-3" aria-label="Default select example">
+                                                <option value ="" selected>Sélectionner un salarié</option>
                                             </select>
                                         </div>
 
@@ -139,12 +126,11 @@
 
                     </div>
 
-                    <div class="row mb-3 justify-content-md-center">
+                    <div class="row mb-3 mt-5 justify-content-md-center">
                         
                         <div class="col-sm-8 mb-5 text-center">
-                            <input type="hidden" value="<?=($_POST['idRecord'])?>" name="record_id"/>
                             <input type="button" value="Annuler" class="btn btn-light"/>
-                            <input type="submit" value="Valider" class="btn btn-dark"/>
+                            <input type="submit" value="Exporter" class="btn btn-dark"/>
                         </div>
                         
                     </div>
@@ -153,5 +139,16 @@
         </div>
 
         <?php include('partials/footer.php'); ?>
+        <!-- <script>
+            $('#selectManager').append(new Option("Manager 1", "12"));
+        </script> -->
+
+        <script src="public/js/update_records_log.js"></script>
+        <script>
+            $(function() {
+                getOptionsData('managers');
+                getOptionsData('users');
+            });
+        </script>
     </body>
 </html>

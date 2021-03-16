@@ -144,15 +144,6 @@ if(isset($_GET['action'])){
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
 
-            // Récupérer les relevés en attente de validation
-            // case "getRecordsToCheck":
-            //     if(isset($_SESSION['id'])){
-            //         if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecordsToCheck($_SESSION['id'], $_POST['typeOfRecords'], $_POST['scope']);
-            //         else throw new Exception('Un problème est survenu.');
-            //     }
-            //     else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
-            //     break;
-
             // Récupérer les données de l'historique équipe
             case "getTeamRecordsLog":
                 if(isset($_SESSION['id'])){
@@ -174,7 +165,15 @@ if(isset($_GET['action'])){
             // Exporter les données en CSV
             case "exportRecords":
                 if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
-                    if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') exportRecords($_GET['typeOfRecords'], $_GET['scope']);
+                    if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') {
+                        if(isset($_POST['scope']) && isset($_POST['period_start']) && isset($_POST['period_end']) && isset($_POST['manager']) && isset($_POST['user'])) exportRecords($_GET['typeOfRecords'], $_POST['scope'], $_POST['period_start'], $_POST['period_end'], $_POST['manager'], $_POST['user']);
+                    }
+                }
+                break;
+
+            case "getOptionsData":
+                if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1'){
+                    if(isset($_POST['typeOfData'])) getOptionsData($_POST['typeOfData']);
                 }
                 break;
         }

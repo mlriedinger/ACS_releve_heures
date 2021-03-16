@@ -115,7 +115,6 @@ function deleteRecord($id_record, $comment){
 /* Fonctions pour récupérer les relevés :
     * getRecordData() : informations d'un relevé unique,
     * getUserRecords() : relevés personnels,
-    * getTeamRecordsToCheck() : relevés en attente de validation, 
     * getTeamRecords() : relevés de l'équipe, 
     * getAllUsersRecords() : tous les relevés) 
     Params :
@@ -132,11 +131,6 @@ function getUserRecords($id_user, $typeOfRecords, $scope){
     $recordManager->getRecordsFromUser($id_user, $typeOfRecords, $scope);   
 }
 
-// function getTeamRecordsToCheck($id_manager, $typeOfRecords, $scope){
-//     $recordManager = new RecordManager();
-//     $recordManager->getTeamRecordsToCheck($id_manager, $typeOfRecords, $scope);
-// }
-
 function getTeamRecords($id_manager, $typeOfRecords, $scope){
     $recordManager = new RecordManager();
     $recordManager->getRecordsFromTeam($id_manager, $typeOfRecords, $scope);
@@ -147,8 +141,12 @@ function getAllUsersRecords($typeOfRecords, $scope){
     $recordManager->getAllRecords($typeOfRecords, $scope);
 }
 
-function exportRecords($typeOfRecords, $scope){
+function exportRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user){
     $recordManager = new RecordManager();
-    $recordManager->getAllRecords($typeOfRecords, $scope);
-    // Réutiliser la méthode getAllRecords ? Si oui, l'adapter pour ne pas renvoyer automatiquement du JSON
+    $recordManager->getAllRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user);
+}
+
+function getOptionsData($typeOfData){
+    $recordManager = new RecordManager();
+    $recordManager->getDataForOptionSelect($typeOfData);
 }

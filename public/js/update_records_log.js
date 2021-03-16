@@ -193,11 +193,29 @@ function parseUniqueLineRequest(data){
 
 
 function displayNumberOfRecordsTocheck(data){
-    console.log(data.records);
+    // console.log(data.records);
     var tab_data = data.records;
 
     if(tab_data.length) document.getElementById("notificationIcon").innerHTML = tab_data.length;
     else document.getElementById("notificationIcon").hidden = true;
+}
+
+
+function displayOptionsList(data){
+    // console.log(data);
+    var typeOfData = data.typeOfData;
+    var tab_data = data.records
+
+    if(typeOfData == "managers"){
+        for(let i = 0 ; i < tab_data.length ; i ++){
+            $('#selectManager').append(new Option(tab_data[i].Nom + ' ' + tab_data[i]. Prenom, tab_data[i].ID));
+        }
+    }
+    else if(typeOfData == "users"){
+        for(let i = 0 ; i < tab_data.length ; i ++){
+            $('#selectUser').append(new Option(tab_data[i].Nom + ' ' + tab_data[i]. Prenom, tab_data[i].ID));
+        }
+    }
 }
 
 
@@ -229,6 +247,9 @@ function getNumberOfRecordsToCheck(typeOfRecords, scope){
     $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, displayNumberOfRecordsTocheck, 'json');
 }
 
+function getOptionsData(optionType){
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType }, displayOptionsList, 'json');
+}
 
 /* Appels AJAX pour récupérer le contenu qui va être inséré dans le corps de la fenêtre modale (édition ou suppression d'un relevé)
     Params :
