@@ -172,7 +172,7 @@ class RecordManager extends DatabaseConnection
         Retourne la chaîne $sql complétée
     */
 
-    public function addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start, $date_end, $id_manager, $id_user){
+    public function addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start="", $date_end="", $id_manager="", $id_user=""){
         switch($scope) {
             case "all":
                 if($type_of_records != "export") $sql .= " AND t_saisie_heure.supprimer = 0";
@@ -191,8 +191,8 @@ class RecordManager extends DatabaseConnection
         }
 
         if($date_start != "" && $date_end != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :date_start AND t_saisie_heure.date_hrs_fin <= :date_end";
-        if($manager != "") $sql .= " AND t_equipe.id_manager = :id_manager";
-        if($user != "") $sql .= " AND t_saisie_heure.id_login = :id_user";
+        if($id_manager != "") $sql .= " AND t_equipe.id_manager = :id_manager";
+        if($id_user != "") $sql .= " AND t_saisie_heure.id_login = :id_user";
 
         if($type_of_records == "export" || $type_of_records == "all"){
             $pos = strpos($sql, "AND");
@@ -223,7 +223,7 @@ class RecordManager extends DatabaseConnection
         FROM t_saisie_heure 
         WHERE id_login = :id_user";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_user' => $id_user));
@@ -258,7 +258,7 @@ class RecordManager extends DatabaseConnection
         ON t_login.ID = t_saisie_heure.id_login
         WHERE t_equipe.id_manager = :id_manager";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_manager' => $id_manager));
@@ -287,7 +287,9 @@ class RecordManager extends DatabaseConnection
         $sql = "SELECT *
         FROM t_saisie_heure
         INNER JOIN t_login
-        ON t_saisie_heure.id_login = t_login.ID";
+        ON t_saisie_heure.id_login = t_login.ID
+        INNER JOIN t_equipe
+        ON t_login.ID = t_equipe.id_membre";
 
         $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start, $date_end, $id_manager, $id_user);
 
@@ -306,9 +308,9 @@ class RecordManager extends DatabaseConnection
             $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
             // Décommenter la ligne suivante pour débugger la requête
-            // $query->debugDumpParams();
+            $query->debugDumpParams();
 
-            $this->writeCsvFile($rows);
+            //$this->writeCsvFile($rows);
         }
         else {
             $records["typeOfRecords"] = $type_of_records;

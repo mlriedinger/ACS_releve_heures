@@ -228,7 +228,7 @@ function displayOptionsList(data){
 */
 
 function updatePersonalRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
 ;}
 
 function updateTeamRecordsLog(typeOfRecords, scope) {
