@@ -8,11 +8,16 @@ require_once('DatabaseConnection.php');
     * [INFO] Classe-fille de DatabaseConnection pour pouvoir hériter de la méthode dbConnect()
     * Méthodes de classe :
         * sendNewRecord() 
+        * updateRecord()
         * updateRecordStatus() 
+        * deleteRecord()
+        * getRecord()
+        * addQueryScopeAndOrderByClause()
         * getAllRecordsFromUser() 
-        * getRecordsToCheck()
         * getRecordsFromTeam()
-        * getAllRecords() 
+        * getAllRecords()
+        * writeCsvFile()
+        * getDataForOptionSelect() 
 */
 
 class RecordManager extends DatabaseConnection

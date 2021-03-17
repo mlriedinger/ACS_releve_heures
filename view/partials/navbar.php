@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
            
     <div class="container-fluid d-flex align-items-center">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.php?action=showHomePage">
             <img src="public/img/logo.png" alt="Logo" height="70vw"/>
         </a>
 

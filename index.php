@@ -171,6 +171,7 @@ if(isset($_GET['action'])){
                 }
                 break;
 
+            // Récupérer les listes des managers et des salariés pour le formulaire d'export
             case "getOptionsData":
                 if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1'){
                     if(isset($_POST['typeOfData'])) getOptionsData($_POST['typeOfData']);

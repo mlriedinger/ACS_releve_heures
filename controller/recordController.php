@@ -10,7 +10,9 @@ require_once('model/RecordManager.php');
     * displayNewRecordForm() : page de saisie d'un nouveau relevé, 
     * displayValidationForm() : page de validation de relevés en attente
     * displayPersonalRecordsLog() : historique personnel, 
-    * displayRecordsLog() : historique équipe ou global en fonction du type d'utilisateur 
+    * displayTeamRecordsLog() : historique équipe
+    * displayAllRecordsLog() : historique global
+    * display ExportForm() : page export de données 
 */
 
 function displayNewRecordForm(){
@@ -116,9 +118,13 @@ function deleteRecord($id_record, $comment){
     * getRecordData() : informations d'un relevé unique,
     * getUserRecords() : relevés personnels,
     * getTeamRecords() : relevés de l'équipe, 
-    * getAllUsersRecords() : tous les relevés) 
+    * getAllUsersRecords() : tous les relevés
+    * exportRecords() : exporte les données au format CSV
+    * getOptionsData() : récupère la liste des managers et des salariés pour les afficher dans le formulaire d'export
     Params :
-    * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+    * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
+    * $scope : périmètre de la requête (tout ou seulement une partie des relevés)
+    * $typeOfData : chaîne de caractères ("managers" ou "users")
 */
 
 function getRecordData($recordId){

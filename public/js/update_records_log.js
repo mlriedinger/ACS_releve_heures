@@ -138,8 +138,8 @@ function updateFormInputs(data){
 
 function parseMultipleLinesRequest(data){
     var tab_data = data.records;
-    console.log(data);
-    console.log(tab_data);
+    //console.log(data);
+    //console.log(tab_data);
     var typeOfRecords = data.typeOfRecords;
 
     // On récupère la ligne vide du tableau
@@ -192,6 +192,11 @@ function parseUniqueLineRequest(data){
 }
 
 
+/* Fonction qui permet d'afficher le nombre de relevés en attente de validation dans un badge rouge à côté du menu "Validation"
+    Param :
+    * data : contenu de la réponse à la requête AJAX
+*/
+
 function displayNumberOfRecordsTocheck(data){
     // console.log(data.records);
     var tab_data = data.records;
@@ -200,6 +205,11 @@ function displayNumberOfRecordsTocheck(data){
     else document.getElementById("notificationIcon").hidden = true;
 }
 
+
+/* Fonction qui permet d'afficher une liste déroulante dans le formulaire d'export 1/ avec les noms et prénoms des managers , 2/ avec les noms et prénoms des utilisateurs
+    Param :
+    * data : contenu de la réponse à la requête AJAX
+*/
 
 function displayOptionsList(data){
     // console.log(data);
@@ -219,11 +229,11 @@ function displayOptionsList(data){
 }
 
 
-/*  Appels AJAX pour récupèrer les résultats des requêtes PHP au format JSON
+/*  Appels AJAX pour récupèrer les résultats des requêtes PHP au format JSON et remplir dynamiquement les tableaux de relevés
     Params :
     * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux)
-    * parseMultipleLinesRequest ou parseUniqueLineRequest : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
+    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'scope' : portée de la demande (tous, validés, en attente, supprimés)
+    * parseMultipleLinesRequest : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
     * 'json' : format de données reçues par la requête AJAX
 */
 
@@ -239,17 +249,6 @@ function updateAllUsersRecordsLog(typeOfRecords, scope) {
     $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
-function getRecordData(recordId) {
-    $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
-}
-
-function getNumberOfRecordsToCheck(typeOfRecords, scope){
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, displayNumberOfRecordsTocheck, 'json');
-}
-
-function getOptionsData(optionType){
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType }, displayOptionsList, 'json');
-}
 
 /* Appels AJAX pour récupérer le contenu qui va être inséré dans le corps de la fenêtre modale (édition ou suppression d'un relevé)
     Params :
@@ -268,4 +267,43 @@ function displayDeleteConfirmation(id_record){
         $(".modal-title").html("Confirmation de suppression");
         $(".modal-body").html(content);
     });
+}
+
+
+/*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et remplir dynamiquement le contenu de la modale d'édition d'un relevé
+    Params :
+    * 'url' : url sur laquelle faire la requête POST
+    * {} : données à envoyer dans la requête, ici 'recordID' : l'ID du relevé dont on souhaite récupérer les informations
+    * parseUniqueLineRequest : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
+    * 'json' : format de données reçues par la requête AJAX
+*/
+
+function getRecordData(recordId) {
+    $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
+}
+
+
+/*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et afficher dynamiquement le nombre de relevés en attente de validation
+    Params :
+    * 'url' : url sur laquelle faire la requête POST
+    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'scope' : portée de la demande (tous, validés, en attente, supprimés)
+    * displayNumberOfRecordsTocheck : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
+    * 'json' : format de données reçues par la requête AJAX
+*/
+
+function getNumberOfRecordsToCheck(typeOfRecords, scope){
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, displayNumberOfRecordsTocheck, 'json');
+}
+
+
+/*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et afficher dynamiquement les listes déroulantes de managers et de salariés
+    Params :
+    * 'url' : url sur laquelle faire la requête POST
+    * {} : données à envoyer dans la requête, ici 'typeOfData' : le type d'utilisateurs ("managers" ou "users")
+    * displayOptionsList : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
+    * 'json' : format de données reçues par la requête AJAX
+*/
+
+function getOptionsData(optionType){
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType }, displayOptionsList, 'json');
 }
