@@ -1,3 +1,93 @@
+function fillPersonalRecordsTable(newRow, data, counter){
+    var newStartTime = newRow.insertCell(1);
+    var newEndTime = newRow.insertCell(2);
+    var newComment = newRow.insertCell(3);
+    var newStatus = newRow.insertCell(4);
+    var newUpdateDate = newRow.insertCell(5);
+    var newEdit = newRow.insertCell(6);
+    var newDelete = newRow.insertCell(7);
+
+    // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
+    newStartTime.innerHTML += data[counter].date_hrs_debut;
+    newEndTime.innerHTML += data[counter].date_hrs_fin;
+    newComment.classList.add("records_log_comment");
+    newComment.innerHTML += data[counter].commentaire;
+    if(data[counter].statut_validation == 0){
+        newStatus.innerHTML += "En attente";
+        if(data[counter].supprimer == 0){
+            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
+            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
+        }
+    } else newStatus.innerHTML += "Validé";
+    
+    newUpdateDate.classList.add("records_log_last_modification");
+    newUpdateDate.innerHTML += data[counter].date_hrs_modif;
+}
+
+function fillTeamRecordsToCheckTable(newRow, data, counter){
+    // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
+    var newFirstName = newRow.insertCell(1);
+    var newLastName = newRow.insertCell(2);
+    var newStartTime = newRow.insertCell(3);
+    var newEndTime = newRow.insertCell(4);
+    var newComment = newRow.insertCell(5);
+    var newUpdateDate = newRow.insertCell(6);
+    var newIsValid = newRow.insertCell(7);
+    var newDelete = newRow.insertCell(8);
+
+    // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
+    newFirstName.innerHTML += data[counter].Prenom;
+    newLastName.innerHTML += data[counter].Nom;
+    newStartTime.innerHTML += data[counter].date_hrs_debut;
+    newEndTime.innerHTML += data[counter].date_hrs_fin;
+    newComment.innerHTML += data[counter].commentaire;
+    newUpdateDate.innerHTML += data[counter].date_hrs_modif;
+
+    var html = [
+        '<div class="form-check form-switch">',
+            '<input class="form-check-input" type="checkbox" name="check_list[' + counter +']" id="recordValidationCheck' + counter +'" value="' + data[counter].ID +'"/>',
+            '<label class="form-check-label" for="recordValidationCheck' + counter +'">Sélectionner</label>',
+        '</div>'
+    ].join('');
+
+    newIsValid.innerHTML += html;
+    newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
+} 
+
+
+function fillTeamAndAllUsersRecordsTable(newRow, data, counter){
+    //console.log(data);
+    // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
+    var newFirstName = newRow.insertCell(1);
+    var newLastName = newRow.insertCell(2);
+    var newStartTime = newRow.insertCell(3);
+    var newEndTime = newRow.insertCell(4);
+    var newComment = newRow.insertCell(5);
+    var newStatus = newRow.insertCell(6);
+    var newUpdateDate = newRow.insertCell(7);
+    var newEdit = newRow.insertCell(8);
+    var newDelete = newRow.insertCell(9);
+
+    // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
+    newFirstName.innerHTML += data[counter].Prenom;
+    newLastName.innerHTML += data[counter].Nom;
+    newStartTime.innerHTML += data[counter].date_hrs_debut;
+    newEndTime.innerHTML += data[counter].date_hrs_fin;
+    newComment.innerHTML += data[counter].commentaire;
+
+    if(data[counter].statut_validation == '0'){
+        newStatus.innerHTML += "En attente";
+        if(data[counter].supprimer == 0){
+            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
+            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
+        }
+    } else newStatus.innerHTML += "Validé";
+
+    newUpdateDate.innerHTML += data[counter].date_hrs_modif;
+}
+
 /* Fonction qui ajoute une nouvelle ligne à un tableau cible
     Params :
         * tableID : id associé à la balise <table>
@@ -16,118 +106,43 @@ function appendLine(tableID, data, typeOfRecord, counter){
     var newWorkSite = newRow.insertCell(0);
     newWorkSite.innerHTML += data[counter].id_chantier;
 
-
-    // Si on demande l'historique personnel
-    if(typeOfRecord == 'Personal'){
-        // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
-        var newStartTime = newRow.insertCell(1);
-        var newEndTime = newRow.insertCell(2);
-        var newComment = newRow.insertCell(3);
-        var newStatus = newRow.insertCell(4);
-        var newUpdateDate = newRow.insertCell(5);
-        var newEdit = newRow.insertCell(6);
-        var newDelete = newRow.insertCell(7);
-
-        // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
-        newStartTime.innerHTML += data[counter].date_hrs_debut;
-        newEndTime.innerHTML += data[counter].date_hrs_fin;
-        newComment.classList.add("records_log_comment");
-        newComment.innerHTML += data[counter].commentaire;
-        if(data[counter].statut_validation == 0){
-            newStatus.innerHTML += "En attente";
-            if(data[counter].supprimer == 0){
-                // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-                newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-                newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
-            }
-        } else newStatus.innerHTML += "Validé";
-        
-        newUpdateDate.classList.add("records_log_last_modification");
-        newUpdateDate.innerHTML += data[counter].date_hrs_modif;
-    } 
-
-    // Si on demande les relevés en attente de validation
-    else if (typeOfRecord == 'Check'){        
-        // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
-        var newFirstName = newRow.insertCell(1);
-        var newLastName = newRow.insertCell(2);
-        var newStartTime = newRow.insertCell(3);
-        var newEndTime = newRow.insertCell(4);
-        var newComment = newRow.insertCell(5);
-        var newUpdateDate = newRow.insertCell(6);
-        var newIsValid = newRow.insertCell(7);
-        var newDelete = newRow.insertCell(8);
-        
-        // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
-        newFirstName.innerHTML += data[counter].Prenom;
-        newLastName.innerHTML += data[counter].Nom;
-        newStartTime.innerHTML += data[counter].date_hrs_debut;
-        newEndTime.innerHTML += data[counter].date_hrs_fin;
-        newComment.innerHTML += data[counter].commentaire;
-        newUpdateDate.innerHTML += data[counter].date_hrs_modif;
-
-        var html = [
-            '<div class="form-check form-switch">',
-                '<input class="form-check-input" type="checkbox" name="check_list[' + counter +']" id="recordValidationCheck' + counter +'" value="' + data[counter].ID +'"/>',
-                '<label class="form-check-label" for="recordValidationCheck' + counter +'">Sélectionner</label>',
-            '</div>'
-        ].join('');
-
-        newIsValid.innerHTML += html;
-        newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
-    } 
-
-    // Si on demande les relevés d'équipe ou l'intégralité des relevés
-    else {
-        // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
-        var newFirstName = newRow.insertCell(1);
-        var newLastName = newRow.insertCell(2);
-        var newStartTime = newRow.insertCell(3);
-        var newEndTime = newRow.insertCell(4);
-        var newComment = newRow.insertCell(5);
-        var newStatus = newRow.insertCell(6);
-        var newUpdateDate = newRow.insertCell(7);
-        var newEdit = newRow.insertCell(8);
-        var newDelete = newRow.insertCell(9);
-
-        // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
-        newFirstName.innerHTML += data[counter].Prenom;
-        newLastName.innerHTML += data[counter].Nom;
-        newStartTime.innerHTML += data[counter].date_hrs_debut;
-        newEndTime.innerHTML += data[counter].date_hrs_fin;
-        newComment.innerHTML += data[counter].commentaire;
-
-        if(data[counter].statut_validation == '0'){
-            newStatus.innerHTML += "En attente";
-            if(data[counter].supprimer == 0){
-                // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-                newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-                newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
-            }
-        } else newStatus.innerHTML += "Validé";
-
-        newUpdateDate.innerHTML += data[counter].date_hrs_modif;
-    }
+    if(typeOfRecord == 'Personal') fillPersonalRecordsTable(newRow, data, counter);
+    else if (typeOfRecord == 'Check') fillTeamRecordsToCheckTable(newRow, data, counter);
+    else fillTeamAndAllUsersRecordsTable(newRow, data, counter);
 }
 
 
-/* Fonction qui permet de mettre à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé
-    Param : 
-    * data : un tableau de données
+/* Fonction qui permet de vider le tableau et d'afficher un message s'il n'y a aucun résultat à afficher
+    Param :
+    * tab_data : tableau contenant les données de la requête AJAX
 */
 
-function updateFormInputs(data){
-    var inputDateTimeStart = document.getElementById('datetime_start');
-    var inputDateTimeEnd = document.getElementById('datetime_end');
-    var inputComment = document.getElementById('comment');
+function clearTable(tab_data){
+    // On récupère la ligne vide du tableau
+    var tr_empty = $("#records_log tbody tr:first-child");
 
-    // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par l'input datetime-locale
-    var startTime = data[3].replace(" ", "T");
-    var endTime = data[4].replace(" ", "T");
+    // On ré-insère la ligne vide. Résultat : Le tableau est vidé à chaque fois que la fonction est appelée
+    $("#records_log").children("tbody").html(tr_empty);
 
-    inputDateTimeStart.setAttribute("value", startTime);
-    inputDateTimeEnd.setAttribute("value", endTime);
-    inputComment.innerHTML += data[6];
+    // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau, sinon on le cache
+    if(!tab_data.length) document.getElementById("no_record_message").hidden = false;
+    else document.getElementById("no_record_message").hidden = true;
+}
+
+
+/* Fonction qui permet d'insérer des boutons de contrôle de formulaire */
+
+function insertFormControlButtons(){
+    var formControlButtons = [
+        '<div class="row mb-3 justify-content-md-center">',      
+            '<div class="col-lg mb-5 text-end">',
+                '<input type="reset" value="Annuler" class="btn btn-light p-3"/>',
+                '<input type="submit" value="Valider" class="btn btn-dark"/>',
+            '</div>',
+        '</div>'
+    ].join('');
+
+    $(formControlButtons).insertAfter("#records_log");
 }
 
 
@@ -138,41 +153,42 @@ function updateFormInputs(data){
 
 function parseMultipleLinesRequest(data){
     var tab_data = data.records;
-    //console.log(data);
-    //console.log(tab_data);
     var typeOfRecords = data.typeOfRecords;
+    //console.log(data);
 
-    // On récupère la ligne vide du tableau
-    var tr_empty = $("#records_log tbody tr:first-child");
-    // On ré-insère la ligne vide. 
-    // Résultat : Le tableau est vidé à chaque fois que la fonction est appelée
-    $("#records_log").children("tbody").html(tr_empty);
-
-    // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau
-    if(!tab_data.length) document.getElementById("no_record_message").hidden = false;
-    else document.getElementById("no_record_message").hidden = true;
+    // On vide le tableau
+    clearTable(tab_data);
 
     // Si la requête concerne une liste de relevés à valider, on insère les boutons de contrôle du formulaire de validation après le tableau
-    if(tab_data.length && typeOfRecords == 'Check') {
-        var formControlButtons = [
-            '<div class="row mb-3 justify-content-md-center">',      
-                '<div class="col-lg mb-5 text-end">',
-                    '<input type="button" value="Annuler" class="btn btn-light p-3"/>',
-                    '<input type="submit" value="Valider" class="btn btn-dark"/>',
-                '</div>',
-            '</div>'
-        ].join('');
-    
-        $(formControlButtons).insertAfter("#records_log");
-    }
+    if(tab_data.length && typeOfRecords == 'Check') insertFormControlButtons();
 
+    // Si la requête a retourné des résultats, on boucle sur tab_data pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
     if(tab_data.length){
-        //On boucle sur tab_data pour récupérer chaque objet (relevé d'heure)
         for (var i = 0; i < tab_data.length; i++) {
-            // On appelle la fonction qui permet d'ajouter des lignes au tableau et on lui passe le tableau en paramètre
             appendLine('records_log', tab_data, typeOfRecords, i);
         }
     }
+}
+
+
+/* Fonction qui permet de mettre à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé
+    Param : 
+    * data : un tableau de données
+*/
+
+function updateFormInputs(data){
+    // console.log(data);
+    var inputDateTimeStart = document.getElementById('datetime_start');
+    var inputDateTimeEnd = document.getElementById('datetime_end');
+    var inputComment = document.getElementById('comment');
+
+    // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par datetime-locale
+    var startTime = data[3].replace(" ", "T");
+    var endTime = data[4].replace(" ", "T");
+
+    inputDateTimeStart.setAttribute("value", startTime);
+    inputDateTimeEnd.setAttribute("value", endTime);
+    inputComment.innerHTML += data[6];
 }
 
 
@@ -182,6 +198,7 @@ function parseMultipleLinesRequest(data){
 */
 
 function parseUniqueLineRequest(data){
+    // console.log(data);
     var recordData = [];
 
     $.each(data, function(key, value) {
@@ -246,7 +263,7 @@ function updateTeamRecordsLog(typeOfRecords, scope) {
 }
 
 function updateAllUsersRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
 }
 
 

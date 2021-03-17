@@ -44,8 +44,8 @@
         </div>
 
         <?php include('partials/footer.php'); ?>
+        <?php include('partials/recordFormScripts.php'); ?>
 
-        <script src="public/js/update_records_log.js"></script>
         <script>
             $(function() {
                 getNumberOfRecordsToCheck('Check', 'unchecked');

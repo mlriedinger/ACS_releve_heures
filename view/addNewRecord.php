@@ -16,5 +16,6 @@
         </div>
 
         <?php include('partials/footer.php'); ?>
+        <?php include('partials/recordFormScripts.php'); ?>
     </body>
 </html>

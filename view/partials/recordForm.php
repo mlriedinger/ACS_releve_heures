@@ -31,7 +31,7 @@
             
             <div class="col-sm-8 mb-5 text-center">
                 <input type="hidden" value="<?=($_POST['idRecord'])?>" name="record_id"/>
-                <input type="button" value="Annuler" class="btn btn-light"/>
+                <input type="reset" value="Annuler" onclick="closeModal()" class="btn btn-light"/>
                 <input type="submit" value="Valider" class="btn btn-dark"/>
             </div>
             
@@ -43,6 +43,10 @@
 <script src="public/js/update_records_log.js"></script>
 <script>
     $(function() {
-        getRecordData(<?=($_POST['idRecord']);?>);
+        getRecordData(<?= $_POST['idRecord'] ;?>);
     });
+
+    function closeModal(){
+        $('#formModal').modal('hide');
+    }
 </script>

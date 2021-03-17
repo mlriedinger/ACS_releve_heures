@@ -42,7 +42,8 @@ function displayExportForm(){
 
 /* Fonction pour récupérer le formulaire de saisie (uniquement le formulaire) */
 
-function getRecordForm(){
+function getRecordForm($id_record){
+    $recordId = $id_record;
     require('view/partials/recordForm.php');
 }
 
@@ -147,10 +148,10 @@ function getAllUsersRecords($typeOfRecords, $scope){
     $recordManager->getAllRecords($typeOfRecords, $scope);
 }
 
-function exportRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user){
-    $recordManager = new RecordManager();
-    $recordManager->getAllRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user);
-}
+// function exportRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user){
+//     $recordManager = new RecordManager();
+//     $recordManager->getAllRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user);
+// }
 
 function getOptionsData($typeOfData){
     $recordManager = new RecordManager();

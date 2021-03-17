@@ -115,7 +115,9 @@ if(isset($_GET['action'])){
 
             // Renvoyer le formulaire de saisie
             case "getRecordForm":
-                if(isset($_SESSION['id'])) getRecordForm();
+                if(isset($_SESSION['id'])) {
+                    if (isset($_POST['idRecord'])) getRecordForm($_POST['idRecord']);
+                }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
 
@@ -163,13 +165,13 @@ if(isset($_GET['action'])){
                 break;
 
             // Exporter les données en CSV
-            case "exportRecords":
-                if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
-                    if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') {
-                        if(isset($_POST['scope']) && isset($_POST['period_start']) && isset($_POST['period_end']) && isset($_POST['manager']) && isset($_POST['user'])) exportRecords($_GET['typeOfRecords'], $_POST['scope'], $_POST['period_start'], $_POST['period_end'], $_POST['manager'], $_POST['user']);
-                    }
-                }
-                break;
+            // case "exportRecords":
+            //     if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
+            //         if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') {
+            //             if(isset($_POST['scope']) && isset($_POST['period_start']) && isset($_POST['period_end']) && isset($_POST['manager']) && isset($_POST['user'])) exportRecords($_GET['typeOfRecords'], $_POST['scope'], $_POST['period_start'], $_POST['period_end'], $_POST['manager'], $_POST['user']);
+            //         }
+            //     }
+            //     break;
 
             // Récupérer les listes des managers et des salariés pour le formulaire d'export
             case "getOptionsData":

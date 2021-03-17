@@ -23,7 +23,7 @@
             
             <div class="col-sm-8 mb-5 text-center">
                 <input type="hidden" value="<?=($_POST['idRecord'])?>" name="record_id"/>
-                <input type="button" value="Annuler" class="btn btn-light"/>
+                <input type="reset" value="Annuler" onclick="closeModal()" class="btn btn-light"/>
                 <input type="submit" value="Confirmer" class="btn btn-dark"/>
             </div>
             

@@ -156,7 +156,7 @@ class RecordManager extends DatabaseConnection
     public function getRecord($id_record){
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE ID = :id_record');
+        $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE t_saisie_heure.ID = :id_record');
         $query->execute(array('id_record' => $id_record));
         $recordData = $query->fetch(PDO::FETCH_ASSOC);
 
@@ -177,10 +177,10 @@ class RecordManager extends DatabaseConnection
         Retourne la chaîne $sql complétée
     */
 
-    public function addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start="", $date_end="", $id_manager="", $id_user=""){
+    public function addQueryScopeAndOrderByClause($sql, $scope){
         switch($scope) {
             case "all":
-                if($type_of_records != "export") $sql .= " AND t_saisie_heure.supprimer = 0";
+                $sql .= " AND t_saisie_heure.supprimer = 0";
                 break;
             case "valid":
                 $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
@@ -193,19 +193,6 @@ class RecordManager extends DatabaseConnection
                 break;
             default:
                 break;
-        }
-
-        if($date_start != "" && $date_end != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :date_start AND t_saisie_heure.date_hrs_fin <= :date_end";
-        if($id_manager != "") $sql .= " AND t_equipe.id_manager = :id_manager";
-        if($id_user != "") $sql .= " AND t_saisie_heure.id_login = :id_user";
-
-        if($type_of_records == "export" || $type_of_records == "all"){
-            $pos = strpos($sql, "AND");
-            if($pos !== false) {
-                $search = "AND";
-                $replace = "WHERE";
-                $sql = substr_replace($sql, $replace, $pos, strlen("AND"));
-            }
         }
         
         $sql .= " ORDER BY t_saisie_heure.date_hrs_creation DESC";
@@ -224,11 +211,19 @@ class RecordManager extends DatabaseConnection
     public function getRecordsFromUser($id_user, $type_of_records, $scope){
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT *
+        $sql = "SELECT id_chantier, 
+        date_hrs_debut, 
+        date_hrs_fin, 
+        commentaire, 
+        statut_validation, 
+        date_hrs_creation, 
+        date_hrs_modif,
+        ID,
+        supprimer 
         FROM t_saisie_heure 
         WHERE id_login = :id_user";
 
-        $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_user' => $id_user));
@@ -255,7 +250,17 @@ class RecordManager extends DatabaseConnection
     public function getRecordsFromTeam($id_manager, $type_of_records, $scope){
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT *
+        $sql = "SELECT t_saisie_heure.id_chantier, 
+        t_login.Nom, 
+        t_login.Prenom, 
+        t_saisie_heure.date_hrs_debut, 
+        t_saisie_heure.date_hrs_fin, 
+        t_saisie_heure.commentaire, 
+        t_saisie_heure.statut_validation, 
+        t_saisie_heure.date_hrs_creation, 
+        t_saisie_heure.date_hrs_modif,
+        t_saisie_heure.ID,
+        t_saisie_heure.supprimer
         FROM t_equipe
         INNER JOIN t_login
         ON t_equipe.id_membre = t_login.ID
@@ -263,7 +268,7 @@ class RecordManager extends DatabaseConnection
         ON t_login.ID = t_saisie_heure.id_login
         WHERE t_equipe.id_manager = :id_manager";
 
-        $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_manager' => $id_manager));
@@ -286,49 +291,39 @@ class RecordManager extends DatabaseConnection
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getAllRecords($type_of_records, $scope, $date_start="", $date_end="", $id_manager="", $id_user=""){
+    public function getAllRecords($type_of_records, $scope){
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT *
+        $sql = "SELECT t_saisie_heure.id_chantier, 
+        t_login.Nom, 
+        t_login.Prenom, 
+        t_saisie_heure.date_hrs_debut, 
+        t_saisie_heure.date_hrs_fin, 
+        t_saisie_heure.commentaire, 
+        t_saisie_heure.statut_validation, 
+        t_saisie_heure.date_hrs_creation, 
+        t_saisie_heure.date_hrs_modif,
+        t_saisie_heure.ID,
+        t_saisie_heure.supprimer
         FROM t_saisie_heure
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID";
 
-        if($id_manager != "") $sql .= " INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
-
-        $sql = $this->addQueryScopeAndOrderByClause($type_of_records, $sql, $scope, $date_start, $date_end, $id_manager, $id_user);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
 
         $query = $pdo->prepare($sql);
+        $query->execute();
+        $records["typeOfRecords"] = $type_of_records;
+        $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryParams = array();
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
 
-        if($id_manager != "") $queryParams['id_manager'] = $id_manager;
-        if($id_user != "")  $queryParams['id_user'] = $id_user;
-        if($date_start != "") $queryParams['date_start'] = $date_start;
-        if($date_end != "") $queryParams['date_end'] = $date_end;
-        
-        $query->execute($queryParams);
+        // Commenter la ligne suivante pour débugger la requête
+        header("Content-Type: text/json");
 
-        if($type_of_records == "export"){
-            $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($records);
 
-            // Décommenter la ligne suivante pour débugger la requête
-            // $query->debugDumpParams();
-
-            $this->writeCsvFile($rows);
-        }
-        else {
-            $records["typeOfRecords"] = $type_of_records;
-            $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            // Décommenter la ligne suivante pour débugger la requête
-            // $query->debugDumpParams();
-
-            // Commenter la ligne suivante pour débugger la requête
-            header("Content-Type: text/json");
-
-            echo json_encode($records);
-        }
     }
 
     public function writeCsvFile($rows){
