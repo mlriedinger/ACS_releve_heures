@@ -50,7 +50,7 @@ function getRecordForm(){
 /* Fonction pour récupérer le formulaire de confirmation de suppression (uniquement le formulaire) */
 
 function getDeleteConfirmationForm(){
-    require('view/partials/deleteConfirmation.php');
+    require('view/partials/deleteConfirmationForm.php');
 }
 
 
