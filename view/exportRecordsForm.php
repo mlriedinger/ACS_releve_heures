@@ -71,13 +71,13 @@
 
                                         <div class="accordion-body">
                                             <div class="input-group mb-3">
-                                                <span class="input-group-text" id="period_start_selector">Du</span>
-                                                <input type="date" name="period_start" id="period_start" class="form-control" aria-label="Sélectionnez une date de début" aria-describedby="period_start_selector"/>
+                                                <span class="input-group-text" id="periodStart_selector">Du</span>
+                                                <input type="date" name="periodStart" id="periodStart" class="form-control" aria-label="Sélectionnez une date de début" aria-describedby="periodStart_selector"/>
                                             </div>
 
                                             <div class="input-group mb-3">
-                                                    <span class="input-group-text" id="period_end_selector">Au</span>
-                                                    <input type="date" name="period_end" id="period_end" class="form-control" aria-label="Sélectionnez une date de fin" aria-describedby="period_end_selector"/>
+                                                    <span class="input-group-text" id="periodEnd_selector">Au</span>
+                                                    <input type="date" name="periodEnd" id="periodEnd" class="form-control" aria-label="Sélectionnez une date de fin" aria-describedby="periodEnd_selector"/>
                                             </div>
                                         </div>
 
@@ -139,9 +139,6 @@
         </div>
 
         <?php include('partials/footer.php'); ?>
-        <!-- <script>
-            $('#selectManager').append(new Option("Manager 1", "12"));
-        </script> -->
 
         <script src="public/js/update_records_log.js"></script>
         <script>

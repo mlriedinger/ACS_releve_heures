@@ -148,7 +148,9 @@ if(isset($_GET['action'])){
             // Récupérer les données de l'historique personnel
             case "getPersonalRecordsLog":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope'])) getUserRecords($_SESSION['id'], htmlspecialchars($_POST['typeOfRecords']), htmlspecialchars($_POST['scope']));
+                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope'])) {
+                        getUserRecords($_SESSION['id'], htmlspecialchars($_POST['typeOfRecords']), htmlspecialchars($_POST['scope']));
+                    }
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -177,15 +179,15 @@ if(isset($_GET['action'])){
                 break;
 
             // Exporter les données en CSV
-            // case "exportRecords":
-            //     if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
-            //         if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') {
-            //             if(isset($_POST['scope']) && isset($_POST['period_start']) && isset($_POST['period_end']) && isset($_POST['manager']) && isset($_POST['user'])) {
-            //                  exportRecords(htmlspecialchars($_GET['typeOfRecords']), htmlspecialchars($_POST['scope']), htmlspecialchars($_POST['period_start']), htmlspecialchars($_POST['period_end']), htmlspecialchars($_POST['manager'], $_POST['user']));
-            //              }
-            //         }
-            //     }
-            //     break;
+            case "exportRecords":
+                if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
+                    if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') {
+                        if(isset($_POST['scope']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['manager']) && isset($_POST['user'])) {
+                             exportRecords(htmlspecialchars($_GET['typeOfRecords']), htmlspecialchars($_POST['scope']), htmlspecialchars($_POST['periodStart']), htmlspecialchars($_POST['periodEnd']), htmlspecialchars($_POST['manager'], $_POST['user']));
+                         }
+                    }
+                }
+                break;
 
             // Récupérer les listes des managers et des salariés pour le formulaire d'export
             case "getOptionsData":

@@ -107,7 +107,7 @@ function appendLine(tableID, data, typeOfRecord, counter){
 
     // On crée une nouvelle colonne 'chantiers'
     var newWorkSite = newRow.insertCell(0);
-    newWorkSite.innerHTML += data[counter].id_chantier;
+    newWorkSite.innerHTML += data[counter].id_of;
 
     // En fonction du type de relevés, on crée et on remplit les autres colonnes du tableau
     if(typeOfRecord == 'Personal') fillPersonalRecordsTable(newRow, data, counter);
@@ -156,6 +156,7 @@ function insertFormControlButtons(){
 */
 
 function parseMultipleLinesRequest(data){
+    console.log(data);
     var tab_data = data.records;
     var typeOfRecords = data.typeOfRecords;
 
@@ -229,12 +230,14 @@ function displayNumberOfRecordsTocheck(data){
 */
 
 function displayOptionsList(data){
+    console.log(data);
     var typeOfData = data.typeOfData;
     var tab_data = data.records;
 
     var selector = "";
-    if(typeOfData === "managers") selector = "#selectManager";
     if(typeOfData === "users") selector = "#selectUser";
+    if(typeOfData === "managers") selector = "#selectManager";
+    
 
     for(let i = 0 ; i < tab_data.length ; i ++){
         $(selector).append(new Option(tab_data[i].Nom + ' ' + tab_data[i]. Prenom, tab_data[i].ID));

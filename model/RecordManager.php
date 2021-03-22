@@ -24,16 +24,16 @@ class RecordManager extends DatabaseConnection
 {
     /* Méthode qui permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
-        * $id_user : id utilisateur
-        * $start_time : date et heure de début
-        * $end_time: date et heure de fin
+        * $userID : id utilisateur
+        * $dateTimeStart : date et heure de début
+        * $dateTimeEnd: date et heure de fin
         * $comment : commentaire
-        * $id_group : groupe utilisateur
+        * $groupId : groupe utilisateur
     */
 
-    public function sendNewRecord($id_user, $start_time, $end_time, $comment, $id_group){
+    public function sendNewRecord($userID, $dateTimeStart, $dateTimeEnd, $comment, $groupId){
         $isSendingSuccessfull = false;
-        $id_group === 1 ? $validation_status = 1 : $validation_status = 0;
+        $groupId === 1 ? $validation_status = 1 : $validation_status = 0;
         
         $pdo = $this->dbConnect();
       
@@ -46,16 +46,16 @@ class RecordManager extends DatabaseConnection
             commentaire) 
         VALUES (
             :id,
-            :id_user, 
-            :start_time, 
-            :end_time, 
+            :userID, 
+            :dateTimeStart, 
+            :dateTimeEnd, 
             :validation_status,
             :comment)');
         $attempt = $query->execute(array(
             'id' => 0,
-            'id_user' => $id_user, 
-            'start_time' => $start_time,
-            'end_time' => $end_time,
+            'userID' => $userID, 
+            'dateTimeStart' => $dateTimeStart,
+            'dateTimeEnd' => $dateTimeEnd,
             'validation_status' => $validation_status,
             'comment' => $comment
         ));
@@ -71,27 +71,27 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de mettre à jour un relevé lorsqu'il n'a pas encore été validé par un N+1. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
-        * $id_record : id du relevé à mettre à jour
-        * $start_time : date et heure de début
-        * $end_time: date et heure de fin
+        * $recordId : id du relevé à mettre à jour
+        * $dateTimeStart : date et heure de début
+        * $dateTimeEnd: date et heure de fin
         * $comment : commentaire
     */
 
-    public function updateRecord($id_record, $start_time, $end_time, $comment){
+    public function updateRecord($recordId, $dateTimeStart, $dateTimeEnd, $comment){
         $isUpdateSuccessfull = false;
 
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
         SET 
-        date_hrs_debut = :start_time, 
-        date_hrs_fin = :end_time, 
+        date_hrs_debut = :dateTimeStart, 
+        date_hrs_fin = :dateTimeEnd, 
         commentaire = :comment
-        WHERE ID = :id_record');
+        WHERE ID = :recordId');
         $attempt = $query->execute(array(
-            'id_record' => $id_record,
-            'start_time' => $start_time,
-            'end_time' => $end_time,
+            'recordId' => $recordId,
+            'dateTimeStart' => $dateTimeStart,
+            'dateTimeEnd' => $dateTimeEnd,
             'comment' => $comment
         ));
 
@@ -106,18 +106,18 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
-        * $id_record : id du relevé à mettre à jour
+        * $recordId : id du relevé à mettre à jour
     */
 
-    public function updateRecordStatus($id_record){
+    public function updateRecordStatus($recordId){
         $isUpdateSuccessfull = false;
                 
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
         SET statut_validation = 1
-        WHERE ID = :id_record');
-        $attempt = $query->execute(array('id_record' => $id_record));
+        WHERE ID = :recordId');
+        $attempt = $query->execute(array('recordId' => $recordId));
 
         // Décommenter la ligne suivante pour débugger la requête
         // $query->debugDumpParams();
@@ -130,20 +130,20 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de supprimer un relevé
         Params: 
-        * $id_record : id du relevé à supprimer
+        * $recordId : id du relevé à supprimer
         * $comment : commentaire à mettre à jour dans la BDD (si justification de la suppression)
     */
 
-    public function deleteRecord($id_record, $comment){
+    public function deleteRecord($recordId, $comment){
         $isDeleteSuccessfull = false;
     
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
         SET supprimer = 1, commentaire = :comment
-        WHERE ID=:id_record');
+        WHERE ID=:recordId');
         $attempt = $query->execute(array(
-            'id_record' => $id_record,
+            'recordId' => $recordId,
             'comment' => $comment
         ));
 
@@ -161,11 +161,11 @@ class RecordManager extends DatabaseConnection
         * $recordId : id relevé
     */
 
-    public function getRecord($id_record){
+    public function getRecord($recordId){
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE t_saisie_heure.ID = :id_record');
-        $query->execute(array('id_record' => $id_record));
+        $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE t_saisie_heure.ID = :recordId');
+        $query->execute(array('recordId' => $recordId));
         $recordData = $query->fetch(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête
@@ -185,7 +185,7 @@ class RecordManager extends DatabaseConnection
         Retourne la chaîne $sql complétée
     */
 
-    public function addQueryScopeAndOrderByClause($sql, $scope, $type_of_records){
+    public function addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords){
         switch($scope) {
             case "all":
                 $sql .= " AND t_saisie_heure.supprimer = 0";
@@ -203,7 +203,7 @@ class RecordManager extends DatabaseConnection
                 break;
         }
 
-        if($type_of_records == "export" || $type_of_records == "all"){
+        if($typeOfRecords == "export" || $typeOfRecords == "all"){
             $pos = strpos($sql, "AND");
             if($pos !== false) {
                 $search = "AND";
@@ -220,15 +220,15 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer tous les relevés d'heures associés à un utilisateur. Elle renvoie les données en JSON pour être exploitables par JS.
         Params:
-        * $id_user : id utilisateur
-        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+        * $userID : id utilisateur
+        * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getRecordsFromUser($id_user, $type_of_records, $scope){
+    public function getRecordsFromUser($userID, $typeOfRecords, $scope){
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT id_chantier, 
+        $sql = "SELECT id_of, 
         date_hrs_debut, 
         date_hrs_fin, 
         commentaire, 
@@ -238,13 +238,13 @@ class RecordManager extends DatabaseConnection
         ID,
         supprimer 
         FROM t_saisie_heure 
-        WHERE id_login = :id_user";
+        WHERE id_login = :userID";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
-        $query->execute(array('id_user' => $id_user));
-        $userRecords["typeOfRecords"] = $type_of_records;
+        $query->execute(array('userID' => $userID));
+        $userRecords["typeOfRecords"] = $typeOfRecords;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
         
         // Décommenter la ligne suivante pour débugger la requête
@@ -259,15 +259,15 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer TOUS les relevés d'heures de salariés associés à un manager. Elle renvoie les données en JSON pour être exploitables par JS.
         Params: 
-        * $id_manager : id du chef d'équipe
-        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+        * $managerId : id du chef d'équipe
+        * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getRecordsFromTeam($id_manager, $type_of_records, $scope){
+    public function getRecordsFromTeam($managerId, $typeOfRecords, $scope){
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT t_saisie_heure.id_chantier, 
+        $sql = "SELECT t_saisie_heure.id_of, 
         t_login.Nom, 
         t_login.Prenom, 
         t_saisie_heure.date_hrs_debut, 
@@ -283,13 +283,13 @@ class RecordManager extends DatabaseConnection
         ON t_equipe.id_membre = t_login.ID
         INNER JOIN t_saisie_heure
         ON t_login.ID = t_saisie_heure.id_login
-        WHERE t_equipe.id_manager = :id_manager";
+        WHERE t_equipe.managerId = :managerId";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
-        $query->execute(array('id_manager' => $id_manager));
-        $teamRecords["typeOfRecords"] = $type_of_records;
+        $query->execute(array('managerId' => $managerId));
+        $teamRecords["typeOfRecords"] = $typeOfRecords;
         $teamRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête
@@ -304,14 +304,14 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer les relevés de tous les utilisateurs. Elle renvoie les données en JSON pour être exploitables par JS.
          Params: 
-        * $type_of_records : type de relevés demandés (paramètre envoyé par la requête AJAX)
+        * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getAllRecords($type_of_records, $scope){
+    public function getAllRecords($typeOfRecords, $scope){
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT t_saisie_heure.id_chantier, 
+        $sql = "SELECT t_saisie_heure.id_of, 
         t_login.Nom, 
         t_login.Prenom, 
         t_saisie_heure.date_hrs_debut, 
@@ -326,11 +326,11 @@ class RecordManager extends DatabaseConnection
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
         $query->execute();
-        $records["typeOfRecords"] = $type_of_records;
+        $records["typeOfRecords"] = $typeOfRecords;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête
@@ -343,14 +343,14 @@ class RecordManager extends DatabaseConnection
     }
 
 
-    public function getRecordsToExport($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user){
+    public function getRecordsToExport($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID){
 
         // A COMPLETER ! 
         
         $pdo = $this->dbConnect();
 
         $sql = "SELECT t_saisie_heure.ID AS 'numero de releve',
-        t_saisie_heure.id_chantier AS 'chantier',
+        t_saisie_heure.id_of AS 'chantier',
         t_login.Nom AS 'nom salarie', 
         t_login.Prenom AS 'prenom salarie', 
         t_saisie_heure.date_hrs_debut AS 'date et heure de debut', 
@@ -366,11 +366,11 @@ class RecordManager extends DatabaseConnection
         INNER JOIN t_equipe
         ON t_login.ID = t_equipe.id_membre";
 
-        if($date_start != "" && $date_end != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :date_start AND t_saisie_heure.date_hrs_fin <= :date_end";
-        if($id_manager != "") $sql .= " AND t_equipe.id_manager = :id_manager";
-        if($id_user != "") $sql .= " AND t_saisie_heure.id_login = :id_user";
+        if($dateStart != "" && $dateEnd != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :dateStart AND t_saisie_heure.date_hrs_fin <= :dateEnd";
+        if($managerId != "") $sql .= " AND t_equipe.managerId = :managerId";
+        if($userID != "") $sql .= " AND t_saisie_heure.id_login = :userID";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
         $query->execute();
@@ -415,10 +415,10 @@ class RecordManager extends DatabaseConnection
 
         switch($type){
             case "managers":
-                $sql .= "SELECT * FROM t_equipe INNER JOIN t_login ON t_equipe.id_manager = t_login.ID GROUP BY t_equipe.id_manager";
+                $sql .= "SELECT t_login.Nom, t_login.Prenom FROM t_equipe INNER JOIN t_login ON t_equipe.id_manager = t_login.ID GROUP BY t_equipe.id_manager";
                 break;
             case "users":
-                $sql .= "SELECT * FROM t_login";
+                $sql .= "SELECT Nom, Prenom FROM t_login";
                 break;
         }
 
