@@ -1,4 +1,5 @@
 function fillPersonalRecordsTable(newRow, data, counter){
+    // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
     var newStartTime = newRow.insertCell(1);
     var newEndTime = newRow.insertCell(2);
     var newComment = newRow.insertCell(3);
@@ -10,8 +11,10 @@ function fillPersonalRecordsTable(newRow, data, counter){
     // On ajoute du contenu à chaque colonne créée : ici, les données du tableau passé en paramètre
     newStartTime.innerHTML += data[counter].date_hrs_debut;
     newEndTime.innerHTML += data[counter].date_hrs_fin;
+
     newComment.classList.add("records_log_comment");
     newComment.innerHTML += data[counter].commentaire;
+
     if(data[counter].statut_validation == 0){
         newStatus.innerHTML += "En attente";
         if(data[counter].supprimer == 0){
@@ -57,7 +60,6 @@ function fillTeamRecordsToCheckTable(newRow, data, counter){
 
 
 function fillTeamAndAllUsersRecordsTable(newRow, data, counter){
-    //console.log(data);
     // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
     var newFirstName = newRow.insertCell(1);
     var newLastName = newRow.insertCell(2);
@@ -103,9 +105,11 @@ function appendLine(tableID, data, typeOfRecord, counter){
     // On crée une nouvelle ligne à la fin du tableau existant
     var newRow = table.insertRow(-1);
 
+    // On crée une nouvelle colonne 'chantiers'
     var newWorkSite = newRow.insertCell(0);
     newWorkSite.innerHTML += data[counter].id_chantier;
 
+    // En fonction du type de relevés, on crée et on remplit les autres colonnes du tableau
     if(typeOfRecord == 'Personal') fillPersonalRecordsTable(newRow, data, counter);
     else if (typeOfRecord == 'Check') fillTeamRecordsToCheckTable(newRow, data, counter);
     else fillTeamAndAllUsersRecordsTable(newRow, data, counter);
@@ -154,7 +158,6 @@ function insertFormControlButtons(){
 function parseMultipleLinesRequest(data){
     var tab_data = data.records;
     var typeOfRecords = data.typeOfRecords;
-    //console.log(data);
 
     // On vide le tableau
     clearTable(tab_data);
@@ -177,7 +180,6 @@ function parseMultipleLinesRequest(data){
 */
 
 function updateFormInputs(data){
-    // console.log(data);
     var inputDateTimeStart = document.getElementById('datetime_start');
     var inputDateTimeEnd = document.getElementById('datetime_end');
     var inputComment = document.getElementById('comment');
@@ -198,7 +200,6 @@ function updateFormInputs(data){
 */
 
 function parseUniqueLineRequest(data){
-    // console.log(data);
     var recordData = [];
 
     $.each(data, function(key, value) {
@@ -215,7 +216,6 @@ function parseUniqueLineRequest(data){
 */
 
 function displayNumberOfRecordsTocheck(data){
-    // console.log(data.records);
     var tab_data = data.records;
 
     if(tab_data.length) document.getElementById("notificationIcon").innerHTML = tab_data.length;
@@ -229,19 +229,15 @@ function displayNumberOfRecordsTocheck(data){
 */
 
 function displayOptionsList(data){
-    // console.log(data);
     var typeOfData = data.typeOfData;
-    var tab_data = data.records
+    var tab_data = data.records;
 
-    if(typeOfData == "managers"){
-        for(let i = 0 ; i < tab_data.length ; i ++){
-            $('#selectManager').append(new Option(tab_data[i].Nom + ' ' + tab_data[i]. Prenom, tab_data[i].ID));
-        }
-    }
-    else if(typeOfData == "users"){
-        for(let i = 0 ; i < tab_data.length ; i ++){
-            $('#selectUser').append(new Option(tab_data[i].Nom + ' ' + tab_data[i]. Prenom, tab_data[i].ID));
-        }
+    var selector = "";
+    if(typeOfData === "managers") selector = "#selectManager";
+    if(typeOfData === "users") selector = "#selectUser";
+
+    for(let i = 0 ; i < tab_data.length ; i ++){
+        $(selector).append(new Option(tab_data[i].Nom + ' ' + tab_data[i]. Prenom, tab_data[i].ID));
     }
 }
 
@@ -255,7 +251,7 @@ function displayOptionsList(data){
 */
 
 function updatePersonalRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
+    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 ;}
 
 function updateTeamRecordsLog(typeOfRecords, scope) {
@@ -263,7 +259,7 @@ function updateTeamRecordsLog(typeOfRecords, scope) {
 }
 
 function updateAllUsersRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
+    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
 

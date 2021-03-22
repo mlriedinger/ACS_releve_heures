@@ -150,7 +150,7 @@ function getAllUsersRecords($typeOfRecords, $scope){
 
 // function exportRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user){
 //     $recordManager = new RecordManager();
-//     $recordManager->getAllRecords($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user);
+//     $recordManager->getRecordsToExport($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user);
 // }
 
 function getOptionsData($typeOfData){

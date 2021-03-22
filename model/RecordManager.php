@@ -28,17 +28,22 @@ class RecordManager extends DatabaseConnection
         * $start_time : date et heure de début
         * $end_time: date et heure de fin
         * $comment : commentaire
-
+        * $id_group : groupe utilisateur
     */
 
     public function sendNewRecord($id_user, $start_time, $end_time, $comment, $id_group){
         $isSendingSuccessfull = false;
-        $validation_status = 0;
-        if($id_group == 1) $validation_status = 1;
+        $id_group === 1 ? $validation_status = 1 : $validation_status = 0;
         
         $pdo = $this->dbConnect();
       
-        $query = $pdo->prepare('INSERT INTO t_saisie_heure(id, id_login, date_hrs_debut, date_hrs_fin, statut_validation, commentaire) 
+        $query = $pdo->prepare('INSERT INTO t_saisie_heure(
+            id, 
+            id_login, 
+            date_hrs_debut, 
+            date_hrs_fin, 
+            statut_validation, 
+            commentaire) 
         VALUES (
             :id,
             :id_user, 
@@ -78,7 +83,10 @@ class RecordManager extends DatabaseConnection
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
-        SET date_hrs_debut = :start_time, date_hrs_fin = :end_time, commentaire = :comment
+        SET 
+        date_hrs_debut = :start_time, 
+        date_hrs_fin = :end_time, 
+        commentaire = :comment
         WHERE ID = :id_record');
         $attempt = $query->execute(array(
             'id_record' => $id_record,
@@ -177,7 +185,7 @@ class RecordManager extends DatabaseConnection
         Retourne la chaîne $sql complétée
     */
 
-    public function addQueryScopeAndOrderByClause($sql, $scope){
+    public function addQueryScopeAndOrderByClause($sql, $scope, $type_of_records){
         switch($scope) {
             case "all":
                 $sql .= " AND t_saisie_heure.supprimer = 0";
@@ -193,6 +201,15 @@ class RecordManager extends DatabaseConnection
                 break;
             default:
                 break;
+        }
+
+        if($type_of_records == "export" || $type_of_records == "all"){
+            $pos = strpos($sql, "AND");
+            if($pos !== false) {
+                $search = "AND";
+                $replace = "WHERE";
+                $sql = substr_replace($sql, $replace, $pos, strlen("AND"));
+            }
         }
         
         $sql .= " ORDER BY t_saisie_heure.date_hrs_creation DESC";
@@ -223,7 +240,7 @@ class RecordManager extends DatabaseConnection
         FROM t_saisie_heure 
         WHERE id_login = :id_user";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_user' => $id_user));
@@ -268,7 +285,7 @@ class RecordManager extends DatabaseConnection
         ON t_login.ID = t_saisie_heure.id_login
         WHERE t_equipe.id_manager = :id_manager";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
 
         $query = $pdo->prepare($sql);
         $query->execute(array('id_manager' => $id_manager));
@@ -309,7 +326,7 @@ class RecordManager extends DatabaseConnection
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
 
         $query = $pdo->prepare($sql);
         $query->execute();
@@ -323,7 +340,40 @@ class RecordManager extends DatabaseConnection
         header("Content-Type: text/json");
 
         echo json_encode($records);
+    }
 
+
+    public function getRecordsToExport($typeOfRecords, $scope, $date_start, $date_end, $id_manager, $id_user){
+
+        // A COMPLETER ! 
+        
+        $pdo = $this->dbConnect();
+
+        $sql = "SELECT t_saisie_heure.ID AS 'numero de releve',
+        t_saisie_heure.id_chantier AS 'chantier',
+        t_login.Nom AS 'nom salarie', 
+        t_login.Prenom AS 'prenom salarie', 
+        t_saisie_heure.date_hrs_debut AS 'date et heure de debut', 
+        t_saisie_heure.date_hrs_fin AS 'date et heure de fin', 
+        t_saisie_heure.commentaire, 
+        t_saisie_heure.statut_validation AS 'statut de validation', 
+        t_saisie_heure.date_hrs_creation AS 'date et heure de creation', 
+        t_saisie_heure.date_hrs_modif AS 'date et heure de modification',
+        t_saisie_heure.supprimer AS 'releve supprime'
+        FROM t_saisie_heure
+        INNER JOIN t_login
+        ON t_saisie_heure.id_login = t_login.ID
+        INNER JOIN t_equipe
+        ON t_login.ID = t_equipe.id_membre";
+
+        if($date_start != "" && $date_end != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :date_start AND t_saisie_heure.date_hrs_fin <= :date_end";
+        if($id_manager != "") $sql .= " AND t_equipe.id_manager = :id_manager";
+        if($id_user != "") $sql .= " AND t_saisie_heure.id_login = :id_user";
+
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $type_of_records);
+
+        $query = $pdo->prepare($sql);
+        $query->execute();
     }
 
     public function writeCsvFile($rows){

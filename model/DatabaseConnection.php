@@ -22,28 +22,13 @@ class DatabaseConnection
     */
 
     protected function dbConnect($dbUser = "", $dbPassword = "", $dbHost = "", $dbPort = "", $dbName = ""){
-        if($dbUser != ""){
-            $this->dbUser = $dbUser;
-        }
-
-        if($dbPassword != ""){
-            $this->dbPassword = $dbPassword;
-        }
-
-        if($dbHost != ""){
-            $this->dbHost = $dbHost;
-        }
-
-        if($dbPort != ""){
-            $this->dbPort = $dbPort;
-        }
-
-        if($dbName != ""){
-            $this->dbName = $dbName;
-        }
+        if($dbUser != "") $this->dbUser = $dbUser;
+        if($dbPassword != "") $this->dbPassword = $dbPassword;
+        if($dbHost != "") $this->dbHost = $dbHost;
+        if($dbPort != "") $this->dbPort = $dbPort;
+        if($dbName != "") $this->dbName = $dbName;
 
         $pdo = new PDO('mysql:host=' . $this->dbHost . ';port=' . $this->dbPort . ';dbname=' . $this->dbName . ';charset=utf8', $this->dbUser, $this->dbPassword);
-        // echo "Connexion réussie !";
 
         return $pdo;
     }
