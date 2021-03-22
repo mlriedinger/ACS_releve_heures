@@ -4,7 +4,7 @@
 
 class DatabaseConnection
 {
-    private $dbHost = "192.168.1.2";
+    private $dbHost = "mariadb.acskm.fr";
     private $dbPort = "3306";
     private $dbName = "erp_acs";
     private $dbUser = "erpadmin";
