@@ -8,6 +8,9 @@ require('controller/recordController.php');
 
 /* Routeur de l'application qui appelle le contrôleur correspondant à l'URL demandée */
 
+
+
+
 if(isset($_GET['action'])){
 
     // Décommenter la ligne suivante pour voir la requête qui est reçue
@@ -18,7 +21,7 @@ if(isset($_GET['action'])){
 
             // Page de connexion
             case "login":
-                if(isset($_POST['login']) && isset($_POST['password'])) verifyLogin($_POST['login'], $_POST['password']);
+                if(isset($_POST['login']) && isset($_POST['password'])) verifyLogin(htmlspecialchars($_POST['login']), htmlspecialchars($_POST['password']));
                 else throw new Exception('Veuillez remplir tous les champs.');
                 break;
 
@@ -74,7 +77,9 @@ if(isset($_GET['action'])){
             // Ajout d'un nouveau relevé
             case "addNewRecord":
                 if(isset($_SESSION['id']) && isset($_SESSION['id_group'])){
-                    if(!empty($_POST['datetime_start']) && !empty($_POST['datetime_end'])) addNewRecord($_SESSION['id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment'], $_SESSION['id_group']);
+                    if(!empty($_POST['datetime_start']) && !empty($_POST['datetime_end'])) {
+                        addNewRecord($_SESSION['id'], htmlspecialchars($_POST['datetime_start']), htmlspecialchars($_POST['datetime_end']), htmlspecialchars($_POST['comment']), $_SESSION['id_group']);
+                    }
                     else throw new Exception('Les champs dates doivent être obligatoirement remplis.');
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -83,7 +88,9 @@ if(isset($_GET['action'])){
             // Modification d'un relevé non validé
             case "updateRecord":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['record_id']) && is_numeric($_POST['record_id']) && !empty($_POST['datetime_start']) && !empty($_POST['datetime_end'])) updateRecord($_POST['record_id'], $_POST['datetime_start'], $_POST['datetime_end'], $_POST['comment']);
+                    if(isset($_POST['record_id']) && is_numeric($_POST['record_id']) && !empty($_POST['datetime_start']) && !empty($_POST['datetime_end'])) {
+                        updateRecord(htmlspecialchars($_POST['record_id']), htmlspecialchars($_POST['datetime_start']), htmlspecialchars($_POST['datetime_end']), htmlspecialchars($_POST['comment']));
+                    }
                     else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -92,7 +99,7 @@ if(isset($_GET['action'])){
             // Modification du statut du relevé
             case "updateRecordStatus":
                 if(isset($_SESSION['id'])){
-                    if(!empty($_POST['check_list'])) updateRecordStatus($_POST['check_list']);
+                    if(!empty($_POST['check_list'])) updateRecordStatus(htmlspecialchars($_POST['check_list']));
                     else throw new Exception('Veuillez sélectionner un ou plusieurs relevé(s) à valider.');
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -102,10 +109,14 @@ if(isset($_GET['action'])){
             case "deleteRecord":
                 if(isset($_SESSION['id'])){
                     if($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2'){
-                        if(isset($_POST['record_id']) && is_numeric($_POST['record_id']) && !empty($_POST['comment'])) deleteRecord($_POST['record_id'], $_POST['comment']);
+                        if(isset($_POST['record_id']) && is_numeric($_POST['record_id']) && !empty($_POST['comment'])) {
+                            deleteRecord(htmlspecialchars($_POST['record_id']), htmlspecialchars($_POST['comment']));
+                        }
                         else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée. NB : Le champ "commentaire" est obligatoire.');
                     } else {
-                        if(isset($_POST['record_id']) && is_numeric($_POST['record_id'])) deleteRecord($_POST['record_id'], $_POST['comment']); 
+                        if(isset($_POST['record_id']) && is_numeric($_POST['record_id'])) {
+                            deleteRecord(htmlspecialchars($_POST['record_id']), htmlspecialchars($_POST['comment'])); 
+                        }
                         else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
                     }
                 }
@@ -116,7 +127,7 @@ if(isset($_GET['action'])){
             // Renvoyer le formulaire de saisie
             case "getRecordForm":
                 if(isset($_SESSION['id'])) {
-                    if (isset($_POST['idRecord'])) getRecordForm($_POST['idRecord']);
+                    if (isset($_POST['idRecord'])) getRecordForm(htmlspecialchars($_POST['idRecord']));
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
@@ -131,7 +142,7 @@ if(isset($_GET['action'])){
             // Récupérer les données d'un relevé
             case "getRecordData":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['recordID']) && is_numeric($_POST['recordID'])) getRecordData($_POST['recordID']);
+                    if(isset($_POST['recordID']) && is_numeric($_POST['recordID'])) getRecordData(htmlspecialchars($_POST['recordID']));
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -140,7 +151,7 @@ if(isset($_GET['action'])){
             // Récupérer les données de l'historique personnel
             case "getPersonalRecordsLog":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope'])) getUserRecords($_SESSION['id'], $_POST['typeOfRecords'], $_POST['scope']);
+                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope'])) getUserRecords($_SESSION['id'], htmlspecialchars($_POST['typeOfRecords']), htmlspecialchars($_POST['scope']));
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -149,7 +160,9 @@ if(isset($_GET['action'])){
             // Récupérer les données de l'historique équipe
             case "getTeamRecordsLog":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) getTeamRecords($_SESSION['id'], $_POST['typeOfRecords'], $_POST['scope']);
+                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && ($_SESSION['id_group'] == '1' || $_SESSION['id_group'] == '2')) {
+                        getTeamRecords($_SESSION['id'], htmlspecialchars($_POST['typeOfRecords']), htmlspecialchars($_POST['scope']));
+                    }
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -158,7 +171,9 @@ if(isset($_GET['action'])){
             // Récupérer les données de l'historique global
             case "getAllUsersRecordsLog":
                 if(isset($_SESSION['id'])){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && $_SESSION['id_group'] == '1') getAllUsersRecords($_POST['typeOfRecords'], $_POST['scope']);
+                    if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && $_SESSION['id_group'] == '1') {
+                        getAllUsersRecords(htmlspecialchars($_POST['typeOfRecords']), htmlspecialchars($_POST['scope']));
+                    }
                     else throw new Exception('Un problème est survenu.');
                 }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
@@ -168,7 +183,9 @@ if(isset($_GET['action'])){
             // case "exportRecords":
             //     if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
             //         if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') {
-            //             if(isset($_POST['scope']) && isset($_POST['period_start']) && isset($_POST['period_end']) && isset($_POST['manager']) && isset($_POST['user'])) exportRecords($_GET['typeOfRecords'], $_POST['scope'], $_POST['period_start'], $_POST['period_end'], $_POST['manager'], $_POST['user']);
+            //             if(isset($_POST['scope']) && isset($_POST['period_start']) && isset($_POST['period_end']) && isset($_POST['manager']) && isset($_POST['user'])) {
+            //                  exportRecords(htmlspecialchars($_GET['typeOfRecords']), htmlspecialchars($_POST['scope']), htmlspecialchars($_POST['period_start']), htmlspecialchars($_POST['period_end']), htmlspecialchars($_POST['manager'], $_POST['user']));
+            //              }
             //         }
             //     }
             //     break;
@@ -176,11 +193,11 @@ if(isset($_GET['action'])){
             // Récupérer les listes des managers et des salariés pour le formulaire d'export
             case "getOptionsData":
                 if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1'){
-                    if(isset($_POST['typeOfData'])) getOptionsData($_POST['typeOfData']);
+                    if(isset($_POST['typeOfData'])) getOptionsData(htmlspecialchars($_POST['typeOfData']));
                 }
                 break;
         }
-    } catch(PDOException $e){
+    }catch(PDOException $e){
         echo 'Connexion impossible : ' . $e->getMessage();
     }catch (Exception $e){
         $errorMessage = $e->getMessage();
