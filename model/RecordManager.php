@@ -33,7 +33,7 @@ class RecordManager extends DatabaseConnection
 
     public function sendNewRecord($userID, $dateTimeStart, $dateTimeEnd, $comment, $groupId){
         $isSendingSuccessfull = false;
-        $groupId === 1 ? $validation_status = 1 : $validation_status = 0;
+        $groupId == 1 ? $validation_status = 1 : $validation_status = 0;
         
         $pdo = $this->dbConnect();
       
@@ -283,10 +283,10 @@ class RecordManager extends DatabaseConnection
         ON t_equipe.id_membre = t_login.ID
         INNER JOIN t_saisie_heure
         ON t_login.ID = t_saisie_heure.id_login
-        WHERE t_equipe.managerId = :managerId";
+        WHERE t_equipe.id_manager = :managerId";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
-
+        
         $query = $pdo->prepare($sql);
         $query->execute(array('managerId' => $managerId));
         $teamRecords["typeOfRecords"] = $typeOfRecords;
