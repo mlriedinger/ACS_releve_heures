@@ -108,10 +108,12 @@
                                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#exportFormAccordion">
 
                                         <div class="accordion-body">
+                                            <label for="selectManager" class="mb-2">Exporter les relevés de tous les salariés liés à un manager </label>
                                             <select name="manager" id="selectManager" class="form-select mb-3" aria-label="Default select example">
                                                 <option value ="" selected>Sélectionner un manager</option>
                                             </select>
 
+                                            <label for="selectUser" class="mt-4 mb-2">Exporter les relevés d'un salarié en particulier </label>
                                             <select name="user" id="selectUser" class="form-select mb-3" aria-label="Default select example">
                                                 <option value ="" selected>Sélectionner un salarié</option>
                                             </select>

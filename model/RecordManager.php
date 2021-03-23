@@ -188,7 +188,7 @@ class RecordManager extends DatabaseConnection
     public function addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords){
         switch($scope) {
             case "all":
-                $sql .= " AND t_saisie_heure.supprimer = 0";
+                if($typeOfRecords != "export") $sql .= " AND t_saisie_heure.supprimer = 0";
                 break;
             case "valid":
                 $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
@@ -343,10 +343,14 @@ class RecordManager extends DatabaseConnection
     }
 
 
-    public function getRecordsToExport($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID){
+    public function exportRecords($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID){
+        $rows = $this->getRecordsToExport($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID);
+        $fileName = $this->getFileName($scope, $dateStart, $dateEnd, $managerId, $userID);
+        $this->writeCsvFile($rows, $fileName);
+    }
 
-        // A COMPLETER ! 
-        
+
+    public function getRecordsToExport($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID){
         $pdo = $this->dbConnect();
 
         $sql = "SELECT t_saisie_heure.ID AS 'numero de releve',
@@ -362,21 +366,54 @@ class RecordManager extends DatabaseConnection
         t_saisie_heure.supprimer AS 'releve supprime'
         FROM t_saisie_heure
         INNER JOIN t_login
-        ON t_saisie_heure.id_login = t_login.ID
-        INNER JOIN t_equipe
-        ON t_login.ID = t_equipe.id_membre";
+        ON t_saisie_heure.id_login = t_login.ID";
 
+        if($managerId != "" || $userID != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
+        
         if($dateStart != "" && $dateEnd != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :dateStart AND t_saisie_heure.date_hrs_fin <= :dateEnd";
-        if($managerId != "") $sql .= " AND t_equipe.managerId = :managerId";
+        if($managerId != "") $sql .= " AND t_equipe.id_manager = :managerId";
         if($userID != "") $sql .= " AND t_saisie_heure.id_login = :userID";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
-        $query->execute();
+
+        if($managerId != "" || ($dateStart != "" && $dateEnd != "") || $userID != ""){
+            $queryParams = array();
+            if($managerId != "") $queryParams['managerId'] = $managerId;
+            if($userID != "")  $queryParams['userID'] = $userID;
+            if($dateStart != "") $queryParams['dateStart'] = $dateStart;
+            if($dateEnd != "") $queryParams['dateEnd'] = $dateEnd;
+        
+            $query->execute($queryParams);
+        }
+        else $query->execute();
+
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
+
+        return $rows;
     }
 
-    public function writeCsvFile($rows){
+
+    public function getFileName($scope, $dateStart, $dateEnd, $managerId, $userID){
+        $fileNameDetails ="_";
+        $fileNameDetails .= $scope . "_records";
+
+        if($managerId != "") $fileNameDetails .= "_manager_" . $managerId;
+        if($userID != "") $fileNameDetails .= "_user_" . $userID;
+        if($dateStart != "") $fileNameDetails .= "_from_" . $dateStart;
+        if($dateEnd != "") $fileNameDetails .= "_to_" . $dateEnd;
+
+        $fileName = date('Ymd') . '_export_releves_heures' . $fileNameDetails . '.csv';
+
+        return $fileName;
+    }
+
+
+    public function writeCsvFile($rows, $fileName){
         $columnNames = array();
         if(!empty($rows)){
             // On boucle sur la première ligne pour récupérer les en-têtes des colonnes
@@ -385,8 +422,6 @@ class RecordManager extends DatabaseConnection
                 $columnNames[] = $colName;
             }
         }
-
-        $fileName = date('Ymd') . '_export_releves_heure.csv';
 
         // Commenter les lignes suivantes pour débugger la requête
         header("Content-type: text/csv ; charset=UTF-8");
@@ -415,10 +450,10 @@ class RecordManager extends DatabaseConnection
 
         switch($type){
             case "managers":
-                $sql .= "SELECT t_login.Nom, t_login.Prenom FROM t_equipe INNER JOIN t_login ON t_equipe.id_manager = t_login.ID GROUP BY t_equipe.id_manager";
+                $sql .= "SELECT t_equipe.id_manager AS 'ID', t_login.Nom, t_login.Prenom FROM t_equipe INNER JOIN t_login ON t_equipe.id_manager = t_login.ID GROUP BY t_equipe.id_manager";
                 break;
             case "users":
-                $sql .= "SELECT Nom, Prenom FROM t_login";
+                $sql .= "SELECT ID, Nom, Prenom FROM t_login";
                 break;
         }
 

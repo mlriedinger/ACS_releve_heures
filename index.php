@@ -183,7 +183,7 @@ if(isset($_GET['action'])){
                 if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
                     if(isset($_SESSION['id']) && $_SESSION['id_group'] == '1') {
                         if(isset($_POST['scope']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['manager']) && isset($_POST['user'])) {
-                             exportRecords(htmlspecialchars($_GET['typeOfRecords']), htmlspecialchars($_POST['scope']), htmlspecialchars($_POST['periodStart']), htmlspecialchars($_POST['periodEnd']), htmlspecialchars($_POST['manager'], $_POST['user']));
+                             exportRecords(htmlspecialchars($_GET['typeOfRecords']), htmlspecialchars($_POST['scope']), htmlspecialchars($_POST['periodStart']), htmlspecialchars($_POST['periodEnd']), htmlspecialchars($_POST['manager']), htmlspecialchars($_POST['user']));
                          }
                     }
                 }
