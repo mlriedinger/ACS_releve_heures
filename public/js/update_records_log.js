@@ -1,7 +1,7 @@
 function insertEditAndDeleteButtons(newStatus, newEdit, newDelete, data, counter) {
-    if(data[counter].statut_validation === '0'){
+    if(data[counter].statut_validation === "0"){
         newStatus.innerHTML += "En attente";
-        if(data[counter].supprimer === '0'){
+        if(data[counter].supprimer === "0"){
             // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
             newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
             newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
@@ -109,9 +109,9 @@ function appendLine(tableID, data, typeOfRecord, counter) {
     newWorkSite.innerHTML += data[counter].id_of;
 
     // En fonction du type de relevés, on crée et on remplit les autres colonnes du tableau
-    if(typeOfRecord === 'Personal') {
+    if(typeOfRecord === "Personal") {
         fillPersonalRecordsTable(newRow, data, counter);
-    } else if (typeOfRecord === 'Check') {
+    } else if (typeOfRecord === "Check") {
         fillTeamRecordsToCheckTable(newRow, data, counter);
     } else { 
         fillTeamAndAllUsersRecordsTable(newRow, data, counter);
@@ -170,14 +170,14 @@ function parseMultipleLinesRequest(data) {
     clearTable(tabData);
 
     // Si la requête concerne une liste de relevés à valider, on insère les boutons de contrôle du formulaire de validation après le tableau
-    if(tabData.length && typeOfRecords === 'Check') {
+    if(tabData.length && typeOfRecords === "Check") {
         insertFormControlButtons();
     }
 
     // Si la requête a retourné des résultats, on boucle sur tabData pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
     if(tabData.length) {
         for (var i = 0; i < tabData.length; i++) {
-            appendLine('records_log', tabData, typeOfRecords, i);
+            appendLine("records_log", tabData, typeOfRecords, i);
         }
     }
 }
@@ -189,9 +189,9 @@ function parseMultipleLinesRequest(data) {
 */
 
 function updateFormInputs(data) {
-    var inputDateTimeStart = document.getElementById('datetime_start');
-    var inputDateTimeEnd = document.getElementById('datetime_end');
-    var inputComment = document.getElementById('comment');
+    var inputDateTimeStart = document.getElementById("datetime_start");
+    var inputDateTimeEnd = document.getElementById("datetime_end");
+    var inputComment = document.getElementById("comment");
 
     // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par datetime-locale
     var startTime = data[3].replace(" ", "T");
