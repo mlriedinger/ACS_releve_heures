@@ -1,5 +1,5 @@
 <?php
-require_once('DatabaseConnection.php');
+require_once 'DatabaseConnection.php';
 
 /* Classe qui gère la vérification du login/mot de passe.
     * [INFO] Classe-fille de DatabaseConnection pour pouvoir hériter de la méthode dbConnect()  
