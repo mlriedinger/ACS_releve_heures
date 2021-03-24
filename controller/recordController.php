@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-/* On appelle le modèle correspondant pour accéder à ses méthodes */
-
-require_once('model/RecordManager.php');
+/* On appelle les modèles correspondants pour accéder à leurs méthodes */
+require_once 'model/RecordManager.php';
+require_once 'model/ExportManager.php';
 
 
 /* Fonctions pour gérer l'affichage des pages :
@@ -149,8 +149,8 @@ function getAllUsersRecords($recordInfo){
 }
 
 function exportRecords($recordInfo){
-    $recordManager = new RecordManager();
-    $recordManager->exportRecords($recordInfo);
+    $exportManager = new ExportManager();
+    $exportManager->exportRecords($recordInfo);
 }
 
 function getOptionsData($typeOfData){
