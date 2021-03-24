@@ -23,27 +23,7 @@ class ExportManager extends RecordManager {
     }
 
 
-    /* Fonction permettant de récupérer la liste des relevés à exporter
-        Params: 
-            * $recordInfo : objet Record contenant 
-                - le type de relevés demandés (personnels, équipe, à valider ou tous)
-                - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-                - la date de début de période (facultatif)
-                - la date de fin de période (facultatif)
-                - l'id du manager (facultatif)
-                - l'id du salarié (facultatif)
-    */
-
-    public function getRecordsToExport(Record $recordInfo){
-        $typeOfRecords = $recordInfo->getTypeOfRecords();
-        $scope = $recordInfo->getScope();
-        $periodStart = $recordInfo->getPeriodStart();
-        $periodEnd = $recordInfo->getPeriodEnd();
-        $managerId = $recordInfo->getManagerId();
-        $userId = $recordInfo->getUserId();
-
-        $pdo = $this->dbConnect();
-
+    public function sqlRequestBasics(){
         $sql = "SELECT t_saisie_heure.ID AS 'numero de releve',
         t_saisie_heure.id_of AS 'chantier',
         t_login.Nom AS 'nom salarie', 
@@ -59,23 +39,69 @@ class ExportManager extends RecordManager {
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID";
 
+        return $sql;
+    }
+
+
+    public function sqlRequestOptions(Record $recordInfo, $sql){
+        $periodStart = $recordInfo->getPeriodStart();
+        $periodEnd = $recordInfo->getPeriodEnd();
+        $managerId = $recordInfo->getManagerId();
+        $userId = $recordInfo->getUserId();
+
         if($managerId != "" || $userId != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
         
         if($periodStart != "" && $periodEnd != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :periodStart AND t_saisie_heure.date_hrs_fin <= :periodEnd";
         if($managerId != "") $sql .= " AND t_equipe.id_manager = :managerId";
         if($userId != "") $sql .= " AND t_saisie_heure.id_login = :userId";
 
+        return $sql;
+    }
+
+
+    public function fillQueryParamsArray(Record $recordInfo){
+        $periodStart = $recordInfo->getPeriodStart();
+        $periodEnd = $recordInfo->getPeriodEnd();
+        $managerId = $recordInfo->getManagerId();
+        $userId = $recordInfo->getUserId();
+
+        $queryParams = array();
+
+        if($managerId != "") $queryParams['managerId'] = $managerId;
+        if($userId != "")  $queryParams['userId'] = $userId;
+        if($periodStart != "") $queryParams['periodStart'] = $periodStart;
+        if($periodEnd != "") $queryParams['periodEnd'] = $periodEnd;
+
+        return $queryParams;
+    }
+
+
+    /* Fonction permettant de récupérer la liste des relevés à exporter
+        Params: 
+            * $recordInfo : objet Record contenant 
+                - le type de relevés demandés (personnels, équipe, à valider ou tous)
+                - la portée de la requête, c'est-à-dire tout ou une partie des relevés
+                - la date de début de période (facultatif)
+                - la date de fin de période (facultatif)
+                - l'id du manager (facultatif)
+                - l'id du salarié (facultatif)
+    */
+
+    public function getRecordsToExport(Record $recordInfo){
+        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
+
+        $pdo = $this->dbConnect();
+
+        // Construction de la requête SQL
+        $sql = $this->sqlRequestBasics();
+        $sql = $this->sqlRequestOptions($recordInfo, $sql);
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
-
-        if($managerId != "" || ($periodStart != "" && $periodEnd != "") || $userId != ""){
-            $queryParams = array();
-            if($managerId != "") $queryParams['managerId'] = $managerId;
-            if($userId != "")  $queryParams['userId'] = $userId;
-            if($periodStart != "") $queryParams['periodStart'] = $periodStart;
-            if($periodEnd != "") $queryParams['periodEnd'] = $periodEnd;
+        $queryParams = fillQueryParamsArray($recordInfo);
         
+        if (sizeof($queryParams) != 0){    
             $query->execute($queryParams);
         }
         else $query->execute();
@@ -142,17 +168,17 @@ class ExportManager extends RecordManager {
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
 
         // On crée un pointeur de fichier dans le flux output pour envoyer le fichier directement au navigateur
-        $fp = fopen('php://output', 'w');
+        $filePointer = fopen('php://output', 'w');
 
         // On insère les en-têtes de colonnes au format CSV
-        fputcsv($fp, $columnNames);
+        fputcsv($filePointer, $columnNames);
 
         // On boucle sur les lignes récupérées de la requête pour les insérer dans le fichier au format CSV
         foreach ($rows as $row) {
-            fputcsv($fp, $row);
+            fputcsv($filePointer, $row);
         }
 
         // On ferme le pointeur de fichier
-        fclose($fp);
+        fclose($filePointer);
     }
 }
