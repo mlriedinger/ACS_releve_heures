@@ -9,13 +9,13 @@ require('model/Record.php');
 
 /* Routeur de l'application qui appelle le contrôleur correspondant à l'URL demandée */
 
-if(isset($_GET['action'])){
+if(isset($_GET['action'])) {
 
     // Décommenter la ligne suivante pour voir la requête qui est reçue
     // var_dump($_REQUEST);
 
     try {
-        switch($_GET['action']){
+        switch(htmlspecialchars($_GET['action'])) {
 
             // Page de connexion
             case "login":
