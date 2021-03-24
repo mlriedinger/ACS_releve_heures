@@ -4,13 +4,13 @@ h1 {
 
 /* Override des classes Bootstrap pour modifier la couleur des switches */
 
-.form-switch .form-check-input:focus {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%230388A6'/%3e%3c/svg%3e");
-}
-  
 .form-switch .form-check-input:checked {
   background-position: right center;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+.form-switch .form-check-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%230388A6'/%3e%3c/svg%3e");
 }
 
 .form-check-input:checked {
@@ -20,18 +20,18 @@ h1 {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color:#fff;
+  color: #fff;
   background-color: #212529;
-  border-color:#dee2e6 #dee2e6 #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
 }
 
 /* Masquer des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
 
-@media (min-device-width: 320px) 
-and (max-device-width: 812px) 
-and (orientation: portrait){
-    .records_log_comment, .records_log_last_modification{
-      display: none;
-    }
+@media (min-device-width: 320px)
+  and (max-device-width: 812px)
+  and (orientation: portrait) {
+  .records_log_comment, .records_log_last_modification{
+    display: none;
+  }
 }
 
