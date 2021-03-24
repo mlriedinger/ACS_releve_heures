@@ -5,7 +5,6 @@
 require('controller/loginController.php');
 require('controller/recordController.php');
 require('model/Record.php');
-require('model/User.php');
 
 
 /* Routeur de l'application qui appelle le contrôleur correspondant à l'URL demandée */

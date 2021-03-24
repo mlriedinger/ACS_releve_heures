@@ -6,42 +6,27 @@ require_once('DatabaseConnection.php');
 
 /* Classe qui gère l'envoi et la récupération de données de la BDD 
     * [INFO] Classe-fille de DatabaseConnection pour pouvoir hériter de la méthode dbConnect()
-    * Méthodes de classe :
-        * sendNewRecord() 
-        * updateRecord()
-        * updateRecordStatus() 
-        * deleteRecord()
-        * getRecord()
-        * addQueryScopeAndOrderByClause()
-        * getAllRecordsFromUser() 
-        * getRecordsFromTeam()
-        * getAllRecords()
-        * writeCsvFile()
-        * getDataForOptionSelect() 
 */
 
 class RecordManager extends DatabaseConnection
 {
     /* Méthode qui permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
-        * $userId : id utilisateur
-        * $dateTimeStart : date et heure de début
-        * $dateTimeEnd: date et heure de fin
-        * $comment : commentaire
-        * $groupId : groupe utilisateur
+        * $recordInfo : objet Record contenant l'id user, l'id du groupe utilisateur, la date et heure de début, la date et heure de fin et le commentaire
     */
 
-    public function sendNewRecord($recordInfo){
-        $isSendingSuccessfull = false;
-
+    public function sendNewRecord(Record $recordInfo){
+        // On récupère les informations contenues dans l'objet $recordInfo
         $userId = $recordInfo->getUserId();
         $userGroup = $recordInfo->getUserGroup();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
         $comment = $recordInfo->getComment();
 
+        // Validation automatique des relevés saisis par un utilisateur de type admin
         $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
         
+        $isSendingSuccessfull = false;
         $pdo = $this->dbConnect();
       
         $query = $pdo->prepare('INSERT INTO t_saisie_heure(
@@ -78,20 +63,17 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de mettre à jour un relevé lorsqu'il n'a pas encore été validé par un N+1. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
-        * $recordId : id du relevé à mettre à jour
-        * $dateTimeStart : date et heure de début
-        * $dateTimeEnd: date et heure de fin
-        * $comment : commentaire
+        * $recordInfo : objet Record contenant l'id du relevé à mettre à jour, la date et heure de début, la date et heure de fin et le commentaire
     */
 
-    public function updateRecord($recordInfo){
-        $isUpdateSuccessfull = false;
-
+    public function updateRecord(Record $recordInfo){
+        // On récupère les informations contenues dans l'objet $recordInfo
         $recordId = $recordInfo->getRecordId();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
         $comment = $recordInfo->getComment();
 
+        $isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
@@ -121,9 +103,8 @@ class RecordManager extends DatabaseConnection
         * $recordId : id du relevé à mettre à jour
     */
 
-    public function updateRecordStatus($recordId){
-        $isUpdateSuccessfull = false;
-                
+    public function updateRecordStatus(int $recordId){
+        $isUpdateSuccessfull = false;      
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
@@ -142,16 +123,15 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de supprimer un relevé
         Params: 
-        * $recordId : id du relevé à supprimer
-        * $comment : commentaire à mettre à jour dans la BDD (si justification de la suppression)
+        * $recordInfo : objet Record contenant l'id du relevé à supprimer et le commentaire (si justification de la suppression)
     */
 
-    public function deleteRecord($recordInfo){
-        $isDeleteSuccessfull = false;
-
+    public function deleteRecord(Record $recordInfo){
+        // On récupère les informations contenues dans l'objet $recordInfo
         $recordId = $recordInfo->getRecordId();
         $comment = $recordInfo->getComment();
-    
+
+        $isDeleteSuccessfull = false;
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
@@ -173,13 +153,13 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer tous les informations d'un relevé d'heures. Elle renvoie les données en JSON pour être exploitables par JS.
         Params:
-        * $recordId : id relevé
+        * $recordInfo : objet Record contenant l'id du relevé à récupérer
     */
 
-    public function getRecord($recordInfo){
-        $pdo = $this->dbConnect();
-
+    public function getRecord(Record $recordInfo){
         $recordId = $recordInfo->getRecordId();
+        
+        $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE t_saisie_heure.ID = :recordId');
         $query->execute(array('recordId' => $recordId));
@@ -199,10 +179,11 @@ class RecordManager extends DatabaseConnection
         Params : 
         * $sql : une chaîne de caractères contenant le début de la requête SQL
         * $scope : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
+        * $typeOfRecords : une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
         Retourne la chaîne $sql complétée
     */
 
-    public function addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords){
+    public function addQueryScopeAndOrderByClause(String $sql, String $scope, String $typeOfRecords){
         switch($scope) {
             case "all":
                 if($typeOfRecords != "export") $sql .= " AND t_saisie_heure.supprimer = 0";
@@ -220,6 +201,7 @@ class RecordManager extends DatabaseConnection
                 break;
         }
 
+        // Si on souhaite exporter des données ou récupérer tous les relevés, on remplace la première occurrence de 'AND' et on la remplace par 'WHERE'
         if($typeOfRecords == "export" || $typeOfRecords == "all"){
             $pos = strpos($sql, "AND");
             if($pos !== false) {
@@ -229,6 +211,7 @@ class RecordManager extends DatabaseConnection
             }
         }
         
+        // On ordonne les données par ordre décroissant de date de création
         $sql .= " ORDER BY t_saisie_heure.date_hrs_creation DESC";
 
         return $sql;
@@ -237,12 +220,10 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer tous les relevés d'heures associés à un utilisateur. Elle renvoie les données en JSON pour être exploitables par JS.
         Params:
-        * $userId : id utilisateur
-        * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
-        * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
+        * $recordInfo : objet Record contenant l'id de l'utilisateur, le type de relevés demandés (personnels, équipe, à valider ou tous) et la portée de la requête, c'est-à-dire tout ou une partie des relevés
     */
 
-    public function getRecordsFromUser($recordInfo){
+    public function getRecordsFromUser(Record $recordInfo){
         $pdo = $this->dbConnect();
 
         $userId = $recordInfo->getUserId();
@@ -280,12 +261,10 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer TOUS les relevés d'heures de salariés associés à un manager. Elle renvoie les données en JSON pour être exploitables par JS.
         Params: 
-        * $managerId : id du chef d'équipe
-        * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
-        * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
+        * $recordInfo : objet Record contenant l'id du chef d'équipe, le type de relevés demandés (personnels, équipe, à valider ou tous) et la portée de la requête, c'est-à-dire tout ou une partie des relevés
     */
 
-    public function getRecordsFromTeam($recordInfo){
+    public function getRecordsFromTeam(Record $recordInfo){
         $pdo = $this->dbConnect();
 
         $managerId = $recordInfo->getManagerId();
@@ -329,11 +308,10 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer les relevés de tous les utilisateurs. Elle renvoie les données en JSON pour être exploitables par JS.
          Params: 
-        * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
-        * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
+        * $recordInfo : objet Record contenant le type de relevés demandés (personnels, équipe, à valider ou tous) et la portée de la requête, c'est-à-dire tout ou une partie des relevés
     */
 
-    public function getAllRecords($recordInfo){
+    public function getAllRecords(Record $recordInfo){
         $pdo = $this->dbConnect();
 
         $typeOfRecords = $recordInfo->getTypeOfRecords();
@@ -371,14 +349,37 @@ class RecordManager extends DatabaseConnection
     }
 
 
-    public function exportRecords($recordInfo){
+    /* Fonction permettant d'exporter des données
+     Params: 
+        * $recordInfo : objet Record contenant 
+            - le type de relevés demandés (personnels, équipe, à valider ou tous)
+            - la portée de la requête, c'est-à-dire tout ou une partie des relevés
+            - la date de début de période (facultatif)
+            - la date de fin de période (facultatif)
+            - l'id du manager (facultatif)
+            - l'id du salarié (facultatif)
+    */
+
+
+    public function exportRecords(Record $recordInfo){
         $rows = $this->getRecordsToExport($recordInfo);
         $fileName = $this->getFileName($recordInfo);
         $this->writeCsvFile($rows, $fileName);
     }
 
 
-    public function getRecordsToExport($recordInfo){
+    /* Fonction permettant de récupérer la liste des relevés à exporter
+        Params: 
+            * $recordInfo : objet Record contenant 
+                - le type de relevés demandés (personnels, équipe, à valider ou tous)
+                - la portée de la requête, c'est-à-dire tout ou une partie des relevés
+                - la date de début de période (facultatif)
+                - la date de fin de période (facultatif)
+                - l'id du manager (facultatif)
+                - l'id du salarié (facultatif)
+    */
+
+    public function getRecordsToExport(Record $recordInfo){
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $scope = $recordInfo->getScope();
         $periodStart = $recordInfo->getPeriodStart();
@@ -433,7 +434,18 @@ class RecordManager extends DatabaseConnection
     }
 
 
-    public function getFileName($recordInfo){
+    /* Fonction permettant de construire le nom du fichier d'export
+     Params: 
+        * $recordInfo : objet Record contenant 
+            - la portée de la requête, c'est-à-dire tout ou une partie des relevés
+            - la date de début de période (facultatif)
+            - la date de fin de période (facultatif)
+            - l'id du manager (facultatif)
+            - l'id du salarié (facultatif)
+    */
+
+
+    public function getFileName(Record $recordInfo){
         $scope = $recordInfo->getScope();
         $periodStart = $recordInfo->getPeriodStart();
         $periodEnd = $recordInfo->getPeriodEnd();
@@ -453,6 +465,12 @@ class RecordManager extends DatabaseConnection
         return $fileName;
     }
 
+
+    /* Fonction permettant d'écrire un fichier CSV
+     Params: 
+        * $rows : contient le résultat de la requête getRecordsToExport()
+        * $fileName : contient le résultat de la fonction getFileName()
+    */
 
     public function writeCsvFile($rows, $fileName){
         $columnNames = array();
@@ -483,6 +501,9 @@ class RecordManager extends DatabaseConnection
         fclose($fp);
     }
 
+    /* Fonction permettant de récupérer la liste des managers et des salariés pour alimenter la rubrique select du formulaire d'export
+        * $type : chaîne de caractères correspondant au type d'utilisateurs à récupérer ("managers" ou "users")
+    */
 
     public function getDataForOptionSelect($type){
         $pdo = $this->dbConnect();
