@@ -1,12 +1,10 @@
-<?php session_start(); ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 
-    <?php include('partials/head.php'); ?>
+    <?php include 'partials/head.php'; ?>
 
     <body>
-    <?php include('partials/navbar.php'); ?>
+    <?php include 'partials/navbar.php'; ?>
 
         <div class="container">
             <h2 class="display-6 mt-5 mb-5 text-center">Exporter des relevés</h2>
@@ -140,7 +138,7 @@
                 </form>
         </div>
 
-        <?php include('partials/footer.php'); ?>
+        <?php include 'partials/footer.php'; ?>
 
         <script src="public/js/update_records_log.js"></script>
         <script>
