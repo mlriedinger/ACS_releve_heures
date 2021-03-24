@@ -1,4 +1,17 @@
-function fillPersonalRecordsTable(newRow, data, counter){
+function insertEditAndDeleteButtons(newStatus, newEdit, newDelete, data, counter) {
+    if(data[counter].statut_validation === '0'){
+        newStatus.innerHTML += "En attente";
+        if(data[counter].supprimer === '0'){
+            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
+            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
+            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
+        }
+    } else {
+        newStatus.innerHTML += "Validé";
+    }
+}
+
+function fillPersonalRecordsTable(newRow, data, counter) {
     // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
     var newStartTime = newRow.insertCell(1);
     var newEndTime = newRow.insertCell(2);
@@ -15,20 +28,13 @@ function fillPersonalRecordsTable(newRow, data, counter){
     newComment.classList.add("records_log_comment");
     newComment.innerHTML += data[counter].commentaire;
 
-    if(data[counter].statut_validation == 0){
-        newStatus.innerHTML += "En attente";
-        if(data[counter].supprimer == 0){
-            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
-        }
-    } else newStatus.innerHTML += "Validé";
+    insertEditAndDeleteButtons(newStatus, newEdit, newDelete, data, counter);
     
     newUpdateDate.classList.add("records_log_last_modification");
     newUpdateDate.innerHTML += data[counter].date_hrs_modif;
 }
 
-function fillTeamRecordsToCheckTable(newRow, data, counter){
+function fillTeamRecordsToCheckTable(newRow, data, counter) {
     // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
     var newFirstName = newRow.insertCell(1);
     var newLastName = newRow.insertCell(2);
@@ -59,7 +65,7 @@ function fillTeamRecordsToCheckTable(newRow, data, counter){
 } 
 
 
-function fillTeamAndAllUsersRecordsTable(newRow, data, counter){
+function fillTeamAndAllUsersRecordsTable(newRow, data, counter) {
     // On crée autant de nouvelles colonnes qu'il y a de champs dans le tableau
     var newFirstName = newRow.insertCell(1);
     var newLastName = newRow.insertCell(2);
@@ -78,14 +84,7 @@ function fillTeamAndAllUsersRecordsTable(newRow, data, counter){
     newEndTime.innerHTML += data[counter].date_hrs_fin;
     newComment.innerHTML += data[counter].commentaire;
 
-    if(data[counter].statut_validation == '0'){
-        newStatus.innerHTML += "En attente";
-        if(data[counter].supprimer == 0){
-            // Dans la dernière colonne, on insère un bouton avec une icône, qui commande l'affichage de la fenêtre modale et qui, au clic, appelle la fonction pour charger le formulaire en lui passant l'id du relevé 
-            newEdit.innerHTML += '<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(' + data[counter].ID + ')" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>';
-            newDelete.innerHTML += '<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(' + data[counter].ID + ')"><i class="far fa-trash-alt"></i></button>';
-        }
-    } else newStatus.innerHTML += "Validé";
+    insertEditAndDeleteButtons(newStatus, newEdit, newDelete, data, counter);
 
     newUpdateDate.innerHTML += data[counter].date_hrs_modif;
 }
@@ -98,7 +97,7 @@ function fillTeamAndAllUsersRecordsTable(newRow, data, counter){
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
 
-function appendLine(tableID, data, typeOfRecord, counter){
+function appendLine(tableID, data, typeOfRecord, counter) {
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -110,33 +109,40 @@ function appendLine(tableID, data, typeOfRecord, counter){
     newWorkSite.innerHTML += data[counter].id_of;
 
     // En fonction du type de relevés, on crée et on remplit les autres colonnes du tableau
-    if(typeOfRecord == 'Personal') fillPersonalRecordsTable(newRow, data, counter);
-    else if (typeOfRecord == 'Check') fillTeamRecordsToCheckTable(newRow, data, counter);
-    else fillTeamAndAllUsersRecordsTable(newRow, data, counter);
+    if(typeOfRecord === 'Personal') {
+        fillPersonalRecordsTable(newRow, data, counter);
+    } else if (typeOfRecord === 'Check') {
+        fillTeamRecordsToCheckTable(newRow, data, counter);
+    } else { 
+        fillTeamAndAllUsersRecordsTable(newRow, data, counter);
+    }
 }
 
 
 /* Fonction qui permet de vider le tableau et d'afficher un message s'il n'y a aucun résultat à afficher
     Param :
-    * tab_data : tableau contenant les données de la requête AJAX
+    * tabData : tableau contenant les données de la requête AJAX
 */
 
-function clearTable(tab_data){
+function clearTable(tabData) {
     // On récupère la ligne vide du tableau
-    var tr_empty = $("#records_log tbody tr:first-child");
+    var trEmpty = $("#records_log tbody tr:first-child");
 
     // On ré-insère la ligne vide. Résultat : Le tableau est vidé à chaque fois que la fonction est appelée
-    $("#records_log").children("tbody").html(tr_empty);
+    $("#records_log").children("tbody").html(trEmpty);
 
     // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau, sinon on le cache
-    if(!tab_data.length) document.getElementById("no_record_message").hidden = false;
-    else document.getElementById("no_record_message").hidden = true;
+    if(!tabData.length) {
+        document.getElementById("no_record_message").hidden = false;
+    } else {
+        document.getElementById("no_record_message").hidden = true;
+    }
 }
 
 
 /* Fonction qui permet d'insérer des boutons de contrôle de formulaire */
 
-function insertFormControlButtons(){
+function insertFormControlButtons() {
     var formControlButtons = [
         '<div class="row mb-3 justify-content-md-center">',      
             '<div class="col-lg mb-5 text-end">',
@@ -155,21 +161,23 @@ function insertFormControlButtons(){
     * data : contenu de la réponse à la requête AJAX
 */
 
-function parseMultipleLinesRequest(data){
+function parseMultipleLinesRequest(data) {
     console.log(data);
-    var tab_data = data.records;
+    var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
 
     // On vide le tableau
-    clearTable(tab_data);
+    clearTable(tabData);
 
     // Si la requête concerne une liste de relevés à valider, on insère les boutons de contrôle du formulaire de validation après le tableau
-    if(tab_data.length && typeOfRecords == 'Check') insertFormControlButtons();
+    if(tabData.length && typeOfRecords === 'Check') {
+        insertFormControlButtons();
+    }
 
-    // Si la requête a retourné des résultats, on boucle sur tab_data pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
-    if(tab_data.length){
-        for (var i = 0; i < tab_data.length; i++) {
-            appendLine('records_log', tab_data, typeOfRecords, i);
+    // Si la requête a retourné des résultats, on boucle sur tabData pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
+    if(tabData.length) {
+        for (var i = 0; i < tabData.length; i++) {
+            appendLine('records_log', tabData, typeOfRecords, i);
         }
     }
 }
@@ -180,7 +188,7 @@ function parseMultipleLinesRequest(data){
     * data : un tableau de données
 */
 
-function updateFormInputs(data){
+function updateFormInputs(data) {
     var inputDateTimeStart = document.getElementById('datetime_start');
     var inputDateTimeEnd = document.getElementById('datetime_end');
     var inputComment = document.getElementById('comment');
@@ -200,8 +208,7 @@ function updateFormInputs(data){
     * data : contenu de la réponse à la requête AJAX
 */
 
-function parseUniqueLineRequest(data){
-    console.log(data);
+function parseUniqueLineRequest(data) {
     var recordData = [];
 
     $.each(data, function(key, value) {
@@ -217,11 +224,14 @@ function parseUniqueLineRequest(data){
     * data : contenu de la réponse à la requête AJAX
 */
 
-function displayNumberOfRecordsTocheck(data){
-    var tab_data = data.records;
+function displayNumberOfRecordsTocheck(data) {
+    var tabData = data.records;
 
-    if(tab_data.length) document.getElementById("notificationIcon").innerHTML = tab_data.length;
-    else document.getElementById("notificationIcon").hidden = true;
+    if(tabData.length) {
+        document.getElementById("notificationIcon").innerHTML = tabData.length;
+    } else {
+        document.getElementById("notificationIcon").hidden = true;
+    }
 }
 
 
@@ -230,18 +240,20 @@ function displayNumberOfRecordsTocheck(data){
     * data : contenu de la réponse à la requête AJAX
 */
 
-function displayOptionsList(data){
-    console.log(data);
+function displayOptionsList(data) {
     var typeOfData = data.typeOfData;
-    var tab_data = data.records;
+    var tabData = data.records;
 
     var selector = "";
-    if(typeOfData === "users") selector = "#selectUser";
-    if(typeOfData === "managers") selector = "#selectManager";
-    
+    if(typeOfData === "users") {
+        selector = "#selectUser";
+    }
+    if(typeOfData === "managers") {
+        selector = "#selectManager";
+    }
 
-    for(let i = 0 ; i < tab_data.length ; i ++){
-        $(selector).append(new Option(tab_data[i].Nom + ' ' + tab_data[i]. Prenom, tab_data[i].ID));
+    for(let i = 0 ; i < tabData.length ; i ++) {
+        $(selector).append(new Option(tabData[i].Nom + ' ' + tabData[i]. Prenom, tabData[i].ID));
     }
 }
 
@@ -273,14 +285,14 @@ function updateAllUsersRecordsLog(typeOfRecords, scope) {
     * {} : données à envoyer dans la requête, ici 'recordId' : identifiant du relevé à modifier ou à supprimer
 */
 
-function displayRecordForm(recordId){
-    $.post('index.php?action=getRecordForm', { 'recordId': recordId }, function(content){
+function displayRecordForm(recordId) {
+    $.post('index.php?action=getRecordForm', { 'recordId': recordId }, function(content) {
         $(".modal-body").html(content);
     });
 }
 
-function displayDeleteConfirmation(recordId){
-    $.post('index.php?action=getDeleteConfirmationForm', { 'recordId': recordId }, function(content){
+function displayDeleteConfirmation(recordId) {
+    $.post('index.php?action=getDeleteConfirmationForm', { 'recordId': recordId }, function(content) {
         $(".modal-title").html("Confirmation de suppression");
         $(".modal-body").html(content);
     });
@@ -296,7 +308,7 @@ function displayDeleteConfirmation(recordId){
 */
 
 function getRecordData(recordId) {
-    $.post('index.php?action=getRecordData', { 'recordId': recordId }, parseUniqueLineRequest/*, 'json'*/);
+    $.post('index.php?action=getRecordData', { 'recordId': recordId }, parseUniqueLineRequest, 'json');
 }
 
 
@@ -308,7 +320,7 @@ function getRecordData(recordId) {
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function getNumberOfRecordsToCheck(typeOfRecords, scope){
+function getNumberOfRecordsToCheck(typeOfRecords, scope) {
     $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, displayNumberOfRecordsTocheck, 'json');
 }
 
@@ -321,6 +333,6 @@ function getNumberOfRecordsToCheck(typeOfRecords, scope){
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function getOptionsData(optionType){
+function getOptionsData(optionType) {
     $.post('index.php?action=getOptionsData', { 'typeOfData': optionType }, displayOptionsList, 'json');
 }
