@@ -17,7 +17,7 @@
                 <li class="nav-item ps-4">
                     <a class="nav-link" href="index.php?action=showNewRecordForm">Nouveau relevé</a>
                 </li>
-                <?php if($_SESSION['id_group'] == 1 || $_SESSION['id_group'] == 2){
+                <?php if($_SESSION['userGroup'] == 1 || $_SESSION['userGroup'] == 2){
                     require('view/partials/menuManagerAdmin.php');
                 } else {
                     echo ' 

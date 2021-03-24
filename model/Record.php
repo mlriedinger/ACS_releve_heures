@@ -1,0 +1,131 @@
+<?php 
+
+class Record {
+    private $_recordId;
+    private $_userId;
+    private $_userGroup;
+    private $_managerId;
+    private $_dateTimeStart;
+    private $_dateTimeEnd;
+    private $_comment;
+    private $_periodStart;
+    private $_periodEnd;
+    private $_scope;
+    private $_typeOfRecords;
+
+    public function __construct(){
+        $this->_recordId = 0;
+        $this->_userId = 0;
+        $this->_userGroup = 0;
+        $this->_managerId = 0;
+        $this->_dateTimeStart ="";
+        $this->_dateTimeEnd ="";
+        $this->_comment ="";
+        $this->_periodStart ="";
+        $this->_periodEnd ="";
+        $this->_scope ="";
+        $this->_typeOfRecords="";
+    }
+
+    // Setters
+
+    public function setRecordId(int $recordId){
+        $this->_recordId = $recordId;
+        return $this;
+    }
+
+    public function setUserId(int $userId){
+        $this->_userId = $userId;
+        return $this;
+    }
+
+    public function setUserGroup(int $userGroup){
+        $this->_userGroup = $userGroup;
+        return $this;
+    }
+
+    public function setManagerId(int $managerId){
+        $this->_managerId = $managerId;
+        return $this;
+    }
+
+    public function setDateTimeStart(String $dateTimeStart){
+        $this->_dateTimeStart = $dateTimeStart;
+        return $this;
+    }
+
+    public function setDateTimeEnd(String $dateTimeEnd){
+        $this->_dateTimeEnd = $dateTimeEnd;
+        return $this;
+    }
+
+    public function setComment(String $comment){
+        $this->_comment = $comment;
+        return $this;
+    }
+
+    public function setPeriodStart(String $periodStart){
+        $this->_periodStart = $periodStart;
+        return $this;
+    }
+    public function setPeriodEnd(String $periodEnd){
+        $this->_periodEnd = $periodEnd;
+        return $this;
+    }
+
+    public function setScope(String $scope){
+        $this->_scope = $scope;
+        return $this;
+    }
+
+    public function setTypeOfRecords(String $_typeOfRecords){
+        $this->_typeOfRecords = $_typeOfRecords;
+        return $this;
+    }
+
+    // Getters
+
+    public function getRecordId(){
+        return $this->_recordId;
+    }
+
+    public function getUserId(){
+        return $this->_userId;
+    }
+
+    public function getUserGroup(){
+        return $this->_userGroup;
+    }
+
+    public function getManagerId(){
+        return $this->_managerId;
+    }
+
+    public function getDateTimeStart(){
+        return $this->_dateTimeStart;
+    }
+
+    public function getDateTimeEnd(){
+        return $this->_dateTimeEnd;
+    }
+
+    public function getComment(){
+        return $this->_comment;
+    }
+
+    public function getPeriodStart(){
+        return $this->_periodStart;
+    }
+
+    public function getPeriodEnd(){
+        return $this->_periodEnd;
+    }
+
+    public function getScope(){
+        return $this->_scope;
+    }
+
+    public function getTypeOfRecords(){
+        return $this->_typeOfRecords;
+    }
+}

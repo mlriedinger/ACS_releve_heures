@@ -38,8 +38,8 @@ function verifyLogin($login, $password) {
 function fillSessionData($userData){
     session_start();
     $_SESSION['login'] = $userData['Utilisateur'];
-    $_SESSION['id'] = $userData['ID'];
-    $_SESSION['id_group'] = $userData['id_groupe'];
+    $_SESSION['userId'] = $userData['ID'];
+    $_SESSION['userGroup'] = $userData['id_groupe'];
     $_SESSION['name'] = $userData['Nom'];
     $_SESSION['firstname'] = $userData['Prenom'];
     $_SESSION['isAdmin'] = $userData['Administrateur'];

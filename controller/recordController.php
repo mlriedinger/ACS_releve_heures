@@ -42,8 +42,8 @@ function displayExportForm(){
 
 /* Fonction pour récupérer le formulaire de saisie (uniquement le formulaire) */
 
-function getRecordForm($recordId){
-    $recordId = $recordId;
+function getRecordForm($recordInfo){
+    $recordId = $recordInfo->getRecordId();
     require('view/partials/recordForm.php');
 }
 
@@ -57,9 +57,9 @@ function getDeleteConfirmationForm(){
 
 /* Fonction pour enregistrer un nouveau relevé en BDD */
 
-function addNewRecord($userId, $dateTimeStart, $dateTimeEnd, $comment, $groupId){
+function addNewRecord($recordInfo){
     $recordManager = new RecordManager();
-    $isSendingSuccessfull = $recordManager->sendNewRecord($userId, $dateTimeStart, $dateTimeEnd, $comment, $groupId);
+    $isSendingSuccessfull = $recordManager->sendNewRecord($recordInfo);
 
     if($isSendingSuccessfull) {
         $_SESSION['success'] = true;
@@ -74,9 +74,9 @@ function addNewRecord($userId, $dateTimeStart, $dateTimeEnd, $comment, $groupId)
 
 /* Fonction pour modifier un relevé qui n'a pas encore été validé */
 
-function updateRecord($recordId, $dateTimeStart, $dateTimeEnd, $comment){
+function updateRecord($recordInfo){
     $recordManager = new RecordManager();
-    $isUpdateSuccessfull = $recordManager->updateRecord($recordId, $dateTimeStart, $dateTimeEnd, $comment);
+    $isUpdateSuccessfull = $recordManager->updateRecord($recordInfo);
     
     $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
     // Renvoie sur la dernière page visitée avant l'envoi du formulaire
@@ -86,16 +86,16 @@ function updateRecord($recordId, $dateTimeStart, $dateTimeEnd, $comment){
 
 /* Fonction pour mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager */
 
-function updateRecordStatus($checkList){   
+function updateRecordStatus($recordsCheckList){   
     $recordManager = new RecordManager();
     $updateResults = [];
 
-    foreach($checkList as $lineChecked){
-        $updateAttempt = $recordManager->updateRecordStatus($lineChecked); 
+    foreach($recordsCheckList as $recordChecked){
+        $updateAttempt = $recordManager->updateRecordStatus($recordChecked); 
         if($updateAttempt) array_push($updateResults, $updateAttempt);
     }
 
-    if(count($checkList) == count($updateResults)) $isUpdateSuccessfull = true;      
+    if(count($recordsCheckList) == count($updateResults)) $isUpdateSuccessfull = true;      
 
     $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
     // Renvoie sur la dernière page visitée avant l'envoi du formulaire
@@ -105,9 +105,9 @@ function updateRecordStatus($checkList){
 
 /* Fonction pour "supprimer" un relevé d'heure (en réalité le rendre inactif) */
 
-function deleteRecord($recordId, $comment){
+function deleteRecord($recordInfo){
     $recordManager = new RecordManager();
-    $isDeleteSuccessfull = $recordManager->deleteRecord($recordId, $comment);
+    $isDeleteSuccessfull = $recordManager->deleteRecord($recordInfo);
 
     $isDeleteSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
     // Renvoie sur la dernière page visitée avant l'envoi du formulaire
@@ -128,29 +128,29 @@ function deleteRecord($recordId, $comment){
     * $typeOfData : chaîne de caractères ("managers" ou "users")
 */
 
-function getRecordData($recordId){
+function getRecordData($recordInfo){
     $recordManager = new RecordManager();
-    $recordManager->getRecord($recordId);
+    $recordManager->getRecord($recordInfo);
 }
 
-function getUserRecords($userId, $typeOfRecords, $scope){
+function getUserRecords($recordInfo){
     $recordManager = new RecordManager();
-    $recordManager->getRecordsFromUser($userId, $typeOfRecords, $scope);   
+    $recordManager->getRecordsFromUser($recordInfo);   
 }
 
-function getTeamRecords($managerID, $typeOfRecords, $scope){
+function getTeamRecords($recordInfo){
     $recordManager = new RecordManager();
-    $recordManager->getRecordsFromTeam($managerID, $typeOfRecords, $scope);
+    $recordManager->getRecordsFromTeam($recordInfo);
 }
 
-function getAllUsersRecords($typeOfRecords, $scope){
+function getAllUsersRecords($recordInfo){
     $recordManager = new RecordManager();
-    $recordManager->getAllRecords($typeOfRecords, $scope);
+    $recordManager->getAllRecords($recordInfo);
 }
 
-function exportRecords($typeOfRecords, $scope, $dateStart, $dateEnd, $managerID, $userId){
+function exportRecords($recordInfo){
     $recordManager = new RecordManager();
-    $recordManager->exportRecords($typeOfRecords, $scope, $dateStart, $dateEnd, $managerID, $userId);
+    $recordManager->exportRecords($recordInfo);
 }
 
 function getOptionsData($typeOfData){

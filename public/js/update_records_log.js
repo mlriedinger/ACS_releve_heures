@@ -49,7 +49,7 @@ function fillTeamRecordsToCheckTable(newRow, data, counter){
 
     var html = [
         '<div class="form-check form-switch">',
-            '<input class="form-check-input" type="checkbox" name="check_list[' + counter +']" id="recordValidationCheck' + counter +'" value="' + data[counter].ID +'"/>',
+            '<input class="form-check-input" type="checkbox" name="checkList[' + counter +']" id="recordValidationCheck' + counter +'" value="' + data[counter].ID +'"/>',
             '<label class="form-check-label" for="recordValidationCheck' + counter +'">Sélectionner</label>',
         '</div>'
     ].join('');
@@ -201,6 +201,7 @@ function updateFormInputs(data){
 */
 
 function parseUniqueLineRequest(data){
+    console.log(data);
     var recordData = [];
 
     $.each(data, function(key, value) {
@@ -269,17 +270,17 @@ function updateAllUsersRecordsLog(typeOfRecords, scope) {
 /* Appels AJAX pour récupérer le contenu qui va être inséré dans le corps de la fenêtre modale (édition ou suppression d'un relevé)
     Params :
     * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'idRecord' : identifiant du relevé à modifier ou à supprimer
+    * {} : données à envoyer dans la requête, ici 'recordId' : identifiant du relevé à modifier ou à supprimer
 */
 
-function displayRecordForm(id_record){
-    $.post('index.php?action=getRecordForm', { 'idRecord': id_record }, function(content){
+function displayRecordForm(recordId){
+    $.post('index.php?action=getRecordForm', { 'recordId': recordId }, function(content){
         $(".modal-body").html(content);
     });
 }
 
-function displayDeleteConfirmation(id_record){
-    $.post('index.php?action=getDeleteConfirmationForm', { 'idRecord': id_record }, function(content){
+function displayDeleteConfirmation(recordId){
+    $.post('index.php?action=getDeleteConfirmationForm', { 'recordId': recordId }, function(content){
         $(".modal-title").html("Confirmation de suppression");
         $(".modal-body").html(content);
     });
@@ -295,7 +296,7 @@ function displayDeleteConfirmation(id_record){
 */
 
 function getRecordData(recordId) {
-    $.post('index.php?action=getRecordData', { 'recordID': recordId }, parseUniqueLineRequest, 'json');
+    $.post('index.php?action=getRecordData', { 'recordId': recordId }, parseUniqueLineRequest/*, 'json'*/);
 }
 
 

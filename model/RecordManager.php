@@ -24,16 +24,23 @@ class RecordManager extends DatabaseConnection
 {
     /* Méthode qui permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
-        * $userID : id utilisateur
+        * $userId : id utilisateur
         * $dateTimeStart : date et heure de début
         * $dateTimeEnd: date et heure de fin
         * $comment : commentaire
         * $groupId : groupe utilisateur
     */
 
-    public function sendNewRecord($userID, $dateTimeStart, $dateTimeEnd, $comment, $groupId){
+    public function sendNewRecord($recordInfo){
         $isSendingSuccessfull = false;
-        $groupId == 1 ? $validation_status = 1 : $validation_status = 0;
+
+        $userId = $recordInfo->getUserId();
+        $userGroup = $recordInfo->getUserGroup();
+        $dateTimeStart = $recordInfo->getDateTimeStart();
+        $dateTimeEnd = $recordInfo->getDateTimeEnd();
+        $comment = $recordInfo->getComment();
+
+        $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
         
         $pdo = $this->dbConnect();
       
@@ -46,14 +53,14 @@ class RecordManager extends DatabaseConnection
             commentaire) 
         VALUES (
             :id,
-            :userID, 
+            :userId, 
             :dateTimeStart, 
             :dateTimeEnd, 
             :validation_status,
             :comment)');
         $attempt = $query->execute(array(
             'id' => 0,
-            'userID' => $userID, 
+            'userId' => $userId, 
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'validation_status' => $validation_status,
@@ -77,8 +84,13 @@ class RecordManager extends DatabaseConnection
         * $comment : commentaire
     */
 
-    public function updateRecord($recordId, $dateTimeStart, $dateTimeEnd, $comment){
+    public function updateRecord($recordInfo){
         $isUpdateSuccessfull = false;
+
+        $recordId = $recordInfo->getRecordId();
+        $dateTimeStart = $recordInfo->getDateTimeStart();
+        $dateTimeEnd = $recordInfo->getDateTimeEnd();
+        $comment = $recordInfo->getComment();
 
         $pdo = $this->dbConnect();
 
@@ -134,8 +146,11 @@ class RecordManager extends DatabaseConnection
         * $comment : commentaire à mettre à jour dans la BDD (si justification de la suppression)
     */
 
-    public function deleteRecord($recordId, $comment){
+    public function deleteRecord($recordInfo){
         $isDeleteSuccessfull = false;
+
+        $recordId = $recordInfo->getRecordId();
+        $comment = $recordInfo->getComment();
     
         $pdo = $this->dbConnect();
 
@@ -161,8 +176,10 @@ class RecordManager extends DatabaseConnection
         * $recordId : id relevé
     */
 
-    public function getRecord($recordId){
+    public function getRecord($recordInfo){
         $pdo = $this->dbConnect();
+
+        $recordId = $recordInfo->getRecordId();
 
         $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE t_saisie_heure.ID = :recordId');
         $query->execute(array('recordId' => $recordId));
@@ -220,13 +237,17 @@ class RecordManager extends DatabaseConnection
 
     /* Méthode qui permet de récupérer tous les relevés d'heures associés à un utilisateur. Elle renvoie les données en JSON pour être exploitables par JS.
         Params:
-        * $userID : id utilisateur
+        * $userId : id utilisateur
         * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getRecordsFromUser($userID, $typeOfRecords, $scope){
+    public function getRecordsFromUser($recordInfo){
         $pdo = $this->dbConnect();
+
+        $userId = $recordInfo->getUserId();
+        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
 
         $sql = "SELECT id_of, 
         date_hrs_debut, 
@@ -238,12 +259,12 @@ class RecordManager extends DatabaseConnection
         ID,
         supprimer 
         FROM t_saisie_heure 
-        WHERE id_login = :userID";
+        WHERE id_login = :userId";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
-        $query->execute(array('userID' => $userID));
+        $query->execute(array('userId' => $userId));
         $userRecords["typeOfRecords"] = $typeOfRecords;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
         
@@ -264,8 +285,12 @@ class RecordManager extends DatabaseConnection
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getRecordsFromTeam($managerId, $typeOfRecords, $scope){
+    public function getRecordsFromTeam($recordInfo){
         $pdo = $this->dbConnect();
+
+        $managerId = $recordInfo->getManagerId();
+        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
 
         $sql = "SELECT t_saisie_heure.id_of, 
         t_login.Nom, 
@@ -308,8 +333,11 @@ class RecordManager extends DatabaseConnection
         * $scope : portée de la requêtes, c'est-à-dire tout ou une partie des relevés (paramètre envoyé par la requête AJAX)
     */
 
-    public function getAllRecords($typeOfRecords, $scope){
+    public function getAllRecords($recordInfo){
         $pdo = $this->dbConnect();
+
+        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
 
         $sql = "SELECT t_saisie_heure.id_of, 
         t_login.Nom, 
@@ -343,14 +371,21 @@ class RecordManager extends DatabaseConnection
     }
 
 
-    public function exportRecords($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID){
-        $rows = $this->getRecordsToExport($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID);
-        $fileName = $this->getFileName($scope, $dateStart, $dateEnd, $managerId, $userID);
+    public function exportRecords($recordInfo){
+        $rows = $this->getRecordsToExport($recordInfo);
+        $fileName = $this->getFileName($recordInfo);
         $this->writeCsvFile($rows, $fileName);
     }
 
 
-    public function getRecordsToExport($typeOfRecords, $scope, $dateStart, $dateEnd, $managerId, $userID){
+    public function getRecordsToExport($recordInfo){
+        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
+        $periodStart = $recordInfo->getPeriodStart();
+        $periodEnd = $recordInfo->getPeriodEnd();
+        $managerId = $recordInfo->getManagerId();
+        $userId = $recordInfo->getUserId();
+
         $pdo = $this->dbConnect();
 
         $sql = "SELECT t_saisie_heure.ID AS 'numero de releve',
@@ -368,22 +403,22 @@ class RecordManager extends DatabaseConnection
         INNER JOIN t_login
         ON t_saisie_heure.id_login = t_login.ID";
 
-        if($managerId != "" || $userID != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
+        if($managerId != "" || $userId != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
         
-        if($dateStart != "" && $dateEnd != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :dateStart AND t_saisie_heure.date_hrs_fin <= :dateEnd";
+        if($periodStart != "" && $periodEnd != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :periodStart AND t_saisie_heure.date_hrs_fin <= :periodEnd";
         if($managerId != "") $sql .= " AND t_equipe.id_manager = :managerId";
-        if($userID != "") $sql .= " AND t_saisie_heure.id_login = :userID";
+        if($userId != "") $sql .= " AND t_saisie_heure.id_login = :userId";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
 
-        if($managerId != "" || ($dateStart != "" && $dateEnd != "") || $userID != ""){
+        if($managerId != "" || ($periodStart != "" && $periodEnd != "") || $userId != ""){
             $queryParams = array();
             if($managerId != "") $queryParams['managerId'] = $managerId;
-            if($userID != "")  $queryParams['userID'] = $userID;
-            if($dateStart != "") $queryParams['dateStart'] = $dateStart;
-            if($dateEnd != "") $queryParams['dateEnd'] = $dateEnd;
+            if($userId != "")  $queryParams['userId'] = $userId;
+            if($periodStart != "") $queryParams['periodStart'] = $periodStart;
+            if($periodEnd != "") $queryParams['periodEnd'] = $periodEnd;
         
             $query->execute($queryParams);
         }
@@ -398,14 +433,20 @@ class RecordManager extends DatabaseConnection
     }
 
 
-    public function getFileName($scope, $dateStart, $dateEnd, $managerId, $userID){
+    public function getFileName($recordInfo){
+        $scope = $recordInfo->getScope();
+        $periodStart = $recordInfo->getPeriodStart();
+        $periodEnd = $recordInfo->getPeriodEnd();
+        $managerId = $recordInfo->getManagerId();
+        $userId = $recordInfo->getUserId();
+
         $fileNameDetails ="_";
         $fileNameDetails .= $scope . "_records";
 
         if($managerId != "") $fileNameDetails .= "_manager_" . $managerId;
-        if($userID != "") $fileNameDetails .= "_user_" . $userID;
-        if($dateStart != "") $fileNameDetails .= "_from_" . $dateStart;
-        if($dateEnd != "") $fileNameDetails .= "_to_" . $dateEnd;
+        if($userId != "") $fileNameDetails .= "_user_" . $userId;
+        if($periodStart != "") $fileNameDetails .= "_from_" . $periodStart;
+        if($periodEnd != "") $fileNameDetails .= "_to_" . $periodEnd;
 
         $fileName = date('Ymd') . '_export_releves_heures' . $fileNameDetails . '.csv';
 
