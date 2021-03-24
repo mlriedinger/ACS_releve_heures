@@ -205,7 +205,6 @@ class RecordManager extends DatabaseConnection
         if($typeOfRecords == "export" || $typeOfRecords == "all"){
             $pos = strpos($sql, "AND");
             if($pos !== false) {
-                $search = "AND";
                 $replace = "WHERE";
                 $sql = substr_replace($sql, $replace, $pos, strlen("AND"));
             }
