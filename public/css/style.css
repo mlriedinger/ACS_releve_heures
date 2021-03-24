@@ -4,6 +4,11 @@ h1 {
 
 /* Override des classes Bootstrap pour modifier la couleur des switches */
 
+.form-check-input:checked {
+  background-color: #0388a6;
+  border-color: #0388a6;
+}
+
 .form-switch .form-check-input:checked {
   background-position: right center;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
@@ -11,11 +16,6 @@ h1 {
 
 .form-switch .form-check-input:focus {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%230388A6'/%3e%3c/svg%3e");
-}
-
-.form-check-input:checked {
-  background-color: #0388a6;
-  border-color: #0388a6;
 }
 
 .nav-tabs .nav-link.active,
@@ -30,7 +30,8 @@ h1 {
 @media (min-device-width: 320px)
   and (max-device-width: 812px)
   and (orientation: portrait) {
-  .records_log_comment, .records_log_last_modification{
+  .records_log_comment, 
+  .records_log_last_modification {
     display: none;
   }
 }
