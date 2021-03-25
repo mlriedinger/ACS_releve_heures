@@ -4,12 +4,20 @@
 
 class DatabaseConnection
 {
-    private $dbHost = "mariadb.acskm.fr";
-    private $dbPort = "3306";
-    private $dbName = "erp_acs";
-    private $dbUser = "erpadmin";
-    private $dbPassword = "Acs@73000";
+    private $_dbHost;
+    private $_dbPort;
+    private $_dbName;
+    private $_dbUser;
+    private $_dbPassword;
 
+    public function __construct(){
+        $config = parse_ini_file("config.ini");
+        $this->_dbHost = $config['dbHost'];
+        $this->_dbPort = $config['dbPort'];
+        $this->_dbName = $config['dbName'];
+        $this->_dbUser = $config['dbUser'];
+        $this->_dbPassword = $config['dbPassword'];
+    }
 
     /* Méthode qui initialise une connection à la base de données. Elle retourne un objet PDO en cas de succès, sinon une erreur.
         Params:
@@ -22,13 +30,13 @@ class DatabaseConnection
     */
 
     protected function dbConnect($dbUser = "", $dbPassword = "", $dbHost = "", $dbPort = "", $dbName = ""){
-        if($dbUser != "") $this->dbUser = $dbUser;
-        if($dbPassword != "") $this->dbPassword = $dbPassword;
-        if($dbHost != "") $this->dbHost = $dbHost;
-        if($dbPort != "") $this->dbPort = $dbPort;
-        if($dbName != "") $this->dbName = $dbName;
+        if($_dbUser != "") $this->_dbUser = $dbUser;
+        if($_dbPassword != "") $this->_dbPassword = $dbPassword;
+        if($_dbHost != "") $this->_dbHost = $dbHost;
+        if($_dbPort != "") $this->_dbPort = $dbPort;
+        if($_dbName != "") $this->_dbName = $dbName;
 
-        $pdo = new PDO('mysql:host=' . $this->dbHost . ';port=' . $this->dbPort . ';dbname=' . $this->dbName . ';charset=utf8', $this->dbUser, $this->dbPassword);
+        $pdo = new PDO('mysql:host=' . $this->_dbHost . ';port=' . $this->_dbPort . ';dbname=' . $this->_dbName . ';charset=utf8', $this->_dbUser, $this->_dbPassword);
 
         return $pdo;
     }
