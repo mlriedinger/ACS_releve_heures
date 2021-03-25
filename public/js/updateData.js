@@ -6,26 +6,24 @@
 */
 
 function checkRecordValidationStatus(newLines, data, counter) {
-    if(newLines.newStatus != undefined && newLines.newEdit != undefined && newLines.newDelete != undefined) {
-        let validationStatus = data[counter].statut_validation;
-        let deleteStatus = data[counter].supprimer;
+    let validationStatus = data[counter].statut_validation;
+    let deleteStatus = data[counter].supprimer;
 
-        let newValidationText = "";
-        
-        if(validationStatus === "0" && deleteStatus === "0") {
-            newValidationText = document.createTextNode("En attente");
-            insertEditRecordButton(newLines.newEdit, data, counter);
-            insertDeleteRecordButton(newLines.newDelete, data, counter);  
-        } 
-        else if (validationStatus === "0" && deleteStatus === "1") {
-            newValidationText = document.createTextNode("Supprimé");
-        }
-        else {
-            newValidationText = document.createTextNode("Validé");
-        }
-        
-        newLines.newStatus.appendChild(newValidationText);
+    let newValidationText = "";
+    
+    if(validationStatus === "0" && deleteStatus === "0") {
+        newValidationText = document.createTextNode("En attente");
+        insertEditRecordButton(newLines.newEdit, data, counter);
+        insertDeleteRecordButton(newLines.newDelete, data, counter);  
+    } 
+    else if (validationStatus === "0" && deleteStatus === "1") {
+        newValidationText = document.createTextNode("Supprimé");
     }
+    else {
+        newValidationText = document.createTextNode("Validé");
+    }
+    
+    newLines.newStatus.appendChild(newValidationText);
 }
 
 
@@ -37,34 +35,34 @@ function checkRecordValidationStatus(newLines, data, counter) {
 */
 
 function fillRecordsTable(newLines, data, counter) {
-    if(newLines.newStartTime != undefined) {
+    if(newLines.newStartTime !== undefined) {
         let newText = document.createTextNode(data[counter].date_hrs_debut);
         newLines.newStartTime.appendChild(newText);
     }
 
-    if(newLines.newEndTime != undefined) {
+    if(newLines.newEndTime !== undefined) {
         let newText = document.createTextNode(data[counter].date_hrs_fin);
         newLines.newEndTime.appendChild(newText);
     }
 
-    if(newLines.newComment != undefined) {
+    if(newLines.newComment !== undefined) {
         newLines.newComment.classList.add("records_log_comment");
         let newText = document.createTextNode(data[counter].commentaire);
         newLines.newComment.appendChild(newText);
     }
 
-    if(newLines.newUpdateDate != undefined) {
+    if(newLines.newUpdateDate !== undefined) {
         newLines.newUpdateDate.classList.add("records_log_last_modification");
         let newText = document.createTextNode(data[counter].date_hrs_modif);
         newLines.newUpdateDate.appendChild(newText);
     }
 
-    if(newLines.newFirstName != undefined) {
+    if(newLines.newFirstName !== undefined) {
         let newText = document.createTextNode(data[counter].Prenom);
         newLines.newFirstName.appendChild(newText);
     }
 
-    if(newLines.newLastName != undefined) {
+    if(newLines.newLastName !== undefined) {
         let newText = document.createTextNode(data[counter].Nom);
         newLines.newLastName.appendChild(newText);
     }

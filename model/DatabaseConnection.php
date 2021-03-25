@@ -30,11 +30,11 @@ class DatabaseConnection
     */
 
     protected function dbConnect($dbUser = "", $dbPassword = "", $dbHost = "", $dbPort = "", $dbName = ""){
-        if($_dbUser != "") $this->_dbUser = $dbUser;
-        if($_dbPassword != "") $this->_dbPassword = $dbPassword;
-        if($_dbHost != "") $this->_dbHost = $dbHost;
-        if($_dbPort != "") $this->_dbPort = $dbPort;
-        if($_dbName != "") $this->_dbName = $dbName;
+        if($dbUser != "") $this->_dbUser = $dbUser;
+        if($dbPassword != "") $this->_dbPassword = $dbPassword;
+        if($dbHost != "") $this->_dbHost = $dbHost;
+        if($dbPort != "") $this->_dbPort = $dbPort;
+        if($dbName != "") $this->_dbName = $dbName;
 
         $pdo = new PDO('mysql:host=' . $this->_dbHost . ';port=' . $this->_dbPort . ';dbname=' . $this->_dbName . ';charset=utf8', $this->_dbUser, $this->_dbPassword);
 
