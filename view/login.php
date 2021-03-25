@@ -30,8 +30,6 @@
                         <input type="submit" value="Valider" class="btn btn-dark" />
                         </div>
 
-                        <!-- Remplacer par une autre variable type boolean, quand vrai, on affiche la div-->
-                        <div><?= ((!$isPasswordCorrect || !$data) && isset($_POST['id']) ? 'Mauvais identifiant ou mot de passe.' : '') ?></div>
                     </form>
 
                 </div>

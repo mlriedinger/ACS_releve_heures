@@ -30,7 +30,7 @@ h1 {
 @media (min-device-width: 320px)
   and (max-device-width: 812px)
   and (orientation: portrait) {
-  .records_log_comment, 
+  .records_log_comment,
   .records_log_last_modification {
     display: none;
   }

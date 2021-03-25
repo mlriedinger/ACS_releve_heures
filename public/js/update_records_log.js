@@ -162,7 +162,6 @@ function insertFormControlButtons() {
 */
 
 function parseMultipleLinesRequest(data) {
-    console.log(data);
     var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
 
@@ -268,7 +267,7 @@ function displayOptionsList(data) {
 
 function updatePersonalRecordsLog(typeOfRecords, scope) {
     $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
-;}
+}
 
 function updateTeamRecordsLog(typeOfRecords, scope) {
     $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');

@@ -99,7 +99,7 @@ class ExportManager extends RecordManager {
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
-        $queryParams = fillQueryParamsArray($recordInfo);
+        $queryParams = $this->fillQueryParamsArray($recordInfo);
         
         if (sizeof($queryParams) != 0){    
             $query->execute($queryParams);
