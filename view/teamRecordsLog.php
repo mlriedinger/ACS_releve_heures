@@ -46,7 +46,8 @@
         <?php include('partials/footer.php'); ?>
         <?php include('partials/recordFormScripts.php'); ?>
 
-        <script src="public/js/update_records_log.js"></script>
+        <script id="mainScript" src="public/js/main.js"></script>
+        <!-- <script src="public/js/buttonManagement.js"></script> -->
         
         <script>
             $(function() {

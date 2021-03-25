@@ -15,7 +15,7 @@
         <?php include('partials/footer.php'); ?>
     </body>
 
-    <script src="public/js/update_records_log.js"></script>
+    <script id="mainScript" src="public/js/main.js"></script>
     <script>
         $(function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
