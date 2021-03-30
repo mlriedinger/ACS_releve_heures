@@ -2,6 +2,12 @@ h1 {
   color: #808080;
 }
 
+a,
+a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
 /* Override des classes Bootstrap pour modifier la couleur des switches */
 
 .form-check-input:checked {

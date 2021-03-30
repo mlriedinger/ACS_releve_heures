@@ -30,7 +30,7 @@
         <div class="row mb-3 justify-content-md-center">
             
             <div class="col-sm-8 mb-5 text-center">
-                <input type="hidden" value="<?=($_POST['recordId'])?>" name="recordId"/>
+                <input type="hidden" value="<?= isset($_POST['recordId']) ? ($_POST['recordId']) : "" ;?>" name="recordId"/>
                 <input type="reset" value="Annuler" onclick="closeModal()" class="btn btn-light"/>
                 <input type="submit" value="Valider" class="btn btn-dark"/>
             </div>
@@ -43,7 +43,7 @@
 <script id="mainScript" src="public/js/main.js"></script>
 <script>
     $(function() {
-        getRecordData(<?= $_POST['recordId'] ;?>);
+        getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
     });
 
     function closeModal(){
