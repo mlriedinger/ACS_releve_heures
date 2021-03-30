@@ -19,6 +19,7 @@ class RecordManager extends DatabaseConnection
         // On récupère les informations contenues dans l'objet $recordInfo
         $userId = $recordInfo->getUserId();
         $userGroup = $recordInfo->getUserGroup();
+        $worksite = $recordInfo->getWorksite();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
         $comment = $recordInfo->getComment();
@@ -30,22 +31,22 @@ class RecordManager extends DatabaseConnection
         $pdo = $this->dbConnect();
       
         $query = $pdo->prepare('INSERT INTO t_saisie_heure(
-            id, 
-            id_login, 
+            ID, 
+            id_chantier, 
             date_hrs_debut, 
             date_hrs_fin, 
             statut_validation, 
-            commentaire) 
-        VALUES (
+            commentaire)
+            VALUES (
             :id,
-            :userId, 
+            :id_chantier, 
             :dateTimeStart, 
             :dateTimeEnd, 
             :validation_status,
             :comment)');
         $attempt = $query->execute(array(
             'id' => 0,
-            'userId' => $userId, 
+            'id_chantier' => $worksite,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'validation_status' => $validation_status,
@@ -351,7 +352,7 @@ class RecordManager extends DatabaseConnection
         * $type : chaîne de caractères correspondant au type d'utilisateurs à récupérer ("managers" ou "users")
     */
 
-    public function getDataForOptionSelect($type){
+    public function getDataForOptionSelect($type, $userId){
         $pdo = $this->dbConnect();
 
         $sql ="";
@@ -363,12 +364,36 @@ class RecordManager extends DatabaseConnection
             case "users":
                 $sql .= "SELECT ID, Nom, Prenom FROM t_login";
                 break;
+            case "worksites":
+                $sql .= "SELECT  
+                    t_chantier.ID,
+                    t_chantier.Nom
+                    FROM t_chantier
+                    INNER JOIN t_equipe_compo
+                    ON t_chantier.id_equipe_compo = t_equipe_compo.ID
+                    INNER JOIN t_login
+                    ON t_equipe_compo.id_membre = t_login.ID
+                    WHERE t_login.ID = :userId";
+                break;
         }
 
-        $sql .= " ORDER BY t_login.Nom ASC";
-
+        if($type === "managers" || $type === "users"){
+            $sql .= " ORDER BY t_login.Nom ASC";
+        }
+        else {
+            $sql .= " ORDER BY t_chantier.Nom ASC";
+        }
+        
         $query = $pdo->prepare($sql);
-        $query->execute();
+
+        $queryParams = array();
+        if($userId != "")  $queryParams['userId'] = $userId;
+
+        if (sizeof($queryParams) != 0){    
+            $query->execute($queryParams);
+        }
+        else $query->execute();
+        
         $data["typeOfData"] = $type;
         $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 

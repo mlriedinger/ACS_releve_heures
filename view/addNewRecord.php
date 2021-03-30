@@ -15,6 +15,19 @@
 
         </div>
 
+        <script id="mainScript" src="public/js/main.js"></script>
+        <script>
+
+            window.onload = function() {
+                getOptionsData('add', 'worksites');
+            }
+
+            // $(function() {
+            //     getOptionsData('add', 'worksites');
+            //     getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
+            // });
+        </script>
+
         <?php include('partials/footer.php'); ?>
         <?php include('partials/recordFormScripts.php'); ?>
     </body>

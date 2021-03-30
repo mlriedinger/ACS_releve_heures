@@ -115,6 +115,6 @@ function getNumberOfRecordsToCheck(typeOfRecords, scope) {
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function getOptionsData(optionType) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType }, displayOptionsList, 'json');
+function getOptionsData(scope, optionType) {
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope }, displayOptionsList/*, 'json'*/);
 }

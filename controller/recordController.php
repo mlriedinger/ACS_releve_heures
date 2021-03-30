@@ -153,7 +153,7 @@ function exportRecords($recordInfo){
     $exportManager->exportRecords($recordInfo);
 }
 
-function getOptionsData($typeOfData){
+function getOptionsData($typeOfData, $userId=""){
     $recordManager = new RecordManager();
-    $recordManager->getDataForOptionSelect($typeOfData);
+    $recordManager->getDataForOptionSelect($typeOfData, $userId);
 }

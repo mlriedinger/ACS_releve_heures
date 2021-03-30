@@ -232,6 +232,7 @@ function displayNumberOfRecordsTocheck(data) {
 */
 
 function displayOptionsList(data) {
+    console.log(data);
     var typeOfData = data.typeOfData;
     var tabData = data.records;
 
@@ -242,8 +243,18 @@ function displayOptionsList(data) {
     if(typeOfData === "managers") {
         selector = "#selectManager";
     }
+    if(typeOfData === "worksites") {
+        selector = "#selectWorksite";
+    }
 
-    for(let i = 0 ; i < tabData.length ; i ++) {
-        $(selector).append(new Option(tabData[i].Nom + ' ' + tabData[i]. Prenom, tabData[i].ID));
+    if(typeOfData === "users" || typeOfData === "managers"){
+        for(let i = 0 ; i < tabData.length ; i ++) {
+            $(selector).append(new Option(tabData[i].Nom + ' ' + tabData[i]. Prenom, tabData[i].ID));
+        }
+    }
+    else {
+        for(let i = 0 ; i < tabData.length ; i ++) {
+            $(selector).append(new Option(tabData[i].Nom, tabData[i].ID));
+        }
     }
 }

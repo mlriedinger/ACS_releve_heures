@@ -2,8 +2,19 @@
 <div class="container-fluid">
 
     <form action="<?=($_POST['recordId'] == 0 ? 'index.php?action=addNewRecord' : 'index.php?action=updateRecord')?>" method="POST">
-    
+        
         <div class="row mt-5 mb-3 justify-content-md-center">
+
+            <div class="col-sm-8 mb-3">
+                <span class="input-group-text" id="worksite_selector">Chantier</span>
+                <select class="form-select" name="worksite" id="selectWorksite" aria-label="Sélectionnez un chantier" aria-describedby="worksite_selector">
+                    <option value="" selected>Sélectionnez un chantier</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row mb-3 justify-content-md-center">
 
             <div class="col-sm-4 mb-3">
                 <span class="input-group-text" id="datetime_start_selector">Date et heure de début</span>
@@ -40,13 +51,14 @@
 
 </div>
 
-<script id="mainScript" src="public/js/main.js"></script>
+<!-- <script id="mainScript" src="public/js/main.js"></script>
 <script>
+
     $(function() {
         getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
     });
 
-    function closeModal(){
-        $('#formModal').modal('hide');
-    }
-</script>
+    // function closeModal(){
+    //     $('#formModal').modal('hide');
+    // }
+</script> -->

@@ -142,10 +142,10 @@
 
         <script id="mainScript" src="public/js/main.js"></script>
         <script>
-            $(function() {
-                getOptionsData('managers');
-                getOptionsData('users');
-            });
+            window.onload = function(){
+                getOptionsData('export', 'managers');
+                getOptionsData('export', 'users');
+        }
         </script>
     </body>
 </html>

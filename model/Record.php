@@ -12,6 +12,7 @@ class Record {
     private $_periodEnd;
     private $_scope;
     private $_typeOfRecords;
+    private $_worksite;
 
     public function __construct(){
         $this->_recordId = 0;
@@ -25,6 +26,7 @@ class Record {
         $this->_periodEnd ="";
         $this->_scope ="";
         $this->_typeOfRecords="";
+        $this->_worksite = 0;
     }
 
     // Setters
@@ -78,8 +80,13 @@ class Record {
         return $this;
     }
 
-    public function setTypeOfRecords(String $_typeOfRecords){
-        $this->_typeOfRecords = $_typeOfRecords;
+    public function setTypeOfRecords(String $typeOfRecords){
+        $this->_typeOfRecords = $typeOfRecords;
+        return $this;
+    }
+
+    public function setWorksite(int $_worksite){
+        $this->_worksite = $_worksite;
         return $this;
     }
 
@@ -127,5 +134,9 @@ class Record {
 
     public function getTypeOfRecords(){
         return $this->_typeOfRecords;
+    }
+
+    public function getWorksite(){
+        return $this->_worksite;
     }
 }

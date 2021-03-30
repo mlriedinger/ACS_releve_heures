@@ -17,8 +17,8 @@
 
     <script id="mainScript" src="public/js/main.js"></script>
     <script>
-        $(function() {
+        window.onload = function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
-        });
+    }
     </script>
 </html>

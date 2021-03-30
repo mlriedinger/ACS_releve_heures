@@ -79,6 +79,7 @@ if(isset($_GET['action'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
+                        $recordInfo->setWorksite(htmlspecialchars($_POST['worksite']));
                         $recordInfo->setDateTimeStart(htmlspecialchars($_POST['datetimeStart']));
                         $recordInfo->setDateTimeEnd(htmlspecialchars($_POST['datetimeEnd']));
                         $recordInfo->setComment(htmlspecialchars($_POST['comment']));
@@ -249,8 +250,15 @@ if(isset($_GET['action'])) {
 
             // Récupérer les listes des managers et des salariés pour le formulaire d'export
             case "getOptionsData":
-                if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1'){
-                    if(isset($_POST['typeOfData'])) getOptionsData(htmlspecialchars($_POST['typeOfData']));
+                if(isset($_SESSION['userId'])){
+                    if(isset($_POST['typeOfData']) && isset($_POST['scope'])) {
+                        if(htmlspecialchars($_POST['scope']) === "export"){
+                            getOptionsData(htmlspecialchars($_POST['typeOfData']));
+                        }
+                        if(htmlspecialchars($_POST['scope']) === "add"){
+                            getOptionsData(htmlspecialchars($_POST['typeOfData']), $_SESSION['userId']);
+                        }
+                    }
                 }
                 break;
         }
