@@ -44,6 +44,7 @@ function displayExportForm(){
 
 function getRecordForm($recordInfo){
     $recordId = $recordInfo->getRecordId();
+    $userId = $recordInfo->getUserId();
     require('view/partials/recordForm.php');
 }
 

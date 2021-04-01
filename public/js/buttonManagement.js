@@ -6,7 +6,7 @@
 */
 
 function insertEditRecordButton(newEdit, data, counter){
-    let newEditText = `<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(${data[counter].ID})" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>`;
+    let newEditText = `<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(${data[counter].ID}, ${data[counter].id_membre})" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>`;
     newEdit.innerHTML += newEditText;   
 }
 

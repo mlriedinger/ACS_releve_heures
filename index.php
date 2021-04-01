@@ -154,6 +154,7 @@ if(isset($_GET['action'])) {
                     if (isset($_POST['recordId'])){
                         $recordInfo = new Record();
                         $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
+                        $recordInfo->setUserId(intval(htmlspecialchars($_POST['userId'])));
 
                         getRecordForm($recordInfo);
                     }
@@ -171,7 +172,7 @@ if(isset($_GET['action'])) {
             // Récupérer les données d'un relevé
             case "getRecordData":
                 if(isset($_SESSION['userId'])){
-                    if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])){
+                    if(isset($_POST['recordId']) /*&& is_numeric($_POST['recordId'])*/){
                         $recordInfo = new Record();
                         $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
                         getRecordData($recordInfo);
@@ -255,8 +256,8 @@ if(isset($_GET['action'])) {
                         if(htmlspecialchars($_POST['scope']) === "export"){
                             getOptionsData(htmlspecialchars($_POST['typeOfData']));
                         }
-                        if(htmlspecialchars($_POST['scope']) === "add"){
-                            getOptionsData(htmlspecialchars($_POST['typeOfData']), $_SESSION['userId']);
+                        if(htmlspecialchars($_POST['scope']) === "add" && htmlspecialchars($_POST['userId'] !== null)) {
+                            getOptionsData(htmlspecialchars($_POST['typeOfData']), htmlspecialchars($_POST['userId']));
                         }
                     }
                 }

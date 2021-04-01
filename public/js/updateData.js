@@ -66,6 +66,16 @@ function fillRecordsTable(newLines, data, counter) {
         let newText = document.createTextNode(data[counter].Nom);
         newLines.newLastName.appendChild(newText);
     }
+
+    if(newLines.newEmployee !== undefined) {
+        let newText = document.createTextNode(data[counter].prenom_salarie + ' ' + data[counter].nom_salarie);
+        newLines.newEmployee.appendChild(newText);
+    }
+
+    if(newLines.newManager !== undefined) {
+        let newText = document.createTextNode(data[counter].prenom_manager + ' ' + data[counter].nom_manager);
+        newLines.newManager.appendChild(newText);
+    }
 }
 
 
@@ -108,15 +118,36 @@ function createNewLinesInTeamRecordsToCheckTable(newRow) {
 } 
 
 
-/* Fonction qui permet de créer les cellules d'une nouvelle ligne d'un tableau d'historique équipe ou global 
+/* Fonction qui permet de créer les cellules d'une nouvelle ligne d'un tableau d'historique équipe 
     Params :
         * newRow : correspond à la nouvelle ligne du tableau
 */
 
-function createTeamAndAllUsersRecordsTable(newRow) {
+function createNewLinesInTeamRecordsTable(newRow) {
     var newLines = {
         newFirstName : newRow.insertCell(1),
         newLastName : newRow.insertCell(2),
+        newStartTime : newRow.insertCell(3),
+        newEndTime : newRow.insertCell(4),
+        newComment : newRow.insertCell(5),
+        newStatus : newRow.insertCell(6),
+        newUpdateDate : newRow.insertCell(7),
+        newEdit : newRow.insertCell(8),
+        newDelete : newRow.insertCell(9)
+    }
+    return newLines;
+}
+
+
+/* Fonction qui permet de créer les cellules d'une nouvelle ligne d'un tableau d'historique global 
+    Params :
+        * newRow : correspond à la nouvelle ligne du tableau
+*/
+
+function createNewLinesInAllUsersRecordsTable(newRow) {
+    var newLines = {
+        newManager : newRow.insertCell(1),
+        newEmployee : newRow.insertCell(2),
         newStartTime : newRow.insertCell(3),
         newEndTime : newRow.insertCell(4),
         newComment : newRow.insertCell(5),
@@ -146,7 +177,7 @@ function appendLine(tableID, data, typeOfRecord, counter) {
 
     // On crée une nouvelle colonne 'chantiers'
     var newWorkSite = newRow.insertCell(0);
-    var newText = document.createTextNode(data[counter].id_of);
+    var newText = document.createTextNode(data[counter].chantier);
     newWorkSite.appendChild(newText);
 
     // En fonction du type de relevés, on crée et on remplit les autres colonnes du tableau
@@ -161,8 +192,13 @@ function appendLine(tableID, data, typeOfRecord, counter) {
         insertSwitchButton(newLines.newIsValid, data, counter);
         insertDeleteRecordButton(newLines.newDelete, data, counter);
     } 
-    else { 
-        let newLines = createTeamAndAllUsersRecordsTable(newRow);
+    else if (typeOfRecord === "Team") { 
+        let newLines = createNewLinesInTeamRecordsTable(newRow);
+        fillRecordsTable(newLines, data, counter);
+        checkRecordValidationStatus(newLines, data, counter);
+    }
+    else {
+        let newLines = createNewLinesInAllUsersRecordsTable(newRow);
         fillRecordsTable(newLines, data, counter);
         checkRecordValidationStatus(newLines, data, counter);
     }
@@ -196,17 +232,30 @@ function clearTable(tabData) {
 */
 
 function updateFormInputs(data) {
+    console.log("updateFormInputs :");
+    console.log(data);
+    
+    var worksitesCollection = document.getElementById("selectWorksite").children;
+    for (let item of worksitesCollection) {
+        console.log(item.value);
+        
+        if(item.value === data['id_chantier']){
+            console.log("valeur qui correspond au chantier : " + item.value);
+            item.setAttribute("selected", "");
+        }
+    }
+    
     var inputDateTimeStart = document.getElementById("datetime_start");
     var inputDateTimeEnd = document.getElementById("datetime_end");
     var inputComment = document.getElementById("comment");
 
     // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par datetime-locale
-    var startTime = data[3].replace(" ", "T");
-    var endTime = data[4].replace(" ", "T");
+    var startTime = data['date_hrs_debut'].replace(" ", "T");
+    var endTime = data['date_hrs_fin'].replace(" ", "T");
 
     inputDateTimeStart.setAttribute("value", startTime);
     inputDateTimeEnd.setAttribute("value", endTime);
-    inputComment.innerHTML += data[6];
+    inputComment.innerHTML += data['commentaire'];
 }
 
 
@@ -232,7 +281,7 @@ function displayNumberOfRecordsTocheck(data) {
 */
 
 function displayOptionsList(data) {
-    console.log(data);
+    // console.log(data);
     var typeOfData = data.typeOfData;
     var tabData = data.records;
 

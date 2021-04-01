@@ -162,7 +162,19 @@ class RecordManager extends DatabaseConnection
         
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT * FROM t_saisie_heure WHERE t_saisie_heure.ID = :recordId');
+        $query = $pdo->prepare('SELECT 
+            Releve.id_chantier,
+            t_equipe_compo.id_membre,
+            Releve.date_hrs_debut,
+            Releve.date_hrs_fin,
+            Releve.statut_validation,
+            Releve.commentaire 
+        FROM t_saisie_heure AS Releve
+        INNER JOIN t_chantier
+            ON Releve.id_chantier = t_chantier.ID
+        INNER JOIN t_equipe_compo
+            ON t_chantier.id_equipe_compo = t_equipe_compo.ID
+        WHERE Releve.ID = :recordId');
         $query->execute(array('recordId' => $recordId));
         $recordData = $query->fetch(PDO::FETCH_ASSOC);
 
@@ -187,16 +199,16 @@ class RecordManager extends DatabaseConnection
     public function addQueryScopeAndOrderByClause(String $sql, String $scope, String $typeOfRecords){
         switch($scope) {
             case "all":
-                if($typeOfRecords != "export") $sql .= " AND t_saisie_heure.supprimer = 0";
+                if($typeOfRecords != "export") $sql .= " AND Releve.supprimer = 0";
                 break;
             case "valid":
-                $sql .= " AND t_saisie_heure.statut_validation = 1 AND t_saisie_heure.supprimer = 0";
+                $sql .= " AND Releve.statut_validation = 1 AND Releve.supprimer = 0";
                 break;
             case "unchecked":
-                $sql .= " AND t_saisie_heure.statut_validation = 0 AND t_saisie_heure.supprimer = 0";
+                $sql .= " AND Releve.statut_validation = 0 AND Releve.supprimer = 0";
                 break;
             case "deleted":
-                $sql .= " AND t_saisie_heure.supprimer = 1";
+                $sql .= " AND Releve.supprimer = 1";
                 break;
             default:
                 break;
@@ -212,7 +224,7 @@ class RecordManager extends DatabaseConnection
         }
         
         // On ordonne les données par ordre décroissant de date de création
-        $sql .= " ORDER BY t_saisie_heure.date_hrs_creation DESC";
+        $sql .= " ORDER BY Releve.date_hrs_creation DESC";
 
         return $sql;
     }
@@ -230,22 +242,32 @@ class RecordManager extends DatabaseConnection
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $scope = $recordInfo->getScope();
 
-        $sql = "SELECT id_of, 
-        date_hrs_debut, 
-        date_hrs_fin, 
-        commentaire, 
-        statut_validation, 
-        date_hrs_creation, 
-        date_hrs_modif,
-        ID,
-        supprimer 
-        FROM t_saisie_heure 
-        WHERE id_login = :userId";
+        $sql = "SELECT 
+            t_chantier.Nom AS 'chantier', 
+            Releve.date_hrs_debut, 
+            Releve.date_hrs_fin, 
+            Releve.commentaire, 
+            Releve.statut_validation, 
+            Releve.date_hrs_creation, 
+            Releve.date_hrs_modif,
+            Releve.ID,
+            Releve.supprimer,
+            t_equipe_compo.id_membre 
+        FROM t_saisie_heure AS Releve
+        INNER JOIN t_chantier
+            ON Releve.id_chantier = t_chantier.ID
+        INNER JOIN t_equipe_compo
+            ON t_chantier.id_equipe_compo = t_equipe_compo.ID
+        INNER JOIN t_login
+            ON t_equipe_compo.id_membre = t_login.ID
+        WHERE t_login.ID = :userId";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
-        $query->execute(array('userId' => $userId));
+        $query->execute(array(
+            'userId' => $userId));
+
         $userRecords["typeOfRecords"] = $typeOfRecords;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
         
@@ -259,38 +281,80 @@ class RecordManager extends DatabaseConnection
     }
 
 
-    /* Méthode qui permet de récupérer TOUS les relevés d'heures de salariés associés à un manager. Elle renvoie les données en JSON pour être exploitables par JS.
+    /* Méthode qui permet de récupérer TOUS les relevés d'heures de salariés associés à un manager (sauf les relevés du manager lui-même). 
+        Elle renvoie les données en JSON pour être exploitables par JS.
         Params: 
         * $recordInfo : objet Record contenant l'id du chef d'équipe, le type de relevés demandés (personnels, équipe, à valider ou tous) et la portée de la requête, c'est-à-dire tout ou une partie des relevés
     */
 
     public function getRecordsFromTeam(Record $recordInfo){
-        $pdo = $this->dbConnect();
-
         $managerId = $recordInfo->getManagerId();
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $scope = $recordInfo->getScope();
 
-        $sql = "SELECT t_saisie_heure.id_of, 
-        t_login.Nom, 
-        t_login.Prenom, 
-        t_saisie_heure.date_hrs_debut, 
-        t_saisie_heure.date_hrs_fin, 
-        t_saisie_heure.commentaire, 
-        t_saisie_heure.statut_validation, 
-        t_saisie_heure.date_hrs_creation, 
-        t_saisie_heure.date_hrs_modif,
-        t_saisie_heure.ID,
-        t_saisie_heure.supprimer
-        FROM t_equipe
-        INNER JOIN t_login
-        ON t_equipe.id_membre = t_login.ID
-        INNER JOIN t_saisie_heure
-        ON t_login.ID = t_saisie_heure.id_login
+        $pdo = $this->dbConnect();
+
+        $sql = "(
+        SELECT 
+            t_equipe.Nom AS 'equipe',
+            t_chantier.Nom AS 'chantier', 
+            Membre.Nom, 
+            Membre.Prenom, 
+            Releve.date_hrs_debut, 
+            Releve.date_hrs_fin, 
+            Releve.commentaire, 
+            Releve.statut_validation, 
+            Releve.date_hrs_creation, 
+            Releve.date_hrs_modif,
+            Releve.ID,
+            Releve.supprimer,
+            t_equipe_compo.id_membre 
+        FROM t_saisie_heure AS Releve
+        INNER JOIN t_chantier 
+            ON Releve.id_chantier = t_chantier.ID
+        INNER JOIN t_equipe_compo 
+            ON t_chantier.id_equipe_compo = t_equipe_compo.ID
+        INNER JOIN t_equipe 
+            ON t_equipe_compo.id_equipe = t_equipe.ID
+        INNER JOIN t_login AS Membre
+            ON t_equipe_compo.id_membre = Membre.ID
+        INNER JOIN t_login AS Manager
+            ON t_equipe.id_manager = Manager.ID
         WHERE t_equipe.id_manager = :managerId";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
+
+        $sql .= ") EXCEPT (
+        SELECT 
+            t_equipe.Nom AS 'equipe',
+            t_chantier.Nom AS 'chantier', 
+            Membre.Nom, 
+            Membre.Prenom, 
+            Releve.date_hrs_debut, 
+            Releve.date_hrs_fin, 
+            Releve.commentaire, 
+            Releve.statut_validation, 
+            Releve.date_hrs_creation, 
+            Releve.date_hrs_modif,
+            Releve.ID,
+            Releve.supprimer,
+            t_equipe.id_manager 
+        FROM t_saisie_heure AS Releve
+        INNER JOIN t_chantier 
+            ON Releve.id_chantier = t_chantier.ID
+        INNER JOIN t_equipe_compo 
+            ON t_chantier.id_equipe_compo = t_equipe_compo.ID
+        INNER JOIN t_equipe 
+            ON t_equipe_compo.id_equipe = t_equipe.ID
+        INNER JOIN t_login AS Membre
+            ON t_equipe_compo.id_membre = Membre.ID
+        INNER JOIN t_login AS Manager
+            ON t_equipe.id_manager = Manager.ID
+        WHERE t_equipe_compo.id_membre = :managerId";
         
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
+        $sql .= ")";
+
         $query = $pdo->prepare($sql);
         $query->execute(array('managerId' => $managerId));
         $teamRecords["typeOfRecords"] = $typeOfRecords;
@@ -317,20 +381,38 @@ class RecordManager extends DatabaseConnection
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $scope = $recordInfo->getScope();
 
-        $sql = "SELECT t_saisie_heure.id_of, 
-        t_login.Nom, 
-        t_login.Prenom, 
-        t_saisie_heure.date_hrs_debut, 
-        t_saisie_heure.date_hrs_fin, 
-        t_saisie_heure.commentaire, 
-        t_saisie_heure.statut_validation, 
-        t_saisie_heure.date_hrs_creation, 
-        t_saisie_heure.date_hrs_modif,
-        t_saisie_heure.ID,
-        t_saisie_heure.supprimer
-        FROM t_saisie_heure
-        INNER JOIN t_login
-        ON t_saisie_heure.id_login = t_login.ID";
+        $sql = "SELECT
+            Equipe.Nom AS 'equipe',
+            Chantier.Nom AS 'chantier',
+            Membre.Nom AS 'nom_salarie',
+            Membre.Prenom AS 'prenom_salarie',
+            Manager.Nom AS 'nom_manager',
+            Manager.Prenom AS 'prenom_manager',
+            Releve.date_hrs_debut,
+            Releve.date_hrs_fin, 
+            Releve.commentaire, 
+            Releve.statut_validation, 
+            Releve.date_hrs_creation, 
+            Releve.date_hrs_modif,
+            Releve.ID,
+            Releve.supprimer,
+            Compo.id_membre
+        FROM t_saisie_heure AS Releve
+        
+        INNER JOIN t_chantier AS Chantier
+            ON Releve.id_chantier = Chantier.ID
+
+        INNER JOIN t_equipe_compo AS Compo
+            ON Chantier.id_equipe_compo = Compo.ID
+
+        INNER JOIN t_equipe AS Equipe
+            ON Compo.id_equipe = Equipe.ID
+
+        INNER JOIN t_login AS Membre
+            ON Compo.id_membre = Membre.ID
+            
+        INNER JOIN t_login AS Manager
+            ON Equipe.id_manager = Manager.ID";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 

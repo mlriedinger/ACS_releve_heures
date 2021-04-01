@@ -8,7 +8,7 @@
             <div class="col-sm-8 mb-3">
                 <span class="input-group-text" id="worksite_selector">Chantier</span>
                 <select class="form-select" name="worksite" id="selectWorksite" aria-label="Sélectionnez un chantier" aria-describedby="worksite_selector">
-                    <option value="" selected>Sélectionnez un chantier</option>
+                    <option value="0">Sélectionnez un chantier</option>
                 </select>
             </div>
 
@@ -51,14 +51,9 @@
 
 </div>
 
-<!-- <script id="mainScript" src="public/js/main.js"></script>
+<script src="public/js/ajaxRequests.js"></script>
+
 <script>
-
-    $(function() {
-        getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
-    });
-
-    // function closeModal(){
-    //     $('#formModal').modal('hide');
-    // }
-</script> -->
+    getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
+    getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
+</script>

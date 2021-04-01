@@ -4,6 +4,8 @@
 */
 
 function parseMultipleLinesRequest(data) {
+    console.log("parseMultipleLinesRequest : ");
+    console.log(data);
     var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
 
@@ -30,6 +32,7 @@ function parseMultipleLinesRequest(data) {
 */
 
 function parseUniqueLineRequest(data) {
+    console.log(data);
     var recordData = [];
 
     $.each(data, function(key, value) {
@@ -53,7 +56,7 @@ function updatePersonalRecordsLog(typeOfRecords, scope) {
 }
 
 function updateTeamRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
 }
 
 function updateAllUsersRecordsLog(typeOfRecords, scope) {
@@ -67,8 +70,9 @@ function updateAllUsersRecordsLog(typeOfRecords, scope) {
     * {} : données à envoyer dans la requête, ici 'recordId' : identifiant du relevé à modifier ou à supprimer
 */
 
-function displayRecordForm(recordId) {
-    $.post('index.php?action=getRecordForm', { 'recordId': recordId }, function(content) {
+function displayRecordForm(recordId, userId) {
+    $.post('index.php?action=getRecordForm', { 'recordId': recordId, 'userId': userId }, function(content) {
+        $(".modal-title").html("Editer un relevé");
         $(".modal-body").html(content);
     });
 }
@@ -90,7 +94,7 @@ function displayDeleteConfirmation(recordId) {
 */
 
 function getRecordData(recordId) {
-    $.post('index.php?action=getRecordData', { 'recordId': recordId }, parseUniqueLineRequest, 'json');
+    $.post('index.php?action=getRecordData', { 'recordId': recordId }, updateFormInputs, 'json');
 }
 
 
@@ -115,6 +119,6 @@ function getNumberOfRecordsToCheck(typeOfRecords, scope) {
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function getOptionsData(scope, optionType) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope }, displayOptionsList/*, 'json'*/);
+function getOptionsData(scope, optionType, userId) {
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, displayOptionsList, 'json');
 }

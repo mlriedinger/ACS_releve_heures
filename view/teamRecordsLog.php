@@ -27,7 +27,29 @@
                 </ul>
 
                 <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="all_records" role="tabpanel" aria-labelledby="all_records-tab"><?php include('partials/otherUsersRecordsTable.php'); ?></div>
+                    <div class="tab-pane fade show active" id="all_records" role="tabpanel" aria-labelledby="all_records-tab">
+                        <table class="table table-striped table-hover mt-4" id="records_log">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Chantier</th>
+                                    <th scope="col">Prénom</th>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Date et heure de début</th>
+                                    <th scope="col">Date et heure de fin</th>
+                                    <th scope="col">Commentaire</th>
+                                    <th scope="col">Statut</th>
+                                    <th scope="col">Modifié le</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>
+                            </tbody>
+                        </table> 
+
+                        <p id="no_record_message" class="lead text-center mt-5" hidden>Aucun relevé à afficher.</p>
+                    </div>
                 </div>  
 
             </div>
@@ -47,13 +69,12 @@
         <?php include('partials/recordFormScripts.php'); ?>
 
         <script id="mainScript" src="public/js/main.js"></script>
-        <!-- <script src="public/js/buttonManagement.js"></script> -->
         
         <script>
-            $(function() {
+            window.onload = function(){
                 getNumberOfRecordsToCheck('Check', 'unchecked');
                 updateTeamRecordsLog('Team', 'all');
-            });
+            }
         </script>
 
         <?php include('partials/initalizeToastScript.php'); ?>
