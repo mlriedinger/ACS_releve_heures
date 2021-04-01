@@ -23,21 +23,38 @@ class ExportManager extends RecordManager {
     }
 
 
-    public function sqlRequestBasics(){
-        $sql = "SELECT t_saisie_heure.ID AS 'numero de releve',
-        t_saisie_heure.id_of AS 'chantier',
-        t_login.Nom AS 'nom salarie', 
-        t_login.Prenom AS 'prenom salarie', 
-        t_saisie_heure.date_hrs_debut AS 'date et heure de debut', 
-        t_saisie_heure.date_hrs_fin AS 'date et heure de fin', 
-        t_saisie_heure.commentaire, 
-        t_saisie_heure.statut_validation AS 'statut de validation', 
-        t_saisie_heure.date_hrs_creation AS 'date et heure de creation', 
-        t_saisie_heure.date_hrs_modif AS 'date et heure de modification',
-        t_saisie_heure.supprimer AS 'releve supprime'
-        FROM t_saisie_heure
-        INNER JOIN t_login
-        ON t_saisie_heure.id_login = t_login.ID";
+    public function sqlRequestBasis(){
+        $sql = "SELECT 
+            Releve.ID AS 'num_releve',
+            Membre.Nom AS 'nom_salarie',
+            Membre.Prenom AS 'prenom_salarie',
+            Releve.date_hrs_debut AS 'date et heure de debut', 
+            Releve.date_hrs_fin AS 'date et heure de fin', 
+            Releve.commentaire, 
+            Releve.statut_validation AS 'statut de validation', 
+            Releve.date_hrs_creation AS 'date et heure de creation', 
+            Releve.date_hrs_modif AS 'date et heure de modification',
+            Releve.supprimer AS 'releve supprime',
+            Equipe.Nom AS 'equipe',
+            Chantier.Nom AS 'chantier',
+            Manager.Nom AS 'nom_manager',
+            Manager.Prenom AS 'prenom_manager'
+        FROM t_saisie_heure AS Releve
+        
+        INNER JOIN t_chantier AS Chantier
+            ON Releve.id_chantier = Chantier.ID
+
+        INNER JOIN t_equipe_compo AS Compo
+            ON Chantier.id_equipe_compo = Compo.ID
+
+        INNER JOIN t_equipe AS Equipe
+            ON Compo.id_equipe = Equipe.ID
+
+        INNER JOIN t_login AS Membre
+            ON Compo.id_membre = Membre.ID
+            
+        INNER JOIN t_login AS Manager
+            ON Equipe.id_manager = Manager.ID";
 
         return $sql;
     }
@@ -49,11 +66,11 @@ class ExportManager extends RecordManager {
         $managerId = $recordInfo->getManagerId();
         $userId = $recordInfo->getUserId();
 
-        if($managerId != "" || $userId != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
+        //if($managerId != "" || $userId != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
         
-        if($periodStart != "" && $periodEnd != "") $sql .= " AND t_saisie_heure.date_hrs_debut >= :periodStart AND t_saisie_heure.date_hrs_fin <= :periodEnd";
-        if($managerId != "") $sql .= " AND t_equipe.id_manager = :managerId";
-        if($userId != "") $sql .= " AND t_saisie_heure.id_login = :userId";
+        if($periodStart != "" && $periodEnd != "") $sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
+        if($managerId != "") $sql .= " AND Equipe.id_manager = :managerId";
+        if($userId != "") $sql .= " AND Membre.ID = :userId";
 
         return $sql;
     }
@@ -67,10 +84,20 @@ class ExportManager extends RecordManager {
 
         $queryParams = array();
 
-        if($managerId != "") $queryParams['managerId'] = $managerId;
-        if($userId != "")  $queryParams['userId'] = $userId;
-        if($periodStart != "") $queryParams['periodStart'] = $periodStart;
-        if($periodEnd != "") $queryParams['periodEnd'] = $periodEnd;
+        if($managerId != "") {
+            $queryParams['managerId'] = $managerId;
+        }
+        if($userId != "") {
+            $queryParams['userId'] = $userId;
+        }
+        if($periodStart != "") {
+            $periodStart .= " 00:00:01";
+            $queryParams['periodStart'] = $periodStart;
+        }
+        if($periodEnd != "") {
+            $periodEnd .= " 23:59:59";
+            $queryParams['periodEnd'] = $periodEnd;
+        }
 
         return $queryParams;
     }
@@ -94,7 +121,7 @@ class ExportManager extends RecordManager {
         $pdo = $this->dbConnect();
 
         // Construction de la requête SQL
-        $sql = $this->sqlRequestBasics();
+        $sql = $this->sqlRequestBasis();
         $sql = $this->sqlRequestOptions($recordInfo, $sql);
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
