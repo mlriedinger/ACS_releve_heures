@@ -48,7 +48,7 @@ function insertFormControlButtons() {
     var formControlButtons = [
         '<div class="row mb-3 justify-content-md-center">',      
             '<div class="col-lg mb-5 text-end">',
-                '<input type="reset" value="Annuler" class="btn btn-light p-3"/>',
+                '<input type="reset" value="Annuler" class="btn btn-light me-3"/>',
                 '<input type="submit" value="Valider" class="btn btn-dark"/>',
             '</div>',
         '</div>'

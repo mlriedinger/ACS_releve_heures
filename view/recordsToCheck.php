@@ -53,10 +53,10 @@
         <script id="mainScript" src="public/js/main.js"></script>
 
         <script>
-            $(function() {
+            window.onload = function() {
                 getNumberOfRecordsToCheck('Check', 'unchecked');
                 updateTeamRecordsLog('Check', 'unchecked');
-            });
+            };
         </script>
 
         <script>
@@ -66,7 +66,7 @@
                         document.validationForm.elements[i].checked = !document.validationForm.elements[i].checked;
                     }
                 }
-                document.getElementById('selectAllButton').innerHTML == 'Sélectionner tout' ? document.getElementById('selectAllButton').innerHTML = 'Désélectionner tout' : document.getElementById('selectAllButton').innerHTML = 'Sélectionner tout';
+                document.getElementById('selectAllButton').innerHTML == 'Sélectionner tout' ? document.getElementById('selectAllButton').innerHTML = 'Désélectionner' : document.getElementById('selectAllButton').innerHTML = 'Sélectionner tout';
             }
         </script>
         
