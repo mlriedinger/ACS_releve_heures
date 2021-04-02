@@ -57,7 +57,7 @@
             <?php include('partials/modal.php'); ?>
 
             <?php 
-                if($_SESSION['success'] == 1) {
+                if($_SESSION['success'] === true) {
                     include('partials/toastAlert.php');
                     unset($_SESSION['success']);
                 }
