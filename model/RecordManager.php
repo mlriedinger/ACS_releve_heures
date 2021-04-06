@@ -255,15 +255,11 @@ class RecordManager extends DatabaseConnection
             Releve.date_hrs_modif,
             Releve.ID,
             Releve.supprimer,
-            t_equipe_compo.id_membre 
+            Releve.id_login 
         FROM t_saisie_heure AS Releve
         INNER JOIN t_chantier
             ON Releve.id_chantier = t_chantier.ID
-        INNER JOIN t_equipe_compo
-            ON t_chantier.id_equipe_compo = t_equipe_compo.ID
-        INNER JOIN t_login
-            ON t_equipe_compo.id_membre = t_login.ID
-        WHERE t_login.ID = :userId";
+        WHERE Releve.id_login = :userId";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
