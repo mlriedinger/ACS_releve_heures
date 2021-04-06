@@ -32,7 +32,8 @@ class RecordManager extends DatabaseConnection
       
         $query = $pdo->prepare('INSERT INTO t_saisie_heure(
             ID, 
-            id_chantier, 
+            id_chantier,
+            id_login,
             date_hrs_debut, 
             date_hrs_fin, 
             statut_validation, 
@@ -40,6 +41,7 @@ class RecordManager extends DatabaseConnection
             VALUES (
             :id,
             :id_chantier, 
+            :id_login,
             :dateTimeStart, 
             :dateTimeEnd, 
             :validation_status,
@@ -47,6 +49,7 @@ class RecordManager extends DatabaseConnection
         $attempt = $query->execute(array(
             'id' => 0,
             'id_chantier' => $worksite,
+            'id_login' => $userId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'validation_status' => $validation_status,
@@ -450,12 +453,10 @@ class RecordManager extends DatabaseConnection
                 $sql .= "SELECT  
                     t_chantier.ID,
                     t_chantier.Nom
-                    FROM t_chantier
-                    INNER JOIN t_equipe_compo
-                    ON t_chantier.id_equipe_compo = t_equipe_compo.ID
-                    INNER JOIN t_login
-                    ON t_equipe_compo.id_membre = t_login.ID
-                    WHERE t_login.ID = :userId";
+                    FROM t_equipe
+                    INNER JOIN t_chantier
+                    ON t_equipe.id_chantier = t_chantier.ID
+                    WHERE t_equipe.id_login = :userId";
                 break;
         }
 
