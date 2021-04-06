@@ -56,7 +56,7 @@ function updatePersonalRecordsLog(typeOfRecords, scope) {
 }
 
 function updateTeamRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest/*, 'json'*/);
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
 }
 
 function updateAllUsersRecordsLog(typeOfRecords, scope) {
