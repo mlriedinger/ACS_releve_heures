@@ -19,12 +19,24 @@
                 <div class="col-lg-3 text-center ">
 
                     <form action="index.php?action=login" method="POST">
+
                         <div class="form-group mt-3 mb-3">
                             <input class="form-control" type="text" name="login" placeholder="Identifiant" />
                         </div>
+
                         <div class="form-group mb-3">
                             <input class="form-control" type="password" name="password" placeholder="Mot de passe" />
                         </div>
+
+                        <?php 
+                            if($error) {
+                        ?>
+                                <div>
+                                    <small style="color: red">Mauvais identifiant ou mot de passe</small>
+                                </div>
+                        <?php
+                            }
+                        ?>
 
                         <div class="form-group mt-4">
                         <input type="submit" value="Valider" class="btn btn-dark" />

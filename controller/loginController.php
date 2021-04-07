@@ -7,7 +7,8 @@ require_once('model/LoginManager.php');
 
 /* Fonctions pour gérer l'affichage des pages de connexion et d'accueil */
 
-function displayLoginPage(){
+function displayLoginPage($error=""){
+    $error;
     require('view/login.php');
 }
 

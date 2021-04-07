@@ -17,7 +17,7 @@ if(isset($_GET['action'])) {
     try {
         switch(htmlspecialchars($_GET['action'])) {
 
-            // Page de connexion
+            // Connexion
             case "login":
                 if(isset($_POST['login']) && isset($_POST['password'])) verifyLogin(htmlspecialchars($_POST['login']), htmlspecialchars($_POST['password']));
                 else throw new Exception('Veuillez remplir tous les champs.');
@@ -264,11 +264,15 @@ if(isset($_GET['action'])) {
                 }
                 break;
         }
-    }catch(PDOException $e){
-        echo 'Connexion impossible : ' . $e->getMessage();
-    }catch (Exception $e){
+    } catch (PDOException $e){
+        $error = true;
+        displayLoginPage($error);
+       
+    } catch (Exception $e){
         $errorMessage = $e->getMessage();
-        echo $errorMessage;
+        echo "Exception : " . $errorMessage;
+    } catch(Error $e){
+        echo "Erreur : " . $e->getMessage();
     }
 } else {
     displayLoginPage();
