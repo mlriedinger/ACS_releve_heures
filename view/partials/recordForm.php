@@ -7,7 +7,7 @@
 
             <div class="col-sm-8 mb-3">
                 <span class="input-group-text" id="worksite_selector">Chantier</span>
-                <select class="form-select" name="worksite" id="selectWorksite" aria-label="Sélectionnez un chantier" aria-describedby="worksite_selector">
+                <select class="form-select" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez un chantier" aria-describedby="worksite_selector">
                     <option value="0">Sélectionnez un chantier</option>
                 </select>
             </div>

@@ -96,6 +96,7 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userId'])){
                     if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
                         $recordInfo = new Record();
+                        $recordInfo->setWorksite(intval(htmlspecialchars($_POST['worksiteId'])));
                         $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
                         $recordInfo->setDateTimeStart(htmlspecialchars($_POST['datetimeStart']));
                         $recordInfo->setDateTimeEnd(htmlspecialchars($_POST['datetimeEnd']));

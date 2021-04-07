@@ -72,6 +72,7 @@ class RecordManager extends DatabaseConnection
 
     public function updateRecord(Record $recordInfo){
         // On récupère les informations contenues dans l'objet $recordInfo
+        $worksiteId = $recordInfo->getWorksite();
         $recordId = $recordInfo->getRecordId();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
@@ -82,11 +83,13 @@ class RecordManager extends DatabaseConnection
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
         SET 
+        id_chantier = :worksiteId,
         date_hrs_debut = :dateTimeStart, 
         date_hrs_fin = :dateTimeEnd, 
         commentaire = :comment
         WHERE ID = :recordId');
         $attempt = $query->execute(array(
+            'worksiteId' => $worksiteId,
             'recordId' => $recordId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
@@ -139,8 +142,10 @@ class RecordManager extends DatabaseConnection
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
-        SET supprimer = 1, commentaire = :comment
-        WHERE ID=:recordId');
+        SET 
+        supprimer = 1, 
+        commentaire = :comment
+        WHERE ID = :recordId');
         $attempt = $query->execute(array(
             'recordId' => $recordId,
             'comment' => $comment
@@ -165,18 +170,15 @@ class RecordManager extends DatabaseConnection
         
         $pdo = $this->dbConnect();
 
-        $query = $pdo->prepare('SELECT 
-            Releve.id_chantier,
-            t_equipe_compo.id_membre,
+        $query = $pdo->prepare('SELECT
+            Releve.id_chantier, 
+            Releve.id_login,
             Releve.date_hrs_debut,
             Releve.date_hrs_fin,
             Releve.statut_validation,
-            Releve.commentaire 
+            Releve.commentaire,
+            Releve.supprimer
         FROM t_saisie_heure AS Releve
-        INNER JOIN t_chantier
-            ON Releve.id_chantier = t_chantier.ID
-        INNER JOIN t_equipe_compo
-            ON t_chantier.id_equipe_compo = t_equipe_compo.ID
         WHERE Releve.ID = :recordId');
         $query->execute(array('recordId' => $recordId));
         $recordData = $query->fetch(PDO::FETCH_ASSOC);
@@ -305,6 +307,7 @@ class RecordManager extends DatabaseConnection
 
             $sql = "(SELECT
                 t_chantier.Nom AS chantier, 
+                t_login.ID AS 'id_login',
                 t_login.Nom, 
                 t_login.Prenom, 
                 Releve.date_hrs_debut, 
@@ -328,6 +331,7 @@ class RecordManager extends DatabaseConnection
                 EXCEPT
                     (SELECT 
                         t_chantier.Nom AS chantier, 
+                        t_login.ID,
                         t_login.Nom, 
                         t_login.Prenom, 
                         Releve.date_hrs_debut, 
@@ -439,7 +443,7 @@ class RecordManager extends DatabaseConnection
 
         switch($type){
             case "managers":
-                $sql .= "SELECT t_equipe.id_manager AS 'ID', t_login.Nom, t_login.Prenom FROM t_equipe INNER JOIN t_login ON t_equipe.id_manager = t_login.ID GROUP BY t_equipe.id_manager";
+                $sql .= "SELECT t_equipe.id_login AS 'ID', t_login.Nom, t_login.Prenom FROM t_equipe INNER JOIN t_login ON t_equipe.id_login = t_login.ID WHERE t_equipe.chef_equipe = 1";
                 break;
             case "users":
                 $sql .= "SELECT ID, Nom, Prenom FROM t_login";
