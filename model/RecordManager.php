@@ -380,7 +380,7 @@ class RecordManager extends DatabaseConnection
         $scope = $recordInfo->getScope();
 
         $sql = "SELECT
-            Equipe.Nom AS 'equipe',
+            Equipe.id_chantier AS 'id_chantier',
             Chantier.Nom AS 'chantier',
             Membre.Nom AS 'nom_salarie',
             Membre.Prenom AS 'prenom_salarie',
@@ -394,23 +394,23 @@ class RecordManager extends DatabaseConnection
             Releve.date_hrs_modif,
             Releve.ID,
             Releve.supprimer,
-            Compo.id_membre
-        FROM t_saisie_heure AS Releve
-        
+            Membre.ID
+        FROM t_equipe AS Equipe
+
         INNER JOIN t_chantier AS Chantier
-            ON Releve.id_chantier = Chantier.ID
+            ON Equipe.id_chantier = Chantier.ID
 
-        INNER JOIN t_equipe_compo AS Compo
-            ON Chantier.id_equipe_compo = Compo.ID
+        INNER JOIN t_saisie_heure AS Releve
+            ON Chantier.ID = Releve.id_chantier
 
-        INNER JOIN t_equipe AS Equipe
-            ON Compo.id_equipe = Equipe.ID
-
-        INNER JOIN t_login AS Membre
-            ON Compo.id_membre = Membre.ID
-            
         INNER JOIN t_login AS Manager
-            ON Equipe.id_manager = Manager.ID";
+            ON Equipe.id_login = Manager.ID
+            
+        INNER JOIN t_login AS Membre
+            ON Releve.id_login = Membre.ID
+
+        WHERE Equipe.chef_equipe = 1    
+        ";
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
 
