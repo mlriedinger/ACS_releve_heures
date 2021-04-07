@@ -75,18 +75,18 @@ if(isset($_GET['action'])) {
             // Ajout d'un nouveau relevé
             case "addNewRecord":
                 if(isset($_SESSION['userId']) && isset($_SESSION['userGroup'])){
-                    if(!empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
+                    if(!empty($_POST['worksiteId']) && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
-                        $recordInfo->setWorksite(htmlspecialchars($_POST['worksite']));
+                        $recordInfo->setWorksite(intval(htmlspecialchars($_POST['worksiteId'])));
                         $recordInfo->setDateTimeStart(htmlspecialchars($_POST['datetimeStart']));
                         $recordInfo->setDateTimeEnd(htmlspecialchars($_POST['datetimeEnd']));
                         $recordInfo->setComment(htmlspecialchars($_POST['comment']));
 
                         addNewRecord($recordInfo);
                     }
-                    else throw new Exception('Les champs dates doivent être obligatoirement remplis.');
+                    else throw new Exception('Les rubriques "Chantier", "Début" et "Fin" sont obligatoires.');
                 } 
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
