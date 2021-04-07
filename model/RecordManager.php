@@ -220,7 +220,7 @@ class RecordManager extends DatabaseConnection
         }
 
         // Si on souhaite exporter des données ou récupérer tous les relevés, on remplace la première occurrence de 'AND' et on la remplace par 'WHERE'
-        if($typeOfRecords == "export" || $typeOfRecords == "all"){
+        if($typeOfRecords == "all"){
             $pos = strpos($sql, "AND");
             if($pos !== false) {
                 $replace = "WHERE";

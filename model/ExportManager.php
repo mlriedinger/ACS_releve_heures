@@ -28,33 +28,26 @@ class ExportManager extends RecordManager {
             Releve.ID AS 'num_releve',
             Membre.Nom AS 'nom_salarie',
             Membre.Prenom AS 'prenom_salarie',
-            Releve.date_hrs_debut AS 'date et heure de debut', 
-            Releve.date_hrs_fin AS 'date et heure de fin', 
-            Releve.commentaire, 
-            Releve.statut_validation AS 'statut de validation', 
-            Releve.date_hrs_creation AS 'date et heure de creation', 
-            Releve.date_hrs_modif AS 'date et heure de modification',
-            Releve.supprimer AS 'releve supprime',
-            Equipe.Nom AS 'equipe',
+            Releve.date_hrs_debut AS 'date_heure_debut',
+            Releve.date_hrs_fin AS 'date_hrs_fin',
+            Releve.commentaire,
+            Releve.statut_validation AS 'statut_validation',
+            Releve.date_hrs_creation AS 'date_heure_creation',
+            Releve.date_hrs_modif AS 'date_heure_modification',
+            Releve.supprimer AS 'releve_supprime',
             Chantier.Nom AS 'chantier',
             Manager.Nom AS 'nom_manager',
             Manager.Prenom AS 'prenom_manager'
-        FROM t_saisie_heure AS Releve
-        
+        FROM t_equipe AS Equipe
         INNER JOIN t_chantier AS Chantier
-            ON Releve.id_chantier = Chantier.ID
-
-        INNER JOIN t_equipe_compo AS Compo
-            ON Chantier.id_equipe_compo = Compo.ID
-
-        INNER JOIN t_equipe AS Equipe
-            ON Compo.id_equipe = Equipe.ID
-
-        INNER JOIN t_login AS Membre
-            ON Compo.id_membre = Membre.ID
-            
+            ON Equipe.id_chantier = Chantier.ID
+        INNER JOIN t_saisie_heure AS Releve
+            ON Chantier.ID = Releve.id_chantier
         INNER JOIN t_login AS Manager
-            ON Equipe.id_manager = Manager.ID";
+            ON Equipe.id_login = Manager.ID
+        INNER JOIN t_login AS Membre
+            ON Releve.id_login = Membre.ID
+        WHERE Equipe.chef_equipe = 1";
 
         return $sql;
     }
@@ -69,7 +62,7 @@ class ExportManager extends RecordManager {
         //if($managerId != "" || $userId != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
         
         if($periodStart != "" && $periodEnd != "") $sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
-        if($managerId != "") $sql .= " AND Equipe.id_manager = :managerId";
+        if($managerId != "") $sql .= " AND Manager.ID = :managerId";
         if($userId != "") $sql .= " AND Membre.ID = :userId";
 
         return $sql;
@@ -136,7 +129,7 @@ class ExportManager extends RecordManager {
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête
-        // $query->debugDumpParams();
+        $query->debugDumpParams();
 
         return $rows;
     }
