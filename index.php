@@ -6,6 +6,14 @@ require('controller/loginController.php');
 require('controller/recordController.php');
 require('model/Record.php');
 
+function inputValidation($data){
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+
+    return $data;
+}
+
 
 /* Routeur de l'application qui appelle le contrôleur correspondant à l'URL demandée */
 
@@ -15,11 +23,13 @@ if(isset($_GET['action'])) {
     // var_dump($_REQUEST);
 
     try {
-        switch(htmlspecialchars($_GET['action'])) {
+        switch(inputValidation($_GET['action'])) {
 
             // Connexion
             case "login":
-                if(isset($_POST['login']) && isset($_POST['password'])) verifyLogin(htmlspecialchars($_POST['login']), htmlspecialchars($_POST['password']));
+                if(isset($_POST['login']) && isset($_POST['password'])) {
+                    verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
+                }
                 else throw new Exception('Veuillez remplir tous les champs.');
                 break;
 
@@ -31,43 +41,57 @@ if(isset($_GET['action'])) {
 
             // Page d'accueil
             case "showHomePage":
-                if(isset($_SESSION['userId'])) displayHomePage();
+                if(isset($_SESSION['userId'])) {
+                    displayHomePage();
+                }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
 
             // Page "Nouveau Relevé"
             case "showNewRecordForm":
-                if(isset($_SESSION['userId'])) displayNewRecordForm();
+                if(isset($_SESSION['userId'])) {
+                    displayNewRecordForm();
+                }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
 
             // Page de validation
             case "showRecordsToCheck":
-                if(isset($_SESSION['userId']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) displayValidationForm();
+                if(isset($_SESSION['userId']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                    displayValidationForm();
+                }
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
 
             // Page historique personnel
             case "showPersonalRecordsLog":
-                if(isset($_SESSION['userId'])) displayPersonalRecordsLog();
+                if(isset($_SESSION['userId'])) {
+                    displayPersonalRecordsLog();
+                }
                 else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
                 break;
 
             // Page historique équipe
             case "showTeamRecordsLog":
-                if(isset($_SESSION['userId']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) displayTeamRecordsLog();
+                if(isset($_SESSION['userId']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                    displayTeamRecordsLog();
+                }
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
 
             // Page historique global
             case "showAllRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') displayAllRecordsLog();
+                if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
+                    displayAllRecordsLog();
+                }
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
 
             // Page export
             case "showExportForm":
-                if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') displayExportForm();
+                if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
+                    displayExportForm();
+                }
                 else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
                 break;
 
@@ -75,14 +99,15 @@ if(isset($_GET['action'])) {
             // Ajout d'un nouveau relevé
             case "addNewRecord":
                 if(isset($_SESSION['userId']) && isset($_SESSION['userGroup'])){
+                   
                     if(!empty($_POST['worksiteId']) && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
-                        $recordInfo->setWorksite(intval(htmlspecialchars($_POST['worksiteId'])));
-                        $recordInfo->setDateTimeStart(htmlspecialchars($_POST['datetimeStart']));
-                        $recordInfo->setDateTimeEnd(htmlspecialchars($_POST['datetimeEnd']));
-                        $recordInfo->setComment(htmlspecialchars($_POST['comment']));
+                        $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
+                        $recordInfo->setDateTimeStart(inputValidation($_POST['datetimeStart']));
+                        $recordInfo->setDateTimeEnd(inputValidation($_POST['datetimeEnd']));
+                        $recordInfo->setComment(inputValidation($_POST['comment']));
 
                         addNewRecord($recordInfo);
                     }
@@ -96,11 +121,11 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userId'])){
                     if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
                         $recordInfo = new Record();
-                        $recordInfo->setWorksite(intval(htmlspecialchars($_POST['worksiteId'])));
-                        $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
-                        $recordInfo->setDateTimeStart(htmlspecialchars($_POST['datetimeStart']));
-                        $recordInfo->setDateTimeEnd(htmlspecialchars($_POST['datetimeEnd']));
-                        $recordInfo->setComment(htmlspecialchars($_POST['comment']));
+                        $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
+                        $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                        $recordInfo->setDateTimeStart(inputValidation($_POST['datetimeStart']));
+                        $recordInfo->setDateTimeEnd(inputValidation($_POST['datetimeEnd']));
+                        $recordInfo->setComment(inputValidation($_POST['comment']));
 
                         updateRecord($recordInfo);
                     }
@@ -124,11 +149,11 @@ if(isset($_GET['action'])) {
             case "deleteRecord":
                 if(isset($_SESSION['userId'])){
                     if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2'){
-                        if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['comment'])) {
+                        if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['comment']) && inputValidation($_POST['comment'] != " ")) {
                             $recordInfo = new Record();
 
-                            $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
-                            $recordInfo->setComment(htmlspecialchars($_POST['comment']));
+                            $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                            $recordInfo->setComment(inputValidation($_POST['comment']));
 
                             deleteRecord($recordInfo);
                         }
@@ -137,8 +162,8 @@ if(isset($_GET['action'])) {
                         if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
                             $recordInfo = new Record();
 
-                            $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
-                            $recordInfo->setComment(htmlspecialchars($_POST['comment']));
+                            $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                            $recordInfo->setComment(inputValidation($_POST['comment']));
 
                             deleteRecord($recordInfo);
                         }
@@ -154,8 +179,8 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userId'])) {
                     if (isset($_POST['recordId'])){
                         $recordInfo = new Record();
-                        $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
-                        $recordInfo->setUserId(intval(htmlspecialchars($_POST['userId'])));
+                        $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                        $recordInfo->setUserId(intval(inputValidation($_POST['userId'])));
 
                         getRecordForm($recordInfo);
                     }
@@ -175,7 +200,7 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userId'])){
                     if(isset($_POST['recordId']) /*&& is_numeric($_POST['recordId'])*/){
                         $recordInfo = new Record();
-                        $recordInfo->setRecordId(intval(htmlspecialchars($_POST['recordId'])));
+                        $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
                         getRecordData($recordInfo);
                     } 
                     else throw new Exception('Un problème est survenu.');
@@ -189,8 +214,8 @@ if(isset($_GET['action'])) {
                     if(isset($_POST['typeOfRecords']) && isset($_POST['scope'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(htmlspecialchars($_POST['typeOfRecords']));
-                        $recordInfo->setScope(htmlspecialchars($_POST['scope']));
+                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['scope']));
                         
                         getUserRecords($recordInfo);
                     }
@@ -205,8 +230,8 @@ if(isset($_GET['action'])) {
                     if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                         $recordInfo = new Record();
                         $recordInfo->setManagerId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(htmlspecialchars($_POST['typeOfRecords']));
-                        $recordInfo->setScope(htmlspecialchars($_POST['scope']));
+                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['scope']));
                         
                         getTeamRecords($recordInfo);
                     }
@@ -220,8 +245,8 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userId'])){
                     if(isset($_POST['typeOfRecords']) && isset($_POST['scope']) && $_SESSION['userGroup'] == '1') {
                         $recordInfo = new Record();
-                        $recordInfo->setTypeOfRecords(htmlspecialchars($_POST['typeOfRecords']));
-                        $recordInfo->setScope(htmlspecialchars($_POST['scope']));
+                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['scope']));
                         getAllUsersRecords($recordInfo);
                     }
                     else throw new Exception('Un problème est survenu.');
@@ -236,12 +261,12 @@ if(isset($_GET['action'])) {
                     if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
                         if(isset($_POST['scope']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['manager']) && isset($_POST['user'])) {
                             $recordInfo = new Record();
-                            $recordInfo->setTypeOfRecords(htmlspecialchars($_GET['typeOfRecords']));
-                            $recordInfo->setScope(htmlspecialchars($_POST['scope']));
-                            $recordInfo->setPeriodStart(htmlspecialchars($_POST['periodStart']));
-                            $recordInfo->setPeriodEnd(htmlspecialchars($_POST['periodEnd']));
-                            $recordInfo->setManagerId(intval(htmlspecialchars($_POST['manager'])));
-                            $recordInfo->setUserId(intval(htmlspecialchars($_POST['user'])));
+                            $recordInfo->setTypeOfRecords(inputValidation($_GET['typeOfRecords']));
+                            $recordInfo->setScope(inputValidation($_POST['scope']));
+                            $recordInfo->setPeriodStart(inputValidation($_POST['periodStart']));
+                            $recordInfo->setPeriodEnd(inputValidation($_POST['periodEnd']));
+                            $recordInfo->setManagerId(intval(inputValidation($_POST['manager'])));
+                            $recordInfo->setUserId(intval(inputValidation($_POST['user'])));
 
                             exportRecords($recordInfo);
                          }
@@ -254,11 +279,11 @@ if(isset($_GET['action'])) {
             case "getOptionsData":
                 if(isset($_SESSION['userId'])){
                     if(isset($_POST['typeOfData']) && isset($_POST['scope'])) {
-                        if(htmlspecialchars($_POST['scope']) === "export"){
-                            getOptionsData(htmlspecialchars($_POST['typeOfData']));
+                        if(inputValidation($_POST['scope']) === "export"){
+                            getOptionsData(inputValidation($_POST['typeOfData']));
                         }
-                        if(htmlspecialchars($_POST['scope']) === "add" && htmlspecialchars($_POST['userId'] !== null)) {
-                            getOptionsData(htmlspecialchars($_POST['typeOfData']), htmlspecialchars($_POST['userId']));
+                        if(inputValidation($_POST['scope']) === "add" && inputValidation($_POST['userId'] !== null)) {
+                            getOptionsData(inputValidation($_POST['typeOfData']), inputValidation($_POST['userId']));
                         }
                     }
                 }
