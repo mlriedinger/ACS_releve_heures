@@ -52,7 +52,7 @@ function fillSessionData($userData){
 /* Fonction pour gérer la déconnexion de l'application */
 
 function logout(){
-    $_SESSION = array();
+    unset($_SESSION);
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000,
