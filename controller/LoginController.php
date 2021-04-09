@@ -18,8 +18,9 @@
 
         /* Fonctions pour gérer l'affichage des pages de connexion et d'accueil */
 
-        public function displayLoginPage($error=""){
-            $error;
+        public function displayLoginPage($errorCode="", $errorMessage=""){
+            $errorCode;
+            $errorMessage;
             require('view/login.php');
         }
 
@@ -35,13 +36,12 @@
             $userData = $loginManager->getUserData($login, $password);
 
             if (!isset($password) || !$userData) {
-                displayLoginPage();
+                throw new AuthenticationException();
                 
             } else if (!empty($userData)){
                 $this->fillSessionData($userData);
                 $this->displayHomePage();
             }
-            else throw New Exception('Mauvais identifiant ou mot de passe.');
         }
 
 

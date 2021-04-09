@@ -1,7 +1,6 @@
 <?php
 
-    /* On appelle les contrôleurs pour avoir accès à leurs méthodes */
-
+    /* On charge les classes des contrôleurs, modèles et exceptions pour avoir accès à leurs méthodes */
     spl_autoload_register(function($class){
         if(file_exists('controller/' . $class . '.php')) {
             require_once 'controller/' . $class . '.php';
@@ -14,6 +13,8 @@
         }
     });
 
+
+    /* Fonction qui permet d'assainir les input utilisateur */
     function inputValidation($data){
         $data = trim($data);
         $data = stripslashes($data);
@@ -22,28 +23,27 @@
         return $data;
     }
 
+
+    // Initialisation d'un objet LoginController et RecordController pour être utilisés par le routeur
     $loginController = new LoginController();
     $recordController = new RecordController();
 
-    /* Routeur de l'application qui appelle le contrôleur correspondant à l'URL demandée */
 
+    /* Routeur de l'application qui appelle le contrôleur correspondant à l'URL demandée */
     if(isset($_GET['action'])) {
     
-
         // Décommenter la ligne suivante pour voir la requête qui est reçue
         // var_dump($_REQUEST);
 
         try {
             
-
             switch(inputValidation($_GET['action'])) {
 
                 // Connexion
                 case "login":
-                    if(isset($_POST['login']) && isset($_POST['password'])) {
+                    if(isset($_POST['login']) && isset($_POST['password']) || $_POST['login'] != "" || $_POST['password'] != "") {
                         $loginController->verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
-                    }
-                    else throw new Exception('Veuillez remplir tous les champs.');
+                    } else throw new InvalidParameterException();
                     break;
 
                 // Déconnexion
@@ -56,56 +56,49 @@
                 case "showHomePage":
                     if(isset($_SESSION['userId'])) {
                         $loginController->displayHomePage();
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                    } else throw new AuthenticationException();
                     break;
 
                 // Page "Nouveau Relevé"
                 case "showNewRecordForm":
                     if(isset($_SESSION['userId'])) {
                         $recordController->displayNewRecordForm();
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                    } else throw new AuthenticationException();
                     break;
 
-                // Page de validation
+                // Page de relevés en attente de validation
                 case "showRecordsToCheck":
                     if(isset($_SESSION['userId']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                         $recordController->displayValidationForm();
-                    }
-                    else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
+                    } else throw new AuthenticationException();
                     break;
 
                 // Page historique personnel
                 case "showPersonalRecordsLog":
                     if(isset($_SESSION['userId'])) {
                         $recordController->displayPersonalRecordsLog();
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                    } else throw new AuthenticationException();
                     break;
 
                 // Page historique équipe
                 case "showTeamRecordsLog":
                     if(isset($_SESSION['userId']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                         $recordController->displayTeamRecordsLog();
-                    }
-                    else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
+                    } else throw new AuthenticationException();
                     break;
 
                 // Page historique global
                 case "showAllRecordsLog":
                     if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
                         $recordController->displayAllRecordsLog();
-                    }
-                    else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
+                    } else throw new AuthenticationException();
                     break;
 
                 // Page export
                 case "showExportForm":
                     if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
                         $recordController->displayExportForm();
-                    }
-                    else throw new Exception('Accès refusé. Veuillez contacter l\'administrateur.');
+                    } else throw new AuthenticationException();
                     break;
 
 
@@ -123,10 +116,8 @@
                             $recordInfo->setComment(inputValidation($_POST['comment']));
 
                             $recordController->addNewRecord($recordInfo);
-                        }
-                        else throw new Exception('Les rubriques "Chantier", "Début" et "Fin" sont obligatoires.');
-                    } 
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                        } else throw new InvalidParameterException();
+                    } else throw new AuthenticationException();
                     break;
 
                 // Modification d'un relevé non validé
@@ -141,10 +132,8 @@
                             $recordInfo->setComment(inputValidation($_POST['comment']));
 
                             $recordController->updateRecord($recordInfo);
-                        }
-                        else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
-                    } 
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                        } else throw new UpdateProblemException();
+                    } else throw new AuthenticationException();
                     break;
                     
                 // Modification du statut du relevé
@@ -152,10 +141,8 @@
                     if(isset($_SESSION['userId'])){
                         if(!empty($_POST['checkList'])){
                             $recordController->updateRecordStatus($_POST['checkList']);
-                        } 
-                        else throw new Exception('Veuillez sélectionner un ou plusieurs relevé(s) à valider.');
-                    } 
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                        } else throw new InvalidParameterException('Veuillez sélectionner un ou plusieurs relevé(s) à valider.');
+                    } else throw new AuthenticationException();
                     break;
 
                 // Supprimer un relevé
@@ -169,8 +156,7 @@
                                 $recordInfo->setComment(inputValidation($_POST['comment']));
 
                                 $recordController->deleteRecord($recordInfo);
-                            }
-                            else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée. NB : Le champ "commentaire" est obligatoire.');
+                            } else throw new UpdateProblemException();
                         } else {
                             if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
                                 $recordInfo = new Record();
@@ -179,11 +165,9 @@
                                 $recordInfo->setComment(inputValidation($_POST['comment']));
 
                                 $recordController->deleteRecord($recordInfo);
-                            }
-                            else throw new Exception('Un problème est survenu. La modification n\'a pas pu être effectuée.');
+                            } else throw new UpdateProblemException();
                         }
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                    } else throw new AuthenticationException();
                     break;
 
 
@@ -197,28 +181,27 @@
 
                             $recordController->getRecordForm($recordInfo);
                         }
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                    } else throw new AuthenticationException();
                     break;
 
                 // Renvoyer le formulaire de confirmation de suppression
                 case "getDeleteConfirmationForm":
-                    if(isset($_SESSION['userId'])) getDeleteConfirmationForm();
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                    if(isset($_SESSION['userId'])) {
+                        getDeleteConfirmationForm();
+                    } else throw new AuthenticationException();
                     break;
 
 
                 // Récupérer les données d'un relevé
                 case "getRecordData":
                     if(isset($_SESSION['userId'])){
-                        if(isset($_POST['recordId']) /*&& is_numeric($_POST['recordId'])*/){
+                        if(isset($_POST['recordId'])){
                             $recordInfo = new Record();
                             $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
                             $recordController->getRecordData($recordInfo);
                         } 
-                        else throw new Exception('Un problème est survenu.');
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                        else throw new NoDataFoundException();
+                    } else throw new AuthenticationException();
                     break;
 
                 // Récupérer les données de l'historique personnel
@@ -232,9 +215,8 @@
                             
                             $recordController->getUserRecords($recordInfo);
                         }
-                        else throw new Exception('Un problème est survenu.');
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                        else throw new NoDataFoundException();
+                    } else throw new AuthenticationException();
                     break;
 
                 // Récupérer les données de l'historique équipe
@@ -248,9 +230,8 @@
                             
                             $recordController->getTeamRecords($recordInfo);
                         }
-                        else throw new Exception('Un problème est survenu.');
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                        else throw new NoDataFoundException();
+                    } else throw new AuthenticationException();
                     break;
 
                 // Récupérer les données de l'historique global
@@ -263,16 +244,15 @@
 
                             $recordController->getAllUsersRecords($recordInfo);
                         }
-                        else throw new Exception('Un problème est survenu.');
-                    }
-                    else throw new Exception('Utilisateur non authentifié. Veuillez vous connecter.');
+                        else throw new NoDataFoundException();
+                    } else throw new AuthenticationException();
                     break;
 
 
                 // Exporter les données en CSV
                 case "exportRecords":
-                    if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export'){
-                        if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
+                    if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
+                        if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export') {
                             if(isset($_POST['scope']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['manager']) && isset($_POST['user'])) {
                                 $recordInfo = new Record();
                                 $recordInfo->setTypeOfRecords(inputValidation($_GET['typeOfRecords']));
@@ -284,8 +264,8 @@
 
                                 $loginController->exportRecords($recordInfo);
                             }
-                        }
-                    }
+                        } 
+                    } else throw new AuthenticationException();
                     break;
 
 
@@ -300,13 +280,16 @@
                                 $recordController->getOptionsData(inputValidation($_POST['typeOfData']), inputValidation($_POST['userId']));
                             }
                         }
-                    }
+                    } else throw new AuthenticationException();
                     break;
             }
         } catch (PDOException $e){
-            $error = true;
-            $loginController->displayLoginPage($error);
-        
+            $errorCode = $e->getCode();
+            $loginController->displayLoginPage($errorCode);
+        } catch (AuthenticationException $e){
+            $errorCode = $e->getCode();
+            $errorMessage = $e->getMessage();
+            $loginController->displayLoginPage($errorCode, $errorMessage);
         } catch (Exception $e){
             $errorMessage = $e->getMessage();
             echo "Exception : " . $errorMessage;
