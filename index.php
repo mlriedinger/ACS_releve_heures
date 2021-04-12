@@ -262,7 +262,7 @@
                                 $recordInfo->setManagerId(intval(inputValidation($_POST['manager'])));
                                 $recordInfo->setUserId(intval(inputValidation($_POST['user'])));
 
-                                $loginController->exportRecords($recordInfo);
+                                $recordController->exportRecords($recordInfo);
                             }
                         } 
                     } else throw new AuthenticationException();

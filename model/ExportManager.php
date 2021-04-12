@@ -129,7 +129,7 @@ class ExportManager extends RecordManager {
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête
-        $query->debugDumpParams();
+        // $query->debugDumpParams();
 
         return $rows;
     }
