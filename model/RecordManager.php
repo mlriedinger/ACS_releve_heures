@@ -15,6 +15,11 @@ class RecordManager extends DatabaseConnection
         * $recordInfo : objet Record contenant l'id user, l'id du groupe utilisateur, la date et heure de début, la date et heure de fin et le commentaire
     */
 
+    public function convertLengthIntoMinutes($hours, $minutes){
+        $lengthInMinutes = $hours * 60 + $minutes;
+        return $lengthInMinutes;
+    }
+
     public function sendNewRecord(Record $recordInfo){
         // On récupère les informations contenues dans l'objet $recordInfo
         $userId = $recordInfo->getUserId();
@@ -22,7 +27,12 @@ class RecordManager extends DatabaseConnection
         $worksite = $recordInfo->getWorksite();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
+        $pauseLengthMinutes = $recordInfo->getPauseLengthMinutes();
+        $tripLengthHours = $recordInfo->getTripLengthHours();
+        $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
         $comment = $recordInfo->getComment();
+
+        $totalTripLengthInMinutes = $this->convertLengthIntoMinutes($tripLengthHours, $tripLengthMinutes);
 
         // Validation automatique des relevés saisis par un utilisateur de type admin
         $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
@@ -36,6 +46,8 @@ class RecordManager extends DatabaseConnection
             id_login,
             date_hrs_debut, 
             date_hrs_fin, 
+            tps_pause,
+            tps_trajet,
             statut_validation, 
             commentaire)
             VALUES (
@@ -43,7 +55,9 @@ class RecordManager extends DatabaseConnection
             :id_chantier, 
             :id_login,
             :dateTimeStart, 
-            :dateTimeEnd, 
+            :dateTimeEnd,
+            :pauseLength,
+            :tripLength, 
             :validation_status,
             :comment)');
         $attempt = $query->execute(array(
@@ -52,6 +66,8 @@ class RecordManager extends DatabaseConnection
             'id_login' => $userId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
+            'pauseLength' => $pauseLengthMinutes,
+            'tripLength' => $totalTripLengthInMinutes,
             'validation_status' => $validation_status,
             'comment' => $comment
         ));
@@ -76,7 +92,12 @@ class RecordManager extends DatabaseConnection
         $recordId = $recordInfo->getRecordId();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
+        $pauseLengthMinutes = $recordInfo->getPauseLengthMinutes();
+        $tripLengthHours = $recordInfo->getTripLengthHours();
+        $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
         $comment = $recordInfo->getComment();
+
+        $totalTripLengthInMinutes = $this->convertLengthIntoMinutes($tripLengthHours, $tripLengthMinutes);
 
         $isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
@@ -85,7 +106,9 @@ class RecordManager extends DatabaseConnection
         SET 
         id_chantier = :worksiteId,
         date_hrs_debut = :dateTimeStart, 
-        date_hrs_fin = :dateTimeEnd, 
+        date_hrs_fin = :dateTimeEnd,
+        tps_pause = :pauseLength,
+        tps_trajet = :tripLength, 
         commentaire = :comment
         WHERE ID = :recordId');
         $attempt = $query->execute(array(
@@ -93,6 +116,8 @@ class RecordManager extends DatabaseConnection
             'recordId' => $recordId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
+            'pauseLength' => $pauseLengthMinutes,
+            'tripLength' => $totalTripLengthInMinutes,
             'comment' => $comment
         ));
 

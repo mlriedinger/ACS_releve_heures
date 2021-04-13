@@ -16,6 +16,8 @@
 
         <div class="row mb-3 justify-content-md-center">
 
+            <p class="h6 text-center mb-3">Temps de travail</p>
+
             <div class="col-sm-4 mb-3">
                 <span class="input-group-text" id="datetime_start_selector">Début</span>
                 <input type="datetime-local" name="datetimeStart" id="datetime_start" class="form-control" aria-label="Sélectionnez une date et une heure de début" aria-describedby="datetime_start_selector" required/>
@@ -24,6 +26,44 @@
             <div class="col-sm-4 mb-3">
                 <span class="input-group-text" id="datetime_end_selector">Fin</span>
                 <input type="datetime-local" name="datetimeEnd" id="datetime_end" class="form-control" aria-label="Sélectionnez une date et une heure de fin" aria-describedby="datetime_end_selector" required/>
+            </div>
+
+        </div>
+
+        <div class="row mb-3 justify-content-md-center">
+
+            <div class="col-sm-4 mb-3">
+
+                <div class="row">
+                    <p class="h6 text-center mb-3">Temps de pause</p>
+                </div>
+
+                <div>
+                    <span class="input-group-text" id="pause_indicator">Minutes</span>
+                    <input type="number" min="0" step="15" name="pauseLengthMinutes" id="pauseLengthMinutes" class="form-control" aria-label="Indiquez un temps de pause en minutes" aria-describedby="pause_indicator" required/>
+                </div>
+
+            </div>
+
+            <div class="col-sm-4 mb-3">
+
+                <div class="row">
+                    <p class="h6 text-center mb-3">Temps de trajet</p>
+                </div>
+                
+                <div class="row">
+
+                    <div class="col">
+                        <span class="input-group-text" id="trip_hours_indicator">Heures</span>
+                        <input type="number" min="0" name="tripLengthHours" id="tripLengthHours" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="trip_hours_indicator" required/>
+                    </div>
+
+                    <div class="col">
+                        <span class="input-group-text" id="trip_minutes_indicator">Minutes</span>
+                        <input type="number" min="0" step="15" name="tripLengthMinutes" id="tripLengthMinutes" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
+                    </div>
+
+                </div>
             </div>
 
         </div>

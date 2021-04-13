@@ -7,6 +7,9 @@ class Record {
     private $_managerId;
     private $_dateTimeStart;
     private $_dateTimeEnd;
+    private $_pauseLengthMinutes;
+    private $_tripLengthHours;
+    private $_tripLengthMinutes;
     private $_comment;
     private $_periodStart;
     private $_periodEnd;
@@ -15,18 +18,22 @@ class Record {
     private $_worksite;
 
     public function __construct(){
-        $this->_recordId = 0;
-        $this->_userId = 0;
-        $this->_userGroup = 0;
-        $this->_managerId = 0;
-        $this->_dateTimeStart ="";
-        $this->_dateTimeEnd ="";
-        $this->_comment ="";
-        $this->_periodStart ="";
-        $this->_periodEnd ="";
-        $this->_scope ="";
-        $this->_typeOfRecords="";
-        $this->_worksite = 0;
+        // $this->_recordId = 0;
+        // $this->_userId = 0;
+        // $this->_userGroup = 0;
+        // $this->_managerId = 0;
+        // $this->_dateTimeStart ="";
+        // $this->_dateTimeEnd ="";
+        // $this->_workLengthHour = 0;
+        // $this->_workLengthMinute = 0;
+        // $this->_tripLengthHour = 0;
+        // $this->_tripLengthMinute = 0;
+        // $this->_comment ="";
+        // $this->_periodStart ="";
+        // $this->_periodEnd ="";
+        // $this->_scope ="";
+        // $this->_typeOfRecords="";
+        // $this->_worksite = 0;
     }
 
     // Setters
@@ -58,6 +65,21 @@ class Record {
 
     public function setDateTimeEnd(String $dateTimeEnd){
         $this->_dateTimeEnd = $dateTimeEnd;
+        return $this;
+    }
+
+    public function setPauseLengthMinutes(int $pauseLengthMinutes){
+        $this->_pauseLengthMinutes = $pauseLengthMinutes;
+        return $this;
+    }
+
+    public function setTripLengthHours(int $tripLengthHours){
+        $this->_tripLengthHours = $tripLengthHours;
+        return $this;
+    }
+
+    public function setTripLengthMinutes(int $tripLengthMinutes){
+        $this->_tripLengthMinutes = $tripLengthMinutes;
         return $this;
     }
 
@@ -114,6 +136,18 @@ class Record {
 
     public function getDateTimeEnd(){
         return $this->_dateTimeEnd;
+    }
+
+    public function getPauseLengthMinutes(){
+        return $this->_pauseLengthMinutes;
+    }
+
+    public function getTripLengthHours(){
+        return $this->_tripLengthHours;
+    }
+
+    public function getTripLengthMinutes(){
+        return $this->_tripLengthMinutes;
     }
 
     public function getComment(){
