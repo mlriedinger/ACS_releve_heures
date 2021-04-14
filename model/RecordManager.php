@@ -3,13 +3,12 @@
 /* On appelle la classe qui gère la connexion à la BDD */
 require_once 'DatabaseConnection.php';
 
-
 /* Classe qui gère l'envoi et la récupération de données de la BDD 
     * [INFO] Classe-fille de DatabaseConnection pour pouvoir hériter de la méthode dbConnect()
 */
 
-class RecordManager extends DatabaseConnection
-{
+class RecordManager extends DatabaseConnection {
+
     /* Méthode qui permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
         Params:
         * $recordInfo : objet Record contenant l'id user, l'id du groupe utilisateur, la date et heure de début, la date et heure de fin et le commentaire

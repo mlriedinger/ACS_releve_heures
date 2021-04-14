@@ -2,8 +2,8 @@
 
 /* Classe qui gère la connexion à la base de données. */
 
-class DatabaseConnection
-{
+class DatabaseConnection {
+    
     private $_dbHost;
     private $_dbPort;
     private $_dbName;
