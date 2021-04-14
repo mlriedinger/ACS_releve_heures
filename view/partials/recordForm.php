@@ -60,7 +60,7 @@
 
                     <div class="col">
                         <span class="input-group-text" id="trip_minutes_indicator">Minutes</span>
-                        <input type="number" min="0" step="15" name="tripLengthMinutes" id="tripLengthMinutes" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
+                        <input type="number" min="0" step="15" max="60" name="tripLengthMinutes" id="tripLengthMinutes" onclick="incrementHour()" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
                     </div>
 
                 </div>
@@ -96,4 +96,13 @@
 <script>
     getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
     getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
+
+    function incrementHour(){
+        let minutesInput = document.getElementById("tripLengthMinutes");
+        if(minutesInput.value === '60'){
+            let hourInput = document.getElementById("tripLengthHours");
+            hourInput.value ++;
+            minutesInput.value = 0;
+        }
+    }
 </script>
