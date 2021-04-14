@@ -1,6 +1,8 @@
 <?php 
 
 class Record {
+
+    // Attributes
     private $_recordId;
     private $_userId;
     private $_userGroup;
@@ -17,27 +19,7 @@ class Record {
     private $_typeOfRecords;
     private $_worksite;
 
-    public function __construct(){
-        // $this->_recordId = 0;
-        // $this->_userId = 0;
-        // $this->_userGroup = 0;
-        // $this->_managerId = 0;
-        // $this->_dateTimeStart ="";
-        // $this->_dateTimeEnd ="";
-        // $this->_workLengthHour = 0;
-        // $this->_workLengthMinute = 0;
-        // $this->_tripLengthHour = 0;
-        // $this->_tripLengthMinute = 0;
-        // $this->_comment ="";
-        // $this->_periodStart ="";
-        // $this->_periodEnd ="";
-        // $this->_scope ="";
-        // $this->_typeOfRecords="";
-        // $this->_worksite = 0;
-    }
-
     // Setters
-
     public function setRecordId(int $recordId){
         $this->_recordId = $recordId;
         return $this;
@@ -113,7 +95,6 @@ class Record {
     }
 
     // Getters
-
     public function getRecordId(){
         return $this->_recordId;
     }
