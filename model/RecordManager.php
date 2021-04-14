@@ -27,7 +27,7 @@ class RecordManager extends DatabaseConnection
         $worksite = $recordInfo->getWorksite();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
-        $pauseLengthMinutes = $recordInfo->getPauseLengthMinutes();
+        $breakLengthMinutes = $recordInfo->getBreakLengthMinutes();
         $tripLengthHours = $recordInfo->getTripLengthHours();
         $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
         $comment = $recordInfo->getComment();
@@ -66,7 +66,7 @@ class RecordManager extends DatabaseConnection
             'id_login' => $userId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
-            'pauseLength' => $pauseLengthMinutes,
+            'pauseLength' => $breakLengthMinutes,
             'tripLength' => $totalTripLengthInMinutes,
             'validation_status' => $validation_status,
             'comment' => $comment
@@ -92,7 +92,7 @@ class RecordManager extends DatabaseConnection
         $recordId = $recordInfo->getRecordId();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
-        $pauseLengthMinutes = $recordInfo->getPauseLengthMinutes();
+        $breakLengthMinutes = $recordInfo->getBreakLengthMinutes();
         $tripLengthHours = $recordInfo->getTripLengthHours();
         $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
         $comment = $recordInfo->getComment();
@@ -116,7 +116,7 @@ class RecordManager extends DatabaseConnection
             'recordId' => $recordId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
-            'pauseLength' => $pauseLengthMinutes,
+            'pauseLength' => $breakLengthMinutes,
             'tripLength' => $totalTripLengthInMinutes,
             'comment' => $comment
         ));
@@ -202,7 +202,9 @@ class RecordManager extends DatabaseConnection
             Releve.date_hrs_fin,
             Releve.statut_validation,
             Releve.commentaire,
-            Releve.supprimer
+            Releve.supprimer,
+            Releve.tps_pause,
+            Releve.tps_trajet 
         FROM t_saisie_heure AS Releve
         WHERE Releve.ID = :recordId');
         $query->execute(array('recordId' => $recordId));
@@ -282,7 +284,9 @@ class RecordManager extends DatabaseConnection
             Releve.date_hrs_modif,
             Releve.ID,
             Releve.supprimer,
-            Releve.id_login 
+            Releve.id_login, 
+            Releve.tps_pause,
+            Releve.tps_trajet 
         FROM t_saisie_heure AS Releve
         INNER JOIN t_chantier
             ON Releve.id_chantier = t_chantier.ID
@@ -342,7 +346,9 @@ class RecordManager extends DatabaseConnection
                 Releve.date_hrs_creation, 
                 Releve.date_hrs_modif,
                 Releve.ID,
-                Releve.supprimer
+                Releve.supprimer,
+                Releve.tps_pause,
+                Releve.tps_trajet
                 FROM t_saisie_heure AS Releve
                 INNER JOIN t_chantier 
                     ON Releve.id_chantier = t_chantier.ID
@@ -366,7 +372,9 @@ class RecordManager extends DatabaseConnection
                         Releve.date_hrs_creation, 
                         Releve.date_hrs_modif,
                         Releve.ID,
-                        Releve.supprimer
+                        Releve.supprimer,
+                        Releve.tps_pause,
+                        Releve.tps_trajet
                     FROM t_saisie_heure AS Releve
                     INNER JOIN t_chantier 
                         ON Releve.id_chantier = t_chantier.ID
@@ -423,7 +431,9 @@ class RecordManager extends DatabaseConnection
             Releve.date_hrs_modif,
             Releve.ID,
             Releve.supprimer,
-            Membre.ID
+            Membre.ID AS 'id_login',
+            Releve.tps_pause,
+            Releve.tps_trajet
         FROM t_equipe AS Equipe
 
         INNER JOIN t_chantier AS Chantier

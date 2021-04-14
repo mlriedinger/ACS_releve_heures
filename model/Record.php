@@ -7,7 +7,7 @@ class Record {
     private $_managerId;
     private $_dateTimeStart;
     private $_dateTimeEnd;
-    private $_pauseLengthMinutes;
+    private $_breakLengthMinutes;
     private $_tripLengthHours;
     private $_tripLengthMinutes;
     private $_comment;
@@ -68,8 +68,8 @@ class Record {
         return $this;
     }
 
-    public function setPauseLengthMinutes(int $pauseLengthMinutes){
-        $this->_pauseLengthMinutes = $pauseLengthMinutes;
+    public function setBreakLengthMinutes(int $breakLengthMinutes){
+        $this->_breakLengthMinutes = $breakLengthMinutes;
         return $this;
     }
 
@@ -138,8 +138,8 @@ class Record {
         return $this->_dateTimeEnd;
     }
 
-    public function getPauseLengthMinutes(){
-        return $this->_pauseLengthMinutes;
+    public function getBreakLengthMinutes(){
+        return $this->_breakLengthMinutes;
     }
 
     public function getTripLengthHours(){

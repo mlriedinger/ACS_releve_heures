@@ -35,8 +35,10 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Chantier</th>
-                                    <th scope="col">Date et heure de début</th>
-                                    <th scope="col">Date et heure de fin</th>
+                                    <th scope="col">Début</th>
+                                    <th scope="col">Fin</th>
+                                    <th scope="col">Pause</th>
+                                    <th scope="col">Trajet</th>
                                     <th scope="col" class="records_log_comment">Commentaire</th>
                                     <th scope="col">Statut</th>
                                     <th scope="col" class="records_log_last_modification">Modifié le</th>

@@ -39,8 +39,8 @@
                 </div>
 
                 <div>
-                    <span class="input-group-text" id="pause_indicator">Minutes</span>
-                    <input type="number" min="0" step="15" name="pauseLengthMinutes" id="pauseLengthMinutes" class="form-control" aria-label="Indiquez un temps de pause en minutes" aria-describedby="pause_indicator" required/>
+                    <span class="input-group-text" id="break_indicator">Minutes</span>
+                    <input type="number" min="0" step="15" name="breakLengthMinutes" id="breakLengthMinutes" class="form-control" aria-label="Indiquez un temps de pause en minutes" aria-describedby="break_indicator" required/>
                 </div>
 
             </div>

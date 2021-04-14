@@ -18,7 +18,7 @@
     function inputValidation($data){
         $data = trim($data);
         $data = stripslashes($data);
-        $data = htmlspecialchars($data, ENT_NOQUOTES);
+        $data = htmlspecialchars($data);
 
         return $data;
     }
@@ -27,7 +27,7 @@
         $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
         $recordInfo->setDateTimeStart(inputValidation($_POST['datetimeStart']));
         $recordInfo->setDateTimeEnd(inputValidation($_POST['datetimeEnd']));
-        $recordInfo->setPauseLengthMinutes(intval(inputValidation($_POST['pauseLengthMinutes'])));
+        $recordInfo->setBreakLengthMinutes(intval(inputValidation($_POST['breakLengthMinutes'])));
         $recordInfo->setTripLengthHours(intval(inputValidation($_POST['tripLengthHours'])));
         $recordInfo->setTripLengthMinutes(intval(inputValidation($_POST['tripLengthMinutes'])));
         $recordInfo->setComment(inputValidation($_POST['comment']));

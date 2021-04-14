@@ -27,6 +27,16 @@ function checkRecordValidationStatus(newLines, data, counter) {
 }
 
 
+function convertTimeToHoursAndMinutes(timeToConvert) {
+    let convertedTime = [];
+    convertedTime['hours'] = Math.floor(timeToConvert / 60);
+    convertedTime['minutes'] = timeToConvert % 60;
+    if(convertedTime['minutes'] === 0) convertedTime['minutes'] = "00";
+
+    return convertedTime;
+}
+
+
 /* Fonction qui permet de remplir les cellules de la nouvelle ligne du tableau avec les données de la requête AJAX 
     Params :
         * newLines : correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
@@ -45,10 +55,22 @@ function fillRecordsTable(newLines, data, counter) {
         newLines.newEndTime.appendChild(newText);
     }
 
+    if(newLines.newBreakTime !== undefined) {
+        time = convertTimeToHoursAndMinutes(data[counter].tps_pause);
+        let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
+        newLines.newBreakTime.appendChild(newText);
+    }
+
+    if(newLines.newTripTime !== undefined) {
+        time = convertTimeToHoursAndMinutes(data[counter].tps_trajet);
+        let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
+        newLines.newTripTime.appendChild(newText);
+    }
+
     if(newLines.newComment !== undefined) {
         newLines.newComment.classList.add("records_log_comment");
-        let newText = document.createTextNode(data[counter].commentaire);
-        newLines.newComment.appendChild(newText);
+        let newText = data[counter].commentaire;
+        newLines.newComment.innerHTML = newText;
     }
 
     if(newLines.newUpdateDate !== undefined) {
@@ -88,11 +110,13 @@ function createNewLinesInPersonalRecordsTable(newRow) {
     var newLines = {
         newStartTime: newRow.insertCell(1),
         newEndTime : newRow.insertCell(2),
-        newComment : newRow.insertCell(3),
-        newStatus : newRow.insertCell(4),
-        newUpdateDate : newRow.insertCell(5),
-        newEdit : newRow.insertCell(6),
-        newDelete : newRow.insertCell(7)
+        newBreakTime : newRow.insertCell(3),
+        newTripTime : newRow.insertCell(4),
+        newComment : newRow.insertCell(5),
+        newStatus : newRow.insertCell(6),
+        newUpdateDate : newRow.insertCell(7),
+        newEdit : newRow.insertCell(8),
+        newDelete : newRow.insertCell(9)
     }
     return newLines;
 }
@@ -109,10 +133,12 @@ function createNewLinesInTeamRecordsToCheckTable(newRow) {
         newLastName : newRow.insertCell(2),
         newStartTime : newRow.insertCell(3),
         newEndTime : newRow.insertCell(4),
-        newComment : newRow.insertCell(5),
-        newUpdateDate : newRow.insertCell(6),
-        newIsValid : newRow.insertCell(7),
-        newDelete : newRow.insertCell(8)
+        newBreakTime : newRow.insertCell(5),
+        newTripTime : newRow.insertCell(6),
+        newComment : newRow.insertCell(7),
+        newUpdateDate : newRow.insertCell(8),
+        newIsValid : newRow.insertCell(9),
+        newDelete : newRow.insertCell(10)
     }
     return newLines;
 } 
@@ -129,11 +155,13 @@ function createNewLinesInTeamRecordsTable(newRow) {
         newLastName : newRow.insertCell(2),
         newStartTime : newRow.insertCell(3),
         newEndTime : newRow.insertCell(4),
-        newComment : newRow.insertCell(5),
-        newStatus : newRow.insertCell(6),
-        newUpdateDate : newRow.insertCell(7),
-        newEdit : newRow.insertCell(8),
-        newDelete : newRow.insertCell(9)
+        newBreakTime : newRow.insertCell(5),
+        newTripTime : newRow.insertCell(6),
+        newComment : newRow.insertCell(7),
+        newStatus : newRow.insertCell(8),
+        newUpdateDate : newRow.insertCell(9),
+        newEdit : newRow.insertCell(10),
+        newDelete : newRow.insertCell(11)
     }
     return newLines;
 }
@@ -150,11 +178,13 @@ function createNewLinesInAllUsersRecordsTable(newRow) {
         newEmployee : newRow.insertCell(2),
         newStartTime : newRow.insertCell(3),
         newEndTime : newRow.insertCell(4),
-        newComment : newRow.insertCell(5),
-        newStatus : newRow.insertCell(6),
-        newUpdateDate : newRow.insertCell(7),
-        newEdit : newRow.insertCell(8),
-        newDelete : newRow.insertCell(9)
+        newBreakTime : newRow.insertCell(5),
+        newTripTime : newRow.insertCell(6),
+        newComment : newRow.insertCell(7),
+        newStatus : newRow.insertCell(8),
+        newUpdateDate : newRow.insertCell(9),
+        newEdit : newRow.insertCell(10),
+        newDelete : newRow.insertCell(11)
     }
     return newLines;
 }
@@ -235,26 +265,36 @@ function updateFormInputs(data) {
     console.log("updateFormInputs :");
     console.log(data);
     
+    // On récupère les chantiers associés à l'utilisateur et on ajoute un attribut "selected" sur le chantier correspondant au relevé en cours d'édition
     var worksitesCollection = document.getElementById("selectWorksite").children;
     for (let item of worksitesCollection) {
-        console.log(item.value);
-        
         if(item.value === data['id_chantier']){
-            console.log("valeur qui correspond au chantier : " + item.value);
             item.setAttribute("selected", "");
         }
     }
     
+    // On pointe sur les inputs de formulaire à modifier
     var inputDateTimeStart = document.getElementById("datetime_start");
     var inputDateTimeEnd = document.getElementById("datetime_end");
+    var inputBreakTime = document.getElementById("breakLengthMinutes");
+    var inputTripLengthHours = document.getElementById("tripLengthHours");
+    var inputTripLengthMinutes = document.getElementById("tripLengthMinutes");
     var inputComment = document.getElementById("comment");
 
     // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par datetime-locale
     var startTime = data['date_hrs_debut'].replace(" ", "T");
     var endTime = data['date_hrs_fin'].replace(" ", "T");
 
+    // On transforme le temps de trajet récupéré en minutes en heures + minutes pour l'affichage
+    var tripTimeHours = Math.floor(data['tps_trajet'] / 60);
+    var tripTimeMinutes = data['tps_trajet'] % 60;
+
+    // On insère les données dans le formulaire
     inputDateTimeStart.setAttribute("value", startTime);
     inputDateTimeEnd.setAttribute("value", endTime);
+    inputBreakTime.setAttribute("value", data['tps_pause']);
+    inputTripLengthHours.setAttribute("value", tripTimeHours);
+    inputTripLengthMinutes.setAttribute("value", tripTimeMinutes);
     inputComment.innerHTML += data['commentaire'];
 }
 
