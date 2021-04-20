@@ -15,8 +15,12 @@
 
     function fillBasicRecordInfos($recordInfo){
         $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
+        $recordInfo->setRecordDate(inputValidation($_POST['recordDate']));
         $recordInfo->setDateTimeStart(inputValidation($_POST['datetimeStart']));
         $recordInfo->setDateTimeEnd(inputValidation($_POST['datetimeEnd']));
+        $recordInfo->setWorkLengthHours(intval(inputValidation($_POST['workLengthHours'])));
+        $recordInfo->setWorkLengthMinutes(intval(inputValidation($_POST['workLengthMinutes'])));
+        $recordInfo->setBreakLengthHours(intval(inputValidation($_POST['breakLengthHours'])));
         $recordInfo->setBreakLengthMinutes(intval(inputValidation($_POST['breakLengthMinutes'])));
         $recordInfo->setTripLengthHours(intval(inputValidation($_POST['tripLengthHours'])));
         $recordInfo->setTripLengthMinutes(intval(inputValidation($_POST['tripLengthMinutes'])));
@@ -29,6 +33,7 @@
     // Initialisation d'un objet LoginController et RecordController pour être utilisés par le routeur
     $loginController = new LoginController();
     $recordController = new RecordController();
+    $settingController = new SettingController();
 
 
     /* Routeur de l'application qui appelle le contrôleur correspondant à l'URL demandée */
@@ -44,6 +49,7 @@
                 // Connexion
                 case "login":
                     if(isset($_POST['login']) && isset($_POST['password']) || $_POST['login'] != "" || $_POST['password'] != "") {
+                        $settingController->getSettings();
                         $loginController->verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
                     } else throw new InvalidParameterException();
                     break;
@@ -100,6 +106,18 @@
                 case "showExportForm":
                     if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
                         $recordController->displayExportForm();
+                    } else throw new AuthenticationException();
+                    break;
+
+                case "showSettingsForm":
+                    if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
+                        $settingController->displaySettingsForm();
+                    } else throw new AuthenticationException();
+                    break;
+
+                case "applySettings":
+                    if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
+                        $settingController->updateSettings();
                     } else throw new AuthenticationException();
                     break;
 

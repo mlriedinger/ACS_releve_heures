@@ -7,18 +7,24 @@ require_once 'DatabaseConnection.php';
     * [INFO] Classe-fille de DatabaseConnection pour pouvoir hériter de la méthode dbConnect()
 */
 
-class RecordManager extends DatabaseConnection {
+class RecordManager extends DatabaseConnection 
+{
+    public function __construct() {
+        parent::__construct();
+    }
 
-    /* Méthode qui permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
-        Params:
-        * $recordInfo : objet Record contenant l'id user, l'id du groupe utilisateur, la date et heure de début, la date et heure de fin et le commentaire
-    */
-
+    
     public function convertLengthIntoMinutes($hours, $minutes){
         $lengthInMinutes = $hours * 60 + $minutes;
         return $lengthInMinutes;
     }
 
+
+    /* Méthode qui permet d'enregistrer un nouveau relevé. Elle renvoie 'true' en cas de succès et 'false' en cas d'erreur.
+        Params:
+        * $recordInfo : objet Record contenant l'id user, l'id du groupe utilisateur, la date et heure de début, la date et heure de fin et le commentaire
+    */
+    
     public function sendNewRecord(Record $recordInfo){
         // On récupère les informations contenues dans l'objet $recordInfo
         $userId = $recordInfo->getUserId();
@@ -26,13 +32,19 @@ class RecordManager extends DatabaseConnection {
         $worksite = $recordInfo->getWorksite();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
+        $workLengthHours = $recordInfo->getWorkLengthHours();
+        $workLengthMinutes = $recordInfo->getWorkLengthMinutes();
+        $breakLengthHours = $recordInfo->getBreakLengthHours();
         $breakLengthMinutes = $recordInfo->getBreakLengthMinutes();
         $tripLengthHours = $recordInfo->getTripLengthHours();
         $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
         $comment = $recordInfo->getComment();
 
+        // Conversion des heures en minutes
+        $totalWorkLengthInMinutes = $this->convertLengthIntoMinutes($workLengthHours, $workLengthMinutes);
+        $totalBreakLengthInMinutes = $this->convertLengthIntoMinutes($breakLengthHours, $breakLengthMinutes);
         $totalTripLengthInMinutes = $this->convertLengthIntoMinutes($tripLengthHours, $tripLengthMinutes);
-
+        
         // Validation automatique des relevés saisis par un utilisateur de type admin
         $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
         
@@ -45,6 +57,7 @@ class RecordManager extends DatabaseConnection {
             id_login,
             date_hrs_debut, 
             date_hrs_fin, 
+            tps_travail,
             tps_pause,
             tps_trajet,
             statut_validation, 
@@ -55,6 +68,7 @@ class RecordManager extends DatabaseConnection {
             :id_login,
             :dateTimeStart, 
             :dateTimeEnd,
+            :workLength,
             :pauseLength,
             :tripLength, 
             :validation_status,
@@ -65,7 +79,8 @@ class RecordManager extends DatabaseConnection {
             'id_login' => $userId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
-            'pauseLength' => $breakLengthMinutes,
+            'workLength' => $totalWorkLengthInMinutes,
+            'pauseLength' => $totalBreakLengthInMinutes,
             'tripLength' => $totalTripLengthInMinutes,
             'validation_status' => $validation_status,
             'comment' => $comment

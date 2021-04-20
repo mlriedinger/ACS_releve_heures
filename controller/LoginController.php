@@ -1,6 +1,6 @@
 <?php
 
-/* On appelle le modèle correspondant pour accéder à ses méthodes */
+/* On charge automatiquement les classes pour accéder à leurs méthodes */
 require 'autoloader.php';
 
 class LoginController {

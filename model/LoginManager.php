@@ -7,11 +7,16 @@ require_once 'DatabaseConnection.php';
 
 class LoginManager extends DatabaseConnection
 {
+    public function __construct() {
+        parent::__construct();
+    }
+
     /* Méthode qui permet de tester la combinaison login/mot de passe saisie par l'utilisateur. Renvoie les informations de l'utilisateur en cas de succès.
         Params :
         * $login : identifiant
         * $password : mot de passe 
     */
+    
     public function getUserData($login, $password){
         $pdo = $this->dbConnect($login, $password);
      

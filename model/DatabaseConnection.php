@@ -9,14 +9,15 @@ class DatabaseConnection {
     private $_dbName;
     private $_dbUser;
     private $_dbPassword;
-
+    protected $_config;
+    
     public function __construct(){
-        $config = parse_ini_file("config.ini");
-        $this->_dbHost = $config['dbHost'];
-        $this->_dbPort = $config['dbPort'];
-        $this->_dbName = $config['dbName'];
-        $this->_dbUser = $config['dbUser'];
-        $this->_dbPassword = $config['dbPassword'];
+        $this->_config = parse_ini_file("config.ini");
+        $this->_dbHost = $this->_config['dbHost'];
+        $this->_dbPort = $this->_config['dbPort'];
+        $this->_dbName = $this->_config['dbName'];
+        $this->_dbUser = $this->_config['dbUser'];
+        $this->_dbPassword = $this->_config['dbPassword'];
     }
 
     /* Méthode qui initialise une connection à la base de données. Elle retourne un objet PDO en cas de succès, sinon une erreur.
@@ -40,6 +41,8 @@ class DatabaseConnection {
 
         return $pdo;
     }
+
+    
 }
 
 

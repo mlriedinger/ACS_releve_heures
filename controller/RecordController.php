@@ -38,8 +38,8 @@ class RecordController {
     public function displayExportForm(){
         require('view/exportRecordsForm.php');
     }
-
-
+    
+    
     /* Fonction pour récupérer le formulaire de saisie (uniquement le formulaire) */
 
     public function getRecordForm($recordInfo){

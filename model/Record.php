@@ -9,6 +9,9 @@ class Record {
     private $_managerId;
     private $_dateTimeStart;
     private $_dateTimeEnd;
+    private $_workLengthHours;
+    private $_workLengthMinutes;
+    private $_breakLengthHours;
     private $_breakLengthMinutes;
     private $_tripLengthHours;
     private $_tripLengthMinutes;
@@ -18,6 +21,8 @@ class Record {
     private $_scope;
     private $_typeOfRecords;
     private $_worksite;
+    private $_recordDate;
+    
 
     // Setters
     public function setRecordId(int $recordId){
@@ -47,6 +52,21 @@ class Record {
 
     public function setDateTimeEnd(String $dateTimeEnd){
         $this->_dateTimeEnd = $dateTimeEnd;
+        return $this;
+    }
+
+    public function setWorkLengthHours(int $workLengthHours){
+        $this->_workLengthHours = $workLengthHours;
+        return $this;
+    }
+
+    public function setWorkLengthMinutes(int $workLengthMinutes){
+        $this->_workLengthMinutes = $workLengthMinutes;
+        return $this;
+    }
+
+    public function setBreakLengthHours(int $breakLengthHours){
+        $this->_breakLengthHours = $breakLengthHours;
         return $this;
     }
 
@@ -89,8 +109,13 @@ class Record {
         return $this;
     }
 
-    public function setWorksite(int $_worksite){
-        $this->_worksite = $_worksite;
+    public function setWorksite(int $worksite){
+        $this->_worksite = $worksite;
+        return $this;
+    }
+
+    public function setRecordDate(String $recordDate){
+        $this->_recordDate = $recordDate;
         return $this;
     }
 
@@ -117,6 +142,18 @@ class Record {
 
     public function getDateTimeEnd(){
         return $this->_dateTimeEnd;
+    }
+
+    public function getWorkLengthHours(){
+        return $this->_workLengthHours;
+    }
+
+    public function getWorkLengthMinutes(){
+        return $this->_workLengthMinutes;
+    }
+
+    public function getBreakLengthHours(){
+        return $this->_breakLengthHours;
     }
 
     public function getBreakLengthMinutes(){
@@ -153,5 +190,9 @@ class Record {
 
     public function getWorksite(){
         return $this->_worksite;
+    }
+
+    public function getRecordDate(){
+        return $this->_recordDate;
     }
 }
