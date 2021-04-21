@@ -115,9 +115,15 @@
                     } else throw new AuthenticationException();
                     break;
 
-                case "applySettings":
+                case "updateSettings":
                     if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
-                        $settingController->updateSettings();
+                        $settingInfo = new Setting();
+                        $settingInfo->setDateTimeMgmt(intval(inputValidation($_POST['dateTimeMgmtSwitch'])));
+                        $settingInfo->setLengthMgmt(intval(inputValidation($_POST['lengthMgmtSwitch'])));
+                        $settingInfo->setTripMgmt(intval(inputValidation($_POST['tripMgmtSwitch'])));
+                        $settingInfo->setBreakMgmt(intval(inputValidation($_POST['breakMgmtSwitch'])));
+
+                        $settingController->updateSettings($settingInfo);
                     } else throw new AuthenticationException();
                     break;
 

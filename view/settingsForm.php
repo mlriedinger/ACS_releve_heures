@@ -11,19 +11,19 @@
         <div class="container">
             <h2 class="display-6 mt-5 mb-5 text-center">Paramètres</h2>
 
-            <form action="index.php?action=applySettings" method="POST">
+            <form action="index.php?action=updateSettings" method="POST">
 
                 <div class="row mt-5 mb-3 justify-content-md-center">
                 
                     <div class="col-sm-4 border rounded p-4">
                         <p>Mode de saisie des relevés</p>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="dateTimeMgmtSwitch" name="dateTimeMgmtSwitch" <?= $_SESSION['dateTimeMgmt'] == 1 ? "checked" : "" ?>/>
+                            <input class="form-check-input" type="checkbox" value="1" id="dateTimeMgmtSwitch" name="dateTimeMgmtSwitch" <?= $_SESSION['dateTimeMgmt'] == 1 ? "checked" : "" ?>/>
                             <label class="form-check-label" for="dateTimeMgmtSwitch">Date et heure de début/fin</label>
                         </div>
 
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="lengthMgmtSwitch" name="lengthMgmtSwitch" <?= $_SESSION['lengthMgmt'] == 1 ? "checked" : "" ?>/>
+                            <input class="form-check-input" type="checkbox" value="1" id="lengthMgmtSwitch" name="lengthMgmtSwitch" <?= $_SESSION['lengthMgmt'] == 1 ? "checked" : "" ?>/>
                             <label class="form-check-label" for="lengthMgmtSwitch">Durée</label>
                         </div>
                     </div>
@@ -33,12 +33,12 @@
                     <div class="col-sm-4 border rounded p-4">
                         <p>Autres options</p>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="tripMgmtSwitch" name="tripMgmtSwitch" <?= $_SESSION['tripMgmt'] == 1 ? "checked" : "" ?>/>
+                            <input class="form-check-input" type="checkbox" value="1" id="tripMgmtSwitch" name="tripMgmtSwitch" <?= $_SESSION['tripMgmt'] == 1 ? "checked" : "" ?>/>
                             <label class="form-check-label" for="tripMgmtSwitch">Gestion du temps de trajet</label>
                         </div>
 
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="breakMgmtSwitch" name="breakMgmtSwitch" <?= $_SESSION['breakMgmt'] == 1 ? "checked" : "" ?>/>
+                            <input class="form-check-input" type="checkbox" value="1" id="breakMgmtSwitch" name="breakMgmtSwitch" <?= $_SESSION['breakMgmt'] == 1 ? "checked" : "" ?>/>
                             <label class="form-check-label" for="breakMgmtSwitch">Gestion du temps de pause</label>
                         </div>
                     </div>
@@ -56,8 +56,8 @@
         </div>
 
         <script>
-            let dateTimeSwitch = document.getElementById("flexSwitchCheckDefault");
-            let timeLengthSwitch = document.getElementById("flexSwitchCheckDefault2");
+            let dateTimeSwitch = document.getElementById("dateTimeMgmtSwitch");
+            let timeLengthSwitch = document.getElementById("lengthMgmtSwitch");
 
             dateTimeSwitch.addEventListener('click', () =>{
                 dateTimeSwitch.checked && timeLengthSwitch.checked ? timeLengthSwitch.checked = !timeLengthSwitch.checked : "";

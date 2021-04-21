@@ -4,7 +4,7 @@ require 'autoloader.php';
 
 class SettingController {
 
-    public function displaySettingsForm(){
+    public function displaySettingsForm() {
         require('view/settingsForm.php');
     }
 
@@ -12,14 +12,19 @@ class SettingController {
         $settingManager = new SettingManager();
         $settings = $settingManager->getSettings();
 
-        if (!empty($settings)){
+        if (!empty($settings)) {
             $this->fillSessionData($settings);
         }
     }
 
-    public function updateSettings() {
+    public function updateSettings($settingInfo) {
         $settingManager = new SettingManager();
-        $settingManager->updateSettings();
+        $isUpdateSuccessfull = $settingManager->updateSettings($settingInfo);
+
+        if($isUpdateSuccessfull) {
+            $this->getSettings();
+            $this->displaySettingsForm();
+        }
     }
 
     public function fillSessionData($settings) {

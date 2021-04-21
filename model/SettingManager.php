@@ -31,10 +31,38 @@ class SettingManager extends DatabaseConnection
         WHERE ID = :id');
         $query->execute(array('id' => 2));
         $settings = $query->fetch(PDO::FETCH_ASSOC);
+
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
  
         return $settings;
     }
 
-    public function updateSettings() {
+    public function updateSettings(Setting $settingInfo) {
+        $dateTimeMgmt = $settingInfo->getDateTimeMgmt();
+        $timeLengthMgmt = $settingInfo->getLengthMgmt();
+        $tripLengthMgmt = $settingInfo->getTripMgmt();
+        $breakLengthMgmt = $settingInfo->getBreakMgmt();
+
+        $pdo = $this->dbConnect();
+
+        $query = $pdo->prepare('UPDATE t_parametres
+        SET 
+            releve_heures_date_debut_fin = :dateTimeMgmt,
+            releve_heures_duree = :timeLengthMgmt, 
+            releve_heures_trajet = :tripLengthMgmt, 
+            releve_heures_pause = :breakLengthMgmt
+        WHERE ID = :id');
+        $updateAttempt = $query->execute(array(
+            'dateTimeMgmt' => $dateTimeMgmt,
+            'timeLengthMgmt' => $timeLengthMgmt,
+            'tripLengthMgmt' => $tripLengthMgmt,
+            'breakLengthMgmt' => $breakLengthMgmt,
+            'id' => 2));
+
+        // Décommenter la ligne suivante pour débugger la requête
+        // $query->debugDumpParams();
+
+        return $updateAttempt;
     }
 }
