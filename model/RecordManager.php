@@ -351,8 +351,8 @@ class RecordManager extends DatabaseConnection
             $sql = "(SELECT
                 t_chantier.Nom AS chantier, 
                 t_login.ID AS 'id_login',
-                t_login.Nom, 
-                t_login.Prenom, 
+                t_login.Nom AS 'nom_salarie', 
+                t_login.Prenom AS 'prenom_salarie', 
                 Releve.date_hrs_debut, 
                 Releve.date_hrs_fin, 
                 Releve.commentaire, 

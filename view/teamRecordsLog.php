@@ -30,19 +30,19 @@
                     <div class="tab-pane fade show active" id="all_records" role="tabpanel" aria-labelledby="all_records-tab">
                         <table class="table table-striped table-hover mt-4" id="records_log">
                             <thead>
-                                <tr>
-                                    <th scope="col">Chantier</th>
-                                    <th scope="col">Prénom</th>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Début</th>
-                                    <th scope="col">Fin</th>
-                                    <th scope="col">Pause</th>
-                                    <th scope="col">Trajet</th>
-                                    <th scope="col">Commentaire</th>
-                                    <th scope="col">Statut</th>
-                                    <th scope="col">Modifié le</th>
-                                    <th scope="col"></th>
-                                    <th scope="col"></th>
+                                <tr id="table-head">
+                                    <th scope="col" id="worksite">Chantier</th>
+                                    <th scope="col" id="employee">Salarié</th>
+                                    <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
+                                    <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="end">Fin</th>' : ""; ?>
+                                    <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="workTime">Temps de travail</th>' : ""; ?>
+                                    <?= $_SESSION['breakMgmt'] == 1 ? '<th scope="col" id="breakTime">Temps de pause</th>' : ""; ?>
+                                    <?= $_SESSION['tripMgmt'] == 1 ? '<th scope="col" id="tripTime">Temps de trajet</th>' : ""; ?>
+                                    <th scope="col" id="comment">Commentaire</th>
+                                    <th scope="col" id="status">Statut</th>
+                                    <th scope="col" id="updateDate">Modifié le</th>
+                                    <th scope="col" id="edit"></th>
+                                    <th scope="col" id="delete"></th>
                                 </tr>
                             </thead>
                             <tbody>

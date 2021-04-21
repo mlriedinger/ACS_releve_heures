@@ -45,6 +45,11 @@ function convertTimeToHoursAndMinutes(timeToConvert) {
 */
 
 function fillRecordsTable(newLines, data, counter) {
+    if(newLines.newWorkSite !== undefined) {
+        let newText = document.createTextNode(data[counter].chantier);
+        newLines.newWorkSite.appendChild(newText);
+    }
+
     if(newLines.newStartTime !== undefined) {
         let newText = document.createTextNode(data[counter].date_hrs_debut);
         newLines.newStartTime.appendChild(newText);
@@ -79,16 +84,6 @@ function fillRecordsTable(newLines, data, counter) {
         newLines.newUpdateDate.appendChild(newText);
     }
 
-    if(newLines.newFirstName !== undefined) {
-        let newText = document.createTextNode(data[counter].Prenom);
-        newLines.newFirstName.appendChild(newText);
-    }
-
-    if(newLines.newLastName !== undefined) {
-        let newText = document.createTextNode(data[counter].Nom);
-        newLines.newLastName.appendChild(newText);
-    }
-
     if(newLines.newEmployee !== undefined) {
         let newText = document.createTextNode(data[counter].prenom_salarie + ' ' + data[counter].nom_salarie);
         newLines.newEmployee.appendChild(newText);
@@ -101,91 +96,86 @@ function fillRecordsTable(newLines, data, counter) {
 }
 
 
-/* Fonction qui permet de créer les cellules d'une nouvelle ligne d'un tableau d'historique personnel 
-    Params :
-        * newRow : correspond à la nouvelle ligne du tableau
+/* 
 */
 
-function createNewLinesInPersonalRecordsTable(newRow) {
-    var newLines = {
-        newStartTime: newRow.insertCell(1),
-        newEndTime : newRow.insertCell(2),
-        newBreakTime : newRow.insertCell(3),
-        newTripTime : newRow.insertCell(4),
-        newComment : newRow.insertCell(5),
-        newStatus : newRow.insertCell(6),
-        newUpdateDate : newRow.insertCell(7),
-        newEdit : newRow.insertCell(8),
-        newDelete : newRow.insertCell(9)
+function createNewLines(newRow) {
+    // On crée un objet newLines qui contiendra les cellules de chaque nouvelle ligne
+    var newLines = {};
+
+    // On cible la ligne du tableau qui contient les en-têtes de colonnes
+    var tableHead = document.getElementById('table-head');
+    var numberOfColumnHeaders = tableHead.childElementCount;
+
+    // On boucle autant de fois qu'il y a d'en-têtes de colonnes dans le tableau
+    for(i = 0 ; i < numberOfColumnHeaders ; i++){
+
+        // On vérifie l'id de chaque balise <th>
+        // S'il correspond à l'une des options, on crée une nouvelle cellule dans la ligne (newRow) avec la méthode insertCell()
+        // Pour s'assurer que le contenu ira dans la bonne colonne du tableau, on passe à insertCell() l'index de la colonne dans laquelle on a trouvé une correspondance avec l'id
+        switch(tableHead.children[i].attributes.id.value){
+            case "worksite":
+                newLines['newWorkSite'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "manager":
+                newLines['newManager'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "employee":
+                newLines['newEmployee'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "start":
+                newLines['newStartTime'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "end":
+                newLines['newEndTime'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "date":
+                newLines['newDate'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "workTime":
+                newLines['newWorkTime'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "breakTime":
+                newLines['newBreakTime'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "tripTime":
+                newLines['newTripTime'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "comment":
+                newLines['newComment'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "status":
+                newLines['newStatus'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "updateDate":
+                newLines['newUpdateDate'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "edit":
+                newLines['newEdit'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "delete":
+                newLines['newDelete'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break;
+
+            case "select":
+                newLines['newIsValid'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                break; 
+        }
     }
-    return newLines;
-}
 
-
-/* Fonction qui permet de créer les cellules d'une nouvelle ligne d'un tableau de relevés en attente de validation 
-    Params :
-        * newRow : correspond à la nouvelle ligne du tableau
-*/
-
-function createNewLinesInTeamRecordsToCheckTable(newRow) {
-    var newLines = {
-        newFirstName : newRow.insertCell(1),
-        newLastName : newRow.insertCell(2),
-        newStartTime : newRow.insertCell(3),
-        newEndTime : newRow.insertCell(4),
-        newBreakTime : newRow.insertCell(5),
-        newTripTime : newRow.insertCell(6),
-        newComment : newRow.insertCell(7),
-        newUpdateDate : newRow.insertCell(8),
-        newIsValid : newRow.insertCell(9),
-        newDelete : newRow.insertCell(10)
-    }
-    return newLines;
-} 
-
-
-/* Fonction qui permet de créer les cellules d'une nouvelle ligne d'un tableau d'historique équipe 
-    Params :
-        * newRow : correspond à la nouvelle ligne du tableau
-*/
-
-function createNewLinesInTeamRecordsTable(newRow) {
-    var newLines = {
-        newFirstName : newRow.insertCell(1),
-        newLastName : newRow.insertCell(2),
-        newStartTime : newRow.insertCell(3),
-        newEndTime : newRow.insertCell(4),
-        newBreakTime : newRow.insertCell(5),
-        newTripTime : newRow.insertCell(6),
-        newComment : newRow.insertCell(7),
-        newStatus : newRow.insertCell(8),
-        newUpdateDate : newRow.insertCell(9),
-        newEdit : newRow.insertCell(10),
-        newDelete : newRow.insertCell(11)
-    }
-    return newLines;
-}
-
-
-/* Fonction qui permet de créer les cellules d'une nouvelle ligne d'un tableau d'historique global 
-    Params :
-        * newRow : correspond à la nouvelle ligne du tableau
-*/
-
-function createNewLinesInAllUsersRecordsTable(newRow) {
-    var newLines = {
-        newManager : newRow.insertCell(1),
-        newEmployee : newRow.insertCell(2),
-        newStartTime : newRow.insertCell(3),
-        newEndTime : newRow.insertCell(4),
-        newBreakTime : newRow.insertCell(5),
-        newTripTime : newRow.insertCell(6),
-        newComment : newRow.insertCell(7),
-        newStatus : newRow.insertCell(8),
-        newUpdateDate : newRow.insertCell(9),
-        newEdit : newRow.insertCell(10),
-        newDelete : newRow.insertCell(11)
-    }
     return newLines;
 }
 
@@ -205,33 +195,17 @@ function appendLine(tableID, data, typeOfRecord, counter) {
     // On crée une nouvelle ligne à la fin du tableau existant
     var newRow = table.insertRow(-1);
 
-    // On crée une nouvelle colonne 'chantiers'
-    var newWorkSite = newRow.insertCell(0);
-    var newText = document.createTextNode(data[counter].chantier);
-    newWorkSite.appendChild(newText);
-
     // En fonction du type de relevés, on crée et on remplit les autres colonnes du tableau
-    if(typeOfRecord === "Personal") {
-        let newLines = createNewLinesInPersonalRecordsTable(newRow);
-        fillRecordsTable(newLines, data, counter);
+    let newLines = createNewLines(newRow);
+    fillRecordsTable(newLines, data, counter);
+
+    if(typeOfRecord === "Personal" || typeOfRecord === "Team" || typeOfRecord === "All") {
         checkRecordValidationStatus(newLines, data, counter);
     } 
-    else if (typeOfRecord === "Check") {
-        let newLines = createNewLinesInTeamRecordsToCheckTable(newRow, data, counter);
-        fillRecordsTable(newLines, data, counter);
+    else {
         insertSwitchButton(newLines.newIsValid, data, counter);
         insertDeleteRecordButton(newLines.newDelete, data, counter);
     } 
-    else if (typeOfRecord === "Team") { 
-        let newLines = createNewLinesInTeamRecordsTable(newRow);
-        fillRecordsTable(newLines, data, counter);
-        checkRecordValidationStatus(newLines, data, counter);
-    }
-    else {
-        let newLines = createNewLinesInAllUsersRecordsTable(newRow);
-        fillRecordsTable(newLines, data, counter);
-        checkRecordValidationStatus(newLines, data, counter);
-    }
 }
 
 
