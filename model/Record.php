@@ -9,6 +9,7 @@ class Record {
     private $_managerId;
     private $_dateTimeStart;
     private $_dateTimeEnd;
+    private $_date;
     private $_workLengthHours;
     private $_workLengthMinutes;
     private $_breakLengthHours;
@@ -21,7 +22,18 @@ class Record {
     private $_scope;
     private $_typeOfRecords;
     private $_worksite;
-    private $_recordDate;
+
+    public function __construct(){
+        $_dateTimeStart = $this->setDateTimeStart("0000-00-00 00:00:00");
+        $_dateTimeEnd = $this->setDateTimeEnd("0000-00-00 00:00:00");
+        $_date = $this->setDate("0000-00-00");
+        $_workLengthHours = $this->setWorkLengthHours(0);
+        $_workLengthMinutes = $this->setWorkLengthMinutes(0);
+        $_breakLengthHours = $this->setBreakLengthHours(0);
+        $_breakLengthMinutes = $this->setBreakLengthMinutes(0);
+        $_tripLengthHours = $this->setTripLengthHours(0);
+        $_tripLengthMinutes = $this->setTripLengthMinutes(0);
+    }
     
 
     // Setters
@@ -52,6 +64,11 @@ class Record {
 
     public function setDateTimeEnd(String $dateTimeEnd){
         $this->_dateTimeEnd = $dateTimeEnd;
+        return $this;
+    }
+
+    public function setDate(String $date){
+        $this->_date = $date;
         return $this;
     }
 
@@ -114,10 +131,6 @@ class Record {
         return $this;
     }
 
-    public function setRecordDate(String $recordDate){
-        $this->_recordDate = $recordDate;
-        return $this;
-    }
 
     // Getters
     public function getRecordId(){
@@ -142,6 +155,10 @@ class Record {
 
     public function getDateTimeEnd(){
         return $this->_dateTimeEnd;
+    }
+
+    public function getDate(){
+        return $this->_date;
     }
 
     public function getWorkLengthHours(){
@@ -190,9 +207,5 @@ class Record {
 
     public function getWorksite(){
         return $this->_worksite;
-    }
-
-    public function getRecordDate(){
-        return $this->_recordDate;
     }
 }

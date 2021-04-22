@@ -15,17 +15,28 @@
 
     function fillBasicRecordInfos($recordInfo){
         $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
-        $recordInfo->setRecordDate(inputValidation($_POST['recordDate']));
-        $recordInfo->setDateTimeStart(inputValidation($_POST['datetimeStart']));
-        $recordInfo->setDateTimeEnd(inputValidation($_POST['datetimeEnd']));
-        $recordInfo->setWorkLengthHours(intval(inputValidation($_POST['workLengthHours'])));
-        $recordInfo->setWorkLengthMinutes(intval(inputValidation($_POST['workLengthMinutes'])));
-        $recordInfo->setBreakLengthHours(intval(inputValidation($_POST['breakLengthHours'])));
-        $recordInfo->setBreakLengthMinutes(intval(inputValidation($_POST['breakLengthMinutes'])));
-        $recordInfo->setTripLengthHours(intval(inputValidation($_POST['tripLengthHours'])));
-        $recordInfo->setTripLengthMinutes(intval(inputValidation($_POST['tripLengthMinutes'])));
         $recordInfo->setComment(inputValidation($_POST['comment']));
 
+        if($_SESSION['dateTimeMgmt'] == '1'){
+            $recordInfo->setDateTimeStart(inputValidation($_POST['datetimeStart']));
+            $recordInfo->setDateTimeEnd(inputValidation($_POST['datetimeEnd']));
+        }
+        else if($_SESSION['lengthMgmt'] == '1'){
+            $recordInfo->setDate(inputValidation($_POST['recordDate']));
+            $recordInfo->setWorkLengthHours(intval(inputValidation($_POST['workLengthHours'])));
+            $recordInfo->setWorkLengthMinutes(intval(inputValidation($_POST['workLengthMinutes'])));
+        }
+
+        if($_SESSION['breakMgmt'] == '1'){
+            $recordInfo->setBreakLengthHours(intval(inputValidation($_POST['breakLengthHours'])));
+            $recordInfo->setBreakLengthMinutes(intval(inputValidation($_POST['breakLengthMinutes'])));
+        }
+
+        if($_SESSION['tripMgmt'] == '1'){
+            $recordInfo->setTripLengthHours(intval(inputValidation($_POST['tripLengthHours'])));
+            $recordInfo->setTripLengthMinutes(intval(inputValidation($_POST['tripLengthMinutes'])));
+        }
+        
         return $recordInfo;
     }
 
@@ -132,14 +143,14 @@
                 case "addNewRecord":
                     if(isset($_SESSION['userId']) && isset($_SESSION['userGroup'])){
                     
-                        if(!empty($_POST['worksiteId']) && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
+                        //if(!empty($_POST['worksiteId'])) {
                             $recordInfo = new Record();
                             $recordInfo = fillBasicRecordInfos($recordInfo);
                             $recordInfo->setUserId($_SESSION['userId']);
                             $recordInfo->setUserGroup($_SESSION['userGroup']);
 
                             $recordController->addNewRecord($recordInfo);
-                        } else throw new InvalidParameterException();
+                        //} else throw new InvalidParameterException();
                     } else throw new AuthenticationException();
                     break;
 

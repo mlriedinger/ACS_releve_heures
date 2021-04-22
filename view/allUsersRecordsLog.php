@@ -22,7 +22,7 @@
                         <button class="nav-link" id="valid_records-tab" onclick="updateAllUsersRecordsLog('All', 'valid')" data-bs-toggle="tab" data-bs-target="#valid_records" type="button" role="tab" aria-controls="valid_records" aria-selected="false">Validés</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="unchecked_records-tab" onclick="updatePersonalRecordsLog('Personal', 'unchecked')" data-bs-toggle="tab" data-bs-target="#unchecked_records" type="button" role="tab" aria-controls="unchecked_records" aria-selected="false" <?= $_SESSION['userGroup'] == 1 ? "hidden" : "" ?>>En attente</button>
+                        <button class="nav-link" id="unchecked_records-tab" onclick="updateAllUsersRecordsLog('All', 'unchecked')" data-bs-toggle="tab" data-bs-target="#unchecked_records" type="button" role="tab" aria-controls="unchecked_records" aria-selected="false">En attente</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="deleted_records-tab" onclick="updateAllUsersRecordsLog('All', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records" aria-selected="false">Supprimés</button>
@@ -39,9 +39,10 @@
                                     <th scope="col" id="employee">Salarié</th>
                                     <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
                                     <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="end">Fin</th>' : ""; ?>
-                                    <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="workTime">Temps de travail</th>' : ""; ?>
-                                    <?= $_SESSION['breakMgmt'] == 1 ? '<th scope="col" id="breakTime">Temps de pause</th>' : ""; ?>
-                                    <?= $_SESSION['tripMgmt'] == 1 ? '<th scope="col" id="tripTime">Temps de trajet</th>' : ""; ?>
+                                    <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="date">Date</th>' : ""; ?>
+                                    <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="workTime">Travail</th>' : ""; ?>
+                                    <?= $_SESSION['breakMgmt'] == 1 ? '<th scope="col" id="breakTime">Pause</th>' : ""; ?>
+                                    <?= $_SESSION['tripMgmt'] == 1 ? '<th scope="col" id="tripTime">Trajet</th>' : ""; ?>
                                     <th scope="col" id="comment">Commentaire</th>
                                     <th scope="col" id="status">Statut</th>
                                     <th scope="col" id="updateDate">Modifié le</th>

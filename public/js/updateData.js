@@ -50,6 +50,16 @@ function fillRecordsTable(newLines, data, counter) {
         newLines.newWorkSite.appendChild(newText);
     }
 
+    if(newLines.newManager !== undefined) {
+        let newText = document.createTextNode(data[counter].prenom_manager + ' ' + data[counter].nom_manager);
+        newLines.newManager.appendChild(newText);
+    }
+
+    if(newLines.newEmployee !== undefined) {
+        let newText = document.createTextNode(data[counter].prenom_salarie + ' ' + data[counter].nom_salarie);
+        newLines.newEmployee.appendChild(newText);
+    }
+
     if(newLines.newStartTime !== undefined) {
         let newText = document.createTextNode(data[counter].date_hrs_debut);
         newLines.newStartTime.appendChild(newText);
@@ -60,14 +70,25 @@ function fillRecordsTable(newLines, data, counter) {
         newLines.newEndTime.appendChild(newText);
     }
 
+    if(newLines.newDate !== undefined) {
+        let newText = document.createTextNode(data[counter].date_releve);
+        newLines.newDate.appendChild(newText);
+    }
+
+    if(newLines.newWorkTime !== undefined) {
+        let time = convertTimeToHoursAndMinutes(data[counter].tps_travail);
+        let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
+        newLines.newWorkTime.appendChild(newText);
+    }
+
     if(newLines.newBreakTime !== undefined) {
-        time = convertTimeToHoursAndMinutes(data[counter].tps_pause);
+        let time = convertTimeToHoursAndMinutes(data[counter].tps_pause);
         let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
         newLines.newBreakTime.appendChild(newText);
     }
 
     if(newLines.newTripTime !== undefined) {
-        time = convertTimeToHoursAndMinutes(data[counter].tps_trajet);
+        let time = convertTimeToHoursAndMinutes(data[counter].tps_trajet);
         let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
         newLines.newTripTime.appendChild(newText);
     }
@@ -84,15 +105,9 @@ function fillRecordsTable(newLines, data, counter) {
         newLines.newUpdateDate.appendChild(newText);
     }
 
-    if(newLines.newEmployee !== undefined) {
-        let newText = document.createTextNode(data[counter].prenom_salarie + ' ' + data[counter].nom_salarie);
-        newLines.newEmployee.appendChild(newText);
-    }
+    
 
-    if(newLines.newManager !== undefined) {
-        let newText = document.createTextNode(data[counter].prenom_manager + ' ' + data[counter].nom_manager);
-        newLines.newManager.appendChild(newText);
-    }
+    
 }
 
 

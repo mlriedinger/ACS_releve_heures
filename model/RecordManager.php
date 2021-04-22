@@ -32,6 +32,7 @@ class RecordManager extends DatabaseConnection
         $worksite = $recordInfo->getWorksite();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
+        $recordDate = $recordInfo->getDate();
         $workLengthHours = $recordInfo->getWorkLengthHours();
         $workLengthMinutes = $recordInfo->getWorkLengthMinutes();
         $breakLengthHours = $recordInfo->getBreakLengthHours();
@@ -57,6 +58,7 @@ class RecordManager extends DatabaseConnection
             id_login,
             date_hrs_debut, 
             date_hrs_fin, 
+            date_releve,
             tps_travail,
             tps_pause,
             tps_trajet,
@@ -68,6 +70,7 @@ class RecordManager extends DatabaseConnection
             :id_login,
             :dateTimeStart, 
             :dateTimeEnd,
+            :recordDate,
             :workLength,
             :pauseLength,
             :tripLength, 
@@ -79,6 +82,7 @@ class RecordManager extends DatabaseConnection
             'id_login' => $userId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
+            'recordDate' => $recordDate,
             'workLength' => $totalWorkLengthInMinutes,
             'pauseLength' => $totalBreakLengthInMinutes,
             'tripLength' => $totalTripLengthInMinutes,
@@ -87,7 +91,7 @@ class RecordManager extends DatabaseConnection
         ));
     
         // Décommenter la ligne suivante pour débugger la requête
-        // $query->debugDumpParams();
+        $query->debugDumpParams();
 
         if($attempt) $isSendingSuccessfull = true;
 
@@ -296,9 +300,11 @@ class RecordManager extends DatabaseConnection
             Releve.statut_validation, 
             Releve.date_hrs_creation, 
             Releve.date_hrs_modif,
+            Releve.date_releve,
             Releve.ID,
             Releve.supprimer,
-            Releve.id_login, 
+            Releve.id_login,
+            Releve.tps_travail, 
             Releve.tps_pause,
             Releve.tps_trajet 
         FROM t_saisie_heure AS Releve
@@ -362,7 +368,9 @@ class RecordManager extends DatabaseConnection
                 Releve.ID,
                 Releve.supprimer,
                 Releve.tps_pause,
-                Releve.tps_trajet
+                Releve.tps_trajet,
+                Releve.date_releve,
+                Releve.tps_travail
                 FROM t_saisie_heure AS Releve
                 INNER JOIN t_chantier 
                     ON Releve.id_chantier = t_chantier.ID
@@ -388,7 +396,9 @@ class RecordManager extends DatabaseConnection
                         Releve.ID,
                         Releve.supprimer,
                         Releve.tps_pause,
-                        Releve.tps_trajet
+                        Releve.tps_trajet,
+                        Releve.date_releve,
+                        Releve.tps_travail
                     FROM t_saisie_heure AS Releve
                     INNER JOIN t_chantier 
                         ON Releve.id_chantier = t_chantier.ID
@@ -447,7 +457,9 @@ class RecordManager extends DatabaseConnection
             Releve.supprimer,
             Membre.ID AS 'id_login',
             Releve.tps_pause,
-            Releve.tps_trajet
+            Releve.tps_trajet,
+            Releve.date_releve,
+            Releve.tps_travail
         FROM t_equipe AS Equipe
 
         INNER JOIN t_chantier AS Chantier
