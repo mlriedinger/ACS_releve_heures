@@ -104,10 +104,6 @@ function fillRecordsTable(newLines, data, counter) {
         let newText = document.createTextNode(data[counter].date_hrs_modif);
         newLines.newUpdateDate.appendChild(newText);
     }
-
-    
-
-    
 }
 
 
@@ -263,9 +259,13 @@ function updateFormInputs(data) {
     }
     
     // On pointe sur les inputs de formulaire à modifier
+    var inputDate = document.getElementById("recordDate");
     var inputDateTimeStart = document.getElementById("datetime_start");
     var inputDateTimeEnd = document.getElementById("datetime_end");
-    var inputBreakTime = document.getElementById("breakLengthMinutes");
+    var inputWorkLengthHours = document.getElementById("workLengthHours");
+    var inputWorkLengthMinutes = document.getElementById("workLengthMinutes");
+    var inputBreakLengthHours = document.getElementById("breakLengthHours");
+    var inputBreakLengthMinutes = document.getElementById("breakLengthMinutes");
     var inputTripLengthHours = document.getElementById("tripLengthHours");
     var inputTripLengthMinutes = document.getElementById("tripLengthMinutes");
     var inputComment = document.getElementById("comment");
@@ -274,16 +274,36 @@ function updateFormInputs(data) {
     var startTime = data['date_hrs_debut'].replace(" ", "T");
     var endTime = data['date_hrs_fin'].replace(" ", "T");
 
-    // On transforme le temps de trajet récupéré en minutes en heures + minutes pour l'affichage
-    var tripTimeHours = Math.floor(data['tps_trajet'] / 60);
-    var tripTimeMinutes = data['tps_trajet'] % 60;
+    // On transforme les temps de travail, trajet et pause récupérés en minutes en heures + minutes pour l'affichage
+    var workTime = convertTimeToHoursAndMinutes(data['tps_travail']);
+    var tripTime = convertTimeToHoursAndMinutes(data['tps_trajet']);
+    var breakTime = convertTimeToHoursAndMinutes(data['tps_pause']);
 
     // On insère les données dans le formulaire
-    inputDateTimeStart.setAttribute("value", startTime);
-    inputDateTimeEnd.setAttribute("value", endTime);
-    inputBreakTime.setAttribute("value", data['tps_pause']);
-    inputTripLengthHours.setAttribute("value", tripTimeHours);
-    inputTripLengthMinutes.setAttribute("value", tripTimeMinutes);
+    if(inputDate !== null) {
+        inputDate.setAttribute("value", data["date_releve"]);
+    }
+
+    if(inputDateTimeStart !== null && inputDateTimeEnd !== null ){
+        inputDateTimeStart.setAttribute("value", startTime);
+        inputDateTimeEnd.setAttribute("value", endTime);
+    }
+
+    if(inputWorkLengthHours !== null && inputWorkLengthMinutes !== null){
+        inputWorkLengthHours.setAttribute("value", workTime['hours']);
+        inputWorkLengthMinutes.setAttribute("value", workTime['minutes']);
+    }
+
+    if(inputBreakLengthHours !== null && inputBreakLengthMinutes !== null){
+        inputBreakLengthHours.setAttribute("value", breakTime['hours']);
+        inputBreakLengthMinutes.setAttribute("value", breakTime['minutes']);
+    }
+
+    if(inputTripLengthHours !== null && inputTripLengthMinutes !== null){
+        inputTripLengthHours.setAttribute("value", tripTime['hours']);
+        inputTripLengthMinutes.setAttribute("value", tripTime['minutes']);
+    }
+
     inputComment.innerHTML += data['commentaire'];
 }
 

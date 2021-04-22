@@ -157,7 +157,7 @@
                 // Modification d'un relevé non validé
                 case "updateRecord":
                     if(isset($_SESSION['userId'])){
-                        if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
+                        if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
                             $recordInfo = new Record();
                             $recordInfo = fillBasicRecordInfos($recordInfo);
                             $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));

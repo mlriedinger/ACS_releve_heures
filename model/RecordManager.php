@@ -110,11 +110,17 @@ class RecordManager extends DatabaseConnection
         $recordId = $recordInfo->getRecordId();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
+        $recordDate = $recordInfo->getDate();
+        $workLengthHours = $recordInfo->getWorkLengthHours();
+        $workLengthMinutes = $recordInfo->getWorkLengthMinutes();
+        $breakLengthHours = $recordInfo->getBreakLengthHours();
         $breakLengthMinutes = $recordInfo->getBreakLengthMinutes();
         $tripLengthHours = $recordInfo->getTripLengthHours();
         $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
         $comment = $recordInfo->getComment();
 
+        $totalWorkLengthInMinutes = $this->convertLengthIntoMinutes($workLengthHours, $workLengthMinutes);
+        $totalBreakLengthInMinutes = $this->convertLengthIntoMinutes($breakLengthHours, $breakLengthMinutes);
         $totalTripLengthInMinutes = $this->convertLengthIntoMinutes($tripLengthHours, $tripLengthMinutes);
 
         $isUpdateSuccessfull = false;
@@ -125,6 +131,8 @@ class RecordManager extends DatabaseConnection
         id_chantier = :worksiteId,
         date_hrs_debut = :dateTimeStart, 
         date_hrs_fin = :dateTimeEnd,
+        date_releve = :recordDate,
+        tps_travail = :workLength,
         tps_pause = :pauseLength,
         tps_trajet = :tripLength, 
         commentaire = :comment
@@ -134,7 +142,9 @@ class RecordManager extends DatabaseConnection
             'recordId' => $recordId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
-            'pauseLength' => $breakLengthMinutes,
+            'recordDate' => $recordDate,
+            'workLength' =>  $totalWorkLengthInMinutes,
+            'pauseLength' => $totalBreakLengthInMinutes,
             'tripLength' => $totalTripLengthInMinutes,
             'comment' => $comment
         ));
@@ -218,9 +228,11 @@ class RecordManager extends DatabaseConnection
             Releve.id_login,
             Releve.date_hrs_debut,
             Releve.date_hrs_fin,
+            Releve.date_releve,
             Releve.statut_validation,
             Releve.commentaire,
             Releve.supprimer,
+            Releve.tps_travail,
             Releve.tps_pause,
             Releve.tps_trajet 
         FROM t_saisie_heure AS Releve
