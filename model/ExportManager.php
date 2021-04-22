@@ -58,8 +58,6 @@ class ExportManager extends RecordManager {
         $periodEnd = $recordInfo->getPeriodEnd();
         $managerId = $recordInfo->getManagerId();
         $userId = $recordInfo->getUserId();
-
-        //if($managerId != "" || $userId != "") $sql .=" INNER JOIN t_equipe ON t_login.ID = t_equipe.id_membre";
         
         if($periodStart != "" && $periodEnd != "") $sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
         if($managerId != "") $sql .= " AND Manager.ID = :managerId";
