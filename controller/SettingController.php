@@ -23,6 +23,7 @@ class SettingController {
 
         if($isUpdateSuccessfull) {
             $this->getSettings();
+            $_SESSION['success'] = true;
             $this->displaySettingsForm();
         }
     }

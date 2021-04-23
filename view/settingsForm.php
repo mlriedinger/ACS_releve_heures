@@ -55,6 +55,15 @@
             </form>
         </div>
 
+        <?php 
+            if($_SESSION['success'] === true) {
+                include('partials/toastAlert.php');
+                unset($_SESSION['success']);
+            }
+        ?>
+
+        <?php include('partials/footer.php'); ?>
+
         <script>
             let dateTimeSwitch = document.getElementById("dateTimeMgmtSwitch");
             let timeLengthSwitch = document.getElementById("lengthMgmtSwitch");
@@ -67,5 +76,8 @@
                 timeLengthSwitch.checked && dateTimeSwitch.checked ? dateTimeSwitch.checked = !dateTimeSwitch.checked : "";
             });
         </script>
+
+        <?php include('partials/initalizeToastScript.php'); ?>
+        
     </body>
 </html>
