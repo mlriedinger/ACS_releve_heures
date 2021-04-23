@@ -35,11 +35,11 @@
                     <form action="index.php?action=login" method="POST">
 
                         <div class="form-group mt-3 mb-3">
-                            <input class="form-control" type="text" name="login" placeholder="Identifiant" required/>
+                            <input class="form-control" type="text" name="login" placeholder="Identifiant" autocomplete="username" required/>
                         </div>
 
                         <div class="form-group mb-3">
-                            <input class="form-control" type="password" name="password" placeholder="Mot de passe" required/>
+                            <input class="form-control" type="password" name="password" placeholder="Mot de passe" autocomplete="current-password" required/>
                         </div>
 
                         <?php 
