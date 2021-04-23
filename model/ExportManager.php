@@ -27,10 +27,26 @@ class ExportManager extends RecordManager {
         $sql = "SELECT 
             Releve.ID AS 'num_releve',
             Membre.Nom AS 'nom_salarie',
-            Membre.Prenom AS 'prenom_salarie',
-            Releve.date_hrs_debut AS 'date_heure_debut',
-            Releve.date_hrs_fin AS 'date_hrs_fin',
-            Releve.commentaire,
+            Membre.Prenom AS 'prenom_salarie',";
+        
+        if($_SESSION['dateTimeMgmt'] == 1) {
+            $sql .= "Releve.date_hrs_debut AS 'date_heure_debut',
+            Releve.date_hrs_fin AS 'date_heure_fin',";
+        }
+        else if ($_SESSION['lengthMgmt'] == 1){
+            $sql .= "Releve.date_releve";
+        }
+            
+        $sql .= "Releve.tps_travail,";
+
+        if($_SESSION['breakMgmt'] == 1){
+            $sql .= " Releve.tps_pause,";
+        }
+        if($_SESSION['tripMgmt'] == 1){
+            $sql .= "Releve.tps_trajet,";
+        }
+            
+        $sql .= "Releve.commentaire,
             Releve.statut_validation AS 'statut_validation',
             Releve.date_hrs_creation AS 'date_heure_creation',
             Releve.date_hrs_modif AS 'date_heure_modification',
