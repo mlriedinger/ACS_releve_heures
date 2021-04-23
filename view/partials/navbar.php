@@ -17,19 +17,57 @@
                 <li class="nav-item ps-4">
                     <a class="nav-link" href="index.php?action=showNewRecordForm">Nouveau relevé</a>
                 </li>
-                <?php if($_SESSION['userGroup'] == 1 || $_SESSION['userGroup'] == 2){
-                    require('view/partials/menuManagerAdmin.php');
-                } else {
-                    echo ' 
+
+                <?php 
+                if($_SESSION['userGroup'] == 1 || $_SESSION['userGroup'] == 2){ 
+                    ?>
+                    <li class="nav-item ps-4">
+                        <a class="nav-link" href="index.php?action=showRecordsToCheck">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
+                    </li>
+
+                    <li class="nav-item dropdown ps-4">
+                        <a class="nav-link dropdown-toggle" href="index.php?action=showPersonalRecordsLog" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Historique</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="index.php?action=showPersonalRecordsLog">Historique personnel</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="index.php?action=showTeamRecordsLog">Historique de l'équipe</a></li> 
+                            <?php 
+                            if($_SESSION['userGroup'] == 1) {
+                                ?>
+                                <li><a class="dropdown-item" href="index.php?action=showAllRecordsLog">Historique global</a></li>
+                            <?php
+                            } ?>
+                        </ul>
+                    </li>
+            
+                    <?php 
+                    if($_SESSION['userGroup'] == 1){ 
+                        ?>
+                        <li class="nav-item ps-4">
+                            <a class="nav-link" href="index.php?action=showExportForm">Export</a>
+                        </li>
+                    <?php 
+                    } ?>
+                <?php 
+                } else { 
+                    ?>
                     <li class="nav-item ps-4">
                         <a class="nav-link" href="index.php?action=showPersonalRecordsLog">Historique</a>
-                    </li>';
+                    </li>;
+                <?php 
                 } ?>
-            </ul>
+                </ul>
             
-            <ul class="navbar-nav mb-2 mb-lg-0">
-                <?= $_SESSION['userGroup'] == 1 ? '<li class="nav-item ps-4"><a class="nav-link" href="index.php?action=showSettingsForm"><i class="fas fa-cogs pe-3"></i>Paramètres</a></li>' : ''; ?>
-            </ul>
+            <?php 
+            if($_SESSION['userGroup'] == 1){
+                ?>
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item ps-4">
+                        <a class="nav-link" href="index.php?action=showSettingsForm"><i class="fas fa-cogs pe-3"></i>Paramètres</a>
+                    </li>
+                </ul>
+            <?php 
+            } ?>
 
             <div class="navbar-text ps-4">
                 <i class="fas fa-user pe-3"></i><?= $_SESSION['firstname'] . ' ' . $_SESSION['name']?>

@@ -3,10 +3,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-    <?php include('partials/head.php'); ?>
+    <?php include 'partials/head.php' ; ?>
 
     <body>
-    <?php include('partials/navbar.php');?>
+    <?php include 'partials/navbar.php' ;?>
 
         <div class="container">
 
@@ -61,18 +61,12 @@
 
             </div>
 
-            <?php include('partials/modal.php'); ?>
-
-            <?php 
-                if($_SESSION['success'] == 1) {
-                    include('partials/toastAlertSuccess.php');
-                    unset($_SESSION['success']);
-                }
-            ?>
+            <?php include 'partials/modal.php' ; ?>
+            <?php include 'partials/toastAlertSuccess.php' ; ?>
             
         </div>
 
-        <?php include('partials/footer.php'); ?>
+        <?php include 'partials/footer.php' ; ?>
         
         <script id="mainScript" src="public/js/main.js"></script>
         <script>
@@ -82,7 +76,7 @@
             };
         </script>
 
-        <?php include('partials/initalizeToastScript.php'); ?>
+        <?php include 'partials/initalizeToastScript.php' ; ?>
         
     </body>
 </html>
