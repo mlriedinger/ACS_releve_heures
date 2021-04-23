@@ -143,14 +143,14 @@
                 case "addNewRecord":
                     if(isset($_SESSION['userId']) && isset($_SESSION['userGroup'])){
                     
-                        //if(!empty($_POST['worksiteId'])) {
+                        if(!empty($_POST['worksiteId'])) {
                             $recordInfo = new Record();
                             $recordInfo = fillBasicRecordInfos($recordInfo);
                             $recordInfo->setUserId($_SESSION['userId']);
                             $recordInfo->setUserGroup($_SESSION['userGroup']);
 
                             $recordController->addNewRecord($recordInfo);
-                        //} else throw new InvalidParameterException();
+                        } else throw new InvalidParameterException();
                     } else throw new AuthenticationException();
                     break;
 
