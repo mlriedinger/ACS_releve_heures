@@ -62,7 +62,7 @@
 
             <?php 
                 if($_SESSION['success'] === true) {
-                    include('partials/toastAlert.php');
+                    include('partials/toastAlertSuccess.php');
                     unset($_SESSION['success']);
                 }
             ?>
