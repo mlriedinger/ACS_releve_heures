@@ -1,24 +1,22 @@
-<?php session_start(); ?>
+<?php 
 
-<!DOCTYPE html>
-<html lang="fr">
+$title = "Accueil";
 
-    <?php include('partials/head.php'); ?>
+?>
 
-    <body>
-    <?php include('partials/navbar.php'); ?>
+<?php ob_start(); ?>
 
-        <div class="container">
-            <h1 class="display-5 text-center mt-5 mb-5">Accueil</h1>
-        </div>
-       
-        <?php include('partials/footer.php'); ?>
-    </body>
+    <h1 class="display-5 text-center mt-5 mb-5">Accueil</h1>
 
-    <script id="mainScript" src="public/js/main.js"></script>
+<?php $content = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
     <script>
         window.onload = function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
     }
     </script>
-</html>
+
+<?php $script = ob_get_clean(); ?>
+
+<?php require 'template.php'; ?>
