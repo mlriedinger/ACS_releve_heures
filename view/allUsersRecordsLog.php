@@ -67,6 +67,7 @@ $heading = "Historique global";
             updateAllUsersRecordsLog('All', 'all');
         };
     </script>
+    <?php include('partials/recordFormScripts.php'); ?>
 <?php $script = ob_get_clean(); ?>
 
 <?php require 'template.php'; ?>
