@@ -14,25 +14,30 @@
     }
 
     function fillBasicRecordInfos($recordInfo){
-        $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
-        $recordInfo->setComment(inputValidation($_POST['comment']));
+        if(!empty($_POST['worksiteId'])){
+            $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
+        }
 
-        if($_SESSION['dateTimeMgmt'] == '1'){
+        if(isset($_POST['comment'])) {
+            $recordInfo->setComment(inputValidation($_POST['comment']));
+        }
+
+        if($_SESSION['dateTimeMgmt'] == '1' && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])){
             $recordInfo->setDateTimeStart(inputValidation($_POST['datetimeStart']));
             $recordInfo->setDateTimeEnd(inputValidation($_POST['datetimeEnd']));
         }
-        else if($_SESSION['lengthMgmt'] == '1'){
+        else if($_SESSION['lengthMgmt'] == '1' && !empty($_POST['recordDate']) && !empty($_POST['workLengthHours']) && !empty($_POST['workLengthMinutes'])){
             $recordInfo->setDate(inputValidation($_POST['recordDate']));
             $recordInfo->setWorkLengthHours(intval(inputValidation($_POST['workLengthHours'])));
             $recordInfo->setWorkLengthMinutes(intval(inputValidation($_POST['workLengthMinutes'])));
         }
 
-        if($_SESSION['breakMgmt'] == '1'){
+        if($_SESSION['breakMgmt'] == '1' && !empty($_POST['breakLengthHours']) && !empty($_POST['breakLengthMinutes'])){
             $recordInfo->setBreakLengthHours(intval(inputValidation($_POST['breakLengthHours'])));
             $recordInfo->setBreakLengthMinutes(intval(inputValidation($_POST['breakLengthMinutes'])));
         }
 
-        if($_SESSION['tripMgmt'] == '1'){
+        if($_SESSION['tripMgmt'] == '1' && !empty($_POST['tripLengthHours']) && !empty($_POST['tripLengthMinutes'])){
             $recordInfo->setTripLengthHours(intval(inputValidation($_POST['tripLengthHours'])));
             $recordInfo->setTripLengthMinutes(intval(inputValidation($_POST['tripLengthMinutes'])));
         }
@@ -134,7 +139,7 @@
                         $settingInfo->setTripMgmt(intval(inputValidation($_POST['tripMgmtSwitch'])));
                         $settingInfo->setBreakMgmt(intval(inputValidation($_POST['breakMgmtSwitch'])));
 
-                        $settingController->updateSettings($settingInfo);
+                        $settingController->updateSettings($settingInfo);   
                     } else throw new AuthenticationException();
                     break;
 
@@ -142,7 +147,7 @@
                 // Ajout d'un nouveau relevé
                 case "addNewRecord":
                     if(!empty($_POST['csrfToken'])) {
-                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                             if(isset($_SESSION['userId']) && isset($_SESSION['userGroup'])){
                                 if(!empty($_POST['worksiteId'])) {
                                     $recordInfo = new Record();
@@ -160,7 +165,7 @@
                 // Modification d'un relevé non validé
                 case "updateRecord":
                     if(!empty($_POST['csrfToken'])) {
-                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                             if(isset($_SESSION['userId'])){
                                 if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
                                     $recordInfo = new Record();
@@ -177,7 +182,7 @@
                 // Modification du statut du relevé
                 case "updateRecordStatus":
                     if(!empty($_POST['csrfToken'])) {
-                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                             if(isset($_SESSION['userId'])){
                                 if(!empty($_POST['checkList'])){
                                     $recordController->updateRecordStatus($_POST['checkList']);
@@ -190,12 +195,11 @@
                 // Supprimer un relevé
                 case "deleteRecord":
                     if(!empty($_POST['csrfToken'])) {
-                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                             if(isset($_SESSION['userId'])){
                                 if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2'){
                                     if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['comment']) && inputValidation($_POST['comment'] != " ")) {
                                         $recordInfo = new Record();
-
                                         $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
                                         $recordInfo->setComment(inputValidation($_POST['comment']));
 
@@ -204,7 +208,6 @@
                                 } else {
                                     if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
                                         $recordInfo = new Record();
-
                                         $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
                                         $recordInfo->setComment(inputValidation($_POST['comment']));
 
@@ -298,7 +301,7 @@
                 // Exporter les données en CSV
                 case "exportRecords":
                     if(!empty($_POST['csrfToken'])) {
-                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                             if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
                                 if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export') {
                                     if(isset($_POST['scope']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['manager']) && isset($_POST['user'])) {
