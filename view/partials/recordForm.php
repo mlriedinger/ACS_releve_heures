@@ -16,7 +16,7 @@
         <?php 
         if($_SESSION['lengthMgmt'] == 1){ ?>
             <div class="col flex-shrink-1 mb-3">
-                <span class="input-group-text" id="worksite_selector">Date</span>
+                <span class="input-group-text" id="date_selector">Date</span>
                 <input type="date" name="recordDate" id="recordDate" class="form-control" aria-label="Sélectionnez une date" aria-describedby="date_selector" required/>
             </div>
         <?php } ?>
@@ -73,12 +73,12 @@
             <p class="h6 text-center mb-3">Temps de pause</p>
 
                 <div class="col mb-3">
-                    <span class="input-group-text" id="trip_hours_indicator">Heures</span>
+                    <span class="input-group-text" id="break_hours_indicator">Heures</span>
                     <input type="number" min="-15" name="breakLengthHours" id="breakLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="trip_hours_indicator" required/>
                 </div>
 
                 <div class="col mb-3">
-                    <span class="input-group-text" id="trip_minutes_indicator">Minutes</span>
+                    <span class="input-group-text" id="break_minutes_indicator">Minutes</span>
                     <input type="number" min="-15" step="15" max="60" name="breakLengthMinutes" id="breakLengthMinutes" value="0" onclick="incrementHour(breakLengthHours, breakLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
                 </div>
 

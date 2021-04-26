@@ -11,16 +11,16 @@ $heading = "Historique personnel";
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="all_records-tab" onclick="updatePersonalRecordsLog('Personal', 'all')" data-bs-toggle="tab" data-bs-target="#all_records" type="button" role="tab" aria-controls="all_records" aria-selected="true">Tous</button>
+                <button class="nav-link active" id="all_records-tab" onclick="updatePersonalRecordsLog('Personal', 'all')" data-bs-toggle="tab" data-bs-target="#all_records" type="button" role="tab" aria-controls="all_records-tab" aria-selected="true">Tous</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="valid_records-tab" onclick="updatePersonalRecordsLog('Personal', 'valid')" data-bs-toggle="tab" data-bs-target="#valid_records" type="button" role="tab" aria-controls="valid_records" aria-selected="false">Validés</button>
+                <button class="nav-link" id="valid_records-tab" onclick="updatePersonalRecordsLog('Personal', 'valid')" data-bs-toggle="tab" data-bs-target="#valid_records" type="button" role="tab" aria-controls="valid_records-tab" aria-selected="false">Validés</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="unchecked_records-tab" onclick="updatePersonalRecordsLog('Personal', 'unchecked')" data-bs-toggle="tab" data-bs-target="#unchecked_records" type="button" role="tab" aria-controls="unchecked_records" aria-selected="false" <?= $_SESSION['userGroup'] == 1 ? "hidden" : "" ?>>En attente</button>
+                <button class="nav-link" id="unchecked_records-tab" onclick="updatePersonalRecordsLog('Personal', 'unchecked')" data-bs-toggle="tab" data-bs-target="#unchecked_records" type="button" role="tab" aria-controls="unchecked_records-tab" aria-selected="false" <?= $_SESSION['userGroup'] == 1 ? "hidden" : "" ?>>En attente</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="deleted_records-tab" onclick="updatePersonalRecordsLog('Personal', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records" aria-selected="false">Supprimés</button>
+                <button class="nav-link" id="deleted_records-tab" onclick="updatePersonalRecordsLog('Personal', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records-tab" aria-selected="false">Supprimés</button>
             </li>
         </ul>
 

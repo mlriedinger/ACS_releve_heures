@@ -26,21 +26,21 @@ $heading = "Exporter des relevés";
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="radio" name="scope" value="valid" aria-label="Bouton radio permettant de sélectionner uniquement les relevés validés" />
                     </div>
-                    <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés &#34validés&#34" readonly/>
+                    <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés &#34;validés&#34;" readonly/>
                 </div>
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="radio" name="scope" value="unchecked" aria-label="Bouton radio permettant de sélectionner uniquement les relevés en attente" />
                     </div>
-                    <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés &#34en attente&#34" readonly/>
+                    <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés &#34;en attente&#34;" readonly/>
                 </div>
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="radio" name="scope" value="deleted" aria-label="Bouton radio permettant de sélectionner uniquement les relevés supprimés" />
                     </div>
-                    <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés supprimés" />
+                    <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés supprimés" readonly/>
                 </div>
 
             </div>
@@ -55,15 +55,15 @@ $heading = "Exporter des relevés";
                     <div class="accordion-item">
 
                         <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                             Souhaitez-vous sélectionner d'autres options ? (facultatif)
                             </button>
                         </h2>
 
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#exportFormAccordion">
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#exportFormAccordion">
 
                             <div class="accordion-body">
-                                <label for="periodStart_selector">Sélectionnez une période :</label>
+                                <p>Sélectionnez une période :</p>
                                 <div class="input-group mt-4 mb-3">
                                     <span class="input-group-text" id="periodStart_selector">Du</span>
                                     <input type="date" name="periodStart" id="periodStart" class="form-control" aria-label="Sélectionnez une date de début" aria-describedby="periodStart_selector"/>

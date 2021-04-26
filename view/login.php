@@ -5,7 +5,7 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
         
-        <title> <?= $title ?> </title>
+        <title>Relevé d'heures | Connexion</title>
         
         <!-- Chargement des fichiers Bootstrap en local -->
         <link rel="stylesheet" href="public/css/bootstrap/bootstrap.min.css"/>

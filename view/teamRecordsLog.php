@@ -11,13 +11,13 @@ $heading = "Historique de l'équipe";
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="all_records-tab" onclick="updateTeamRecordsLog('Team', 'all')" data-bs-toggle="tab" data-bs-target="#all_records" type="button" role="tab" aria-controls="all_records" aria-selected="true">Tous</button>
+                <button class="nav-link active" id="all_records-tab" onclick="updateTeamRecordsLog('Team', 'all')" data-bs-toggle="tab" data-bs-target="#all_records" type="button" role="tab" aria-controls="all_records-tab" aria-selected="true">Tous</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="valid_records-tab" onclick="updateTeamRecordsLog('Team', 'valid')" data-bs-toggle="tab" data-bs-target="#valid_records" type="button" role="tab" aria-controls="valid_records" aria-selected="false">Validés</button>
+                <button class="nav-link" id="valid_records-tab" onclick="updateTeamRecordsLog('Team', 'valid')" data-bs-toggle="tab" data-bs-target="#valid_records" type="button" role="tab" aria-controls="valid_records-tab" aria-selected="false">Validés</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="deleted_records-tab" onclick="updateTeamRecordsLog('Team', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records" aria-selected="false">Supprimés</button>
+                <button class="nav-link" id="deleted_records-tab" onclick="updateTeamRecordsLog('Team', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records-tab" aria-selected="false">Supprimés</button>
             </li>
         </ul>
 
