@@ -268,7 +268,7 @@ function updateFormInputs(data) {
     var inputBreakLengthMinutes = document.getElementById("breakLengthMinutes");
     var inputTripLengthHours = document.getElementById("tripLengthHours");
     var inputTripLengthMinutes = document.getElementById("tripLengthMinutes");
-    var inputComment = document.getElementById("comment");
+    var inputComment = document.getElementById("recordComment");
 
     // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par datetime-locale
     var startTime = data['date_hrs_debut'].replace(" ", "T");
@@ -305,6 +305,7 @@ function updateFormInputs(data) {
     }
 
     inputComment.innerHTML += data['commentaire'];
+    console.log(inputComment);
 }
 
 

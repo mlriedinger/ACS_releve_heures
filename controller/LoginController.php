@@ -39,6 +39,7 @@ class LoginController {
     public function fillSessionData($userData){
         session_start();
         $_SESSION['login'] = $userData['Utilisateur'];
+        $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
         $_SESSION['userId'] = $userData['ID'];
         $_SESSION['userGroup'] = $userData['id_groupe'];
         $_SESSION['name'] = $userData['Nom'];

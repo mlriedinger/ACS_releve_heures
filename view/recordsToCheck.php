@@ -35,7 +35,8 @@ $heading = "Validations en attente";
                     <!-- Ici on insère dynamiquement les lignes du tableau avec Javascript-->
                 </tbody>
             </table>
-
+            
+            <input type="hidden" value="<?= $_SESSION['csrfToken'] ;?>" name="csrfToken"/>
         </form>
 
         <p id="no_record_message" class="lead text-center mt-5" hidden>Aucun relevé à afficher.</p>

@@ -110,7 +110,7 @@
 
         <div class="col mb-3">
             <span class="input-group-text" id="comment_section">Commentaire (facultatif)</span>
-            <textarea autocapitalize="sentences" maxlength="255" name="comment" id="comment" class="form-control" aria-label="Commentaire" aria-describedby="comment_section"></textarea>
+            <textarea autocapitalize="sentences" maxlength="255" name="comment" id="recordComment" class="form-control" aria-label="Commentaire" aria-describedby="comment_section"></textarea>
             <small class="form-text text-muted">255 caractères maximum</small>
         </div>
 
@@ -120,6 +120,7 @@
         
         <div class="col mb-5 text-center">
             <input type="hidden" value="<?= isset($_POST['recordId']) ? ($_POST['recordId']) : "" ;?>" name="recordId"/>
+            <input type="hidden" value="<?= $_SESSION['csrfToken'] ;?>" name="csrfToken"/>
             <input type="reset" value="Annuler" onclick="closeModal()" class="btn btn-light"/>
             <input type="submit" value="Valider" class="btn btn-dark"/>
         </div>

@@ -141,64 +141,79 @@
 
                 // Ajout d'un nouveau relevé
                 case "addNewRecord":
-                    if(isset($_SESSION['userId']) && isset($_SESSION['userGroup'])){
-                    
-                        if(!empty($_POST['worksiteId'])) {
-                            $recordInfo = new Record();
-                            $recordInfo = fillBasicRecordInfos($recordInfo);
-                            $recordInfo->setUserId($_SESSION['userId']);
-                            $recordInfo->setUserGroup($_SESSION['userGroup']);
+                    if(!empty($_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                            if(isset($_SESSION['userId']) && isset($_SESSION['userGroup'])){
+                                if(!empty($_POST['worksiteId'])) {
+                                    $recordInfo = new Record();
+                                    $recordInfo = fillBasicRecordInfos($recordInfo);
+                                    $recordInfo->setUserId($_SESSION['userId']);
+                                    $recordInfo->setUserGroup($_SESSION['userGroup']);
 
-                            $recordController->addNewRecord($recordInfo);
-                        } else throw new InvalidParameterException();
-                    } else throw new AuthenticationException();
+                                    $recordController->addNewRecord($recordInfo);
+                                } else throw new InvalidParameterException();
+                            } else throw new AuthenticationException();
+                        } else throw new AuthenticationException();
+                    } else throw new AuthenticationException(); 
                     break;
 
                 // Modification d'un relevé non validé
                 case "updateRecord":
-                    if(isset($_SESSION['userId'])){
-                        if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
-                            $recordInfo = new Record();
-                            $recordInfo = fillBasicRecordInfos($recordInfo);
-                            $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                    if(!empty($_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                            if(isset($_SESSION['userId'])){
+                                if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
+                                    $recordInfo = new Record();
+                                    $recordInfo = fillBasicRecordInfos($recordInfo);
+                                    $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
 
-                            $recordController->updateRecord($recordInfo);
-                        } else throw new UpdateProblemException();
-                    } else throw new AuthenticationException();
+                                    $recordController->updateRecord($recordInfo);
+                                } else throw new UpdateProblemException();
+                            } else throw new AuthenticationException();
+                        } else throw new AuthenticationException();
+                    } else throw new AuthenticationException(); 
                     break;
                     
                 // Modification du statut du relevé
                 case "updateRecordStatus":
-                    if(isset($_SESSION['userId'])){
-                        if(!empty($_POST['checkList'])){
-                            $recordController->updateRecordStatus($_POST['checkList']);
-                        } else throw new InvalidParameterException('Veuillez sélectionner un ou plusieurs relevé(s) à valider.');
-                    } else throw new AuthenticationException();
+                    if(!empty($_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                            if(isset($_SESSION['userId'])){
+                                if(!empty($_POST['checkList'])){
+                                    $recordController->updateRecordStatus($_POST['checkList']);
+                                } else throw new InvalidParameterException('Veuillez sélectionner un ou plusieurs relevé(s) à valider.');
+                            } else throw new AuthenticationException();
+                        } else throw new AuthenticationException();
+                    } else throw new AuthenticationException(); 
                     break;
 
                 // Supprimer un relevé
                 case "deleteRecord":
-                    if(isset($_SESSION['userId'])){
-                        if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2'){
-                            if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['comment']) && inputValidation($_POST['comment'] != " ")) {
-                                $recordInfo = new Record();
+                    if(!empty($_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                            if(isset($_SESSION['userId'])){
+                                if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2'){
+                                    if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['comment']) && inputValidation($_POST['comment'] != " ")) {
+                                        $recordInfo = new Record();
 
-                                $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
-                                $recordInfo->setComment(inputValidation($_POST['comment']));
+                                        $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                                        $recordInfo->setComment(inputValidation($_POST['comment']));
 
-                                $recordController->deleteRecord($recordInfo);
-                            } else throw new UpdateProblemException();
-                        } else {
-                            if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
-                                $recordInfo = new Record();
+                                        $recordController->deleteRecord($recordInfo);
+                                    } else throw new UpdateProblemException();
+                                } else {
+                                    if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
+                                        $recordInfo = new Record();
 
-                                $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
-                                $recordInfo->setComment(inputValidation($_POST['comment']));
+                                        $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                                        $recordInfo->setComment(inputValidation($_POST['comment']));
 
-                                $recordController->deleteRecord($recordInfo);
-                            } else throw new UpdateProblemException();
-                        }
-                    } else throw new AuthenticationException();
+                                        $recordController->deleteRecord($recordInfo);
+                                    } else throw new UpdateProblemException();
+                                }
+                            } else throw new AuthenticationException();
+                        } else throw new AuthenticationException();
+                    } else throw new AuthenticationException(); 
                     break;
 
 
@@ -218,7 +233,7 @@
                 // Renvoyer le formulaire de confirmation de suppression
                 case "getDeleteConfirmationForm":
                     if(isset($_SESSION['userId'])) {
-                        getDeleteConfirmationForm();
+                        $recordController->getDeleteConfirmationForm();
                     } else throw new AuthenticationException();
                     break;
 
@@ -282,21 +297,25 @@
 
                 // Exporter les données en CSV
                 case "exportRecords":
-                    if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
-                        if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export') {
-                            if(isset($_POST['scope']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['manager']) && isset($_POST['user'])) {
-                                $recordInfo = new Record();
-                                $recordInfo->setTypeOfRecords(inputValidation($_GET['typeOfRecords']));
-                                $recordInfo->setScope(inputValidation($_POST['scope']));
-                                $recordInfo->setPeriodStart(inputValidation($_POST['periodStart']));
-                                $recordInfo->setPeriodEnd(inputValidation($_POST['periodEnd']));
-                                $recordInfo->setManagerId(intval(inputValidation($_POST['manager'])));
-                                $recordInfo->setUserId(intval(inputValidation($_POST['user'])));
+                    if(!empty($_POST['csrfToken'])) {
+                        if(hash_equals($_SESSION['csrfToken'], $_POST['csrfToken'])) {
+                            if(isset($_SESSION['userId']) && $_SESSION['userGroup'] == '1') {
+                                if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export') {
+                                    if(isset($_POST['scope']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['manager']) && isset($_POST['user'])) {
+                                        $recordInfo = new Record();
+                                        $recordInfo->setTypeOfRecords(inputValidation($_GET['typeOfRecords']));
+                                        $recordInfo->setScope(inputValidation($_POST['scope']));
+                                        $recordInfo->setPeriodStart(inputValidation($_POST['periodStart']));
+                                        $recordInfo->setPeriodEnd(inputValidation($_POST['periodEnd']));
+                                        $recordInfo->setManagerId(intval(inputValidation($_POST['manager'])));
+                                        $recordInfo->setUserId(intval(inputValidation($_POST['user'])));
 
-                                $recordController->exportRecords($recordInfo);
-                            }
-                        } 
-                    } else throw new AuthenticationException();
+                                        $recordController->exportRecords($recordInfo);
+                                    }
+                                } 
+                            } else throw new AuthenticationException();
+                        } else throw new AuthenticationException();
+                    } else throw new AuthenticationException(); 
                     break;
 
 

@@ -97,6 +97,7 @@ $heading = "Exporter des relevés";
         <div class="row mb-3 mt-5 justify-content-md-center">
             
             <div class="col-sm-8 mb-5 text-center">
+                <input type="hidden" value="<?= $_SESSION['csrfToken'] ;?>" name="csrfToken"/>
                 <input type="reset" value="Annuler" class="btn btn-light"/>
                 <input type="submit" value="Exporter" class="btn btn-dark"/>
             </div>

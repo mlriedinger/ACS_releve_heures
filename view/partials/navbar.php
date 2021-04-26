@@ -53,7 +53,7 @@
                     ?>
                     <li class="nav-item ps-4">
                         <a class="nav-link" href="index.php?action=showPersonalRecordsLog">Historique</a>
-                    </li>;
+                    </li>
                 <?php 
                 } ?>
                 </ul>

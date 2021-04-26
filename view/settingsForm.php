@@ -43,6 +43,7 @@ $heading = "Paramètres";
         <div class="row mb-3 mt-5 justify-content-md-center">
                 
             <div class="col-sm-4 mb-5 text-center">
+                <input type="hidden" value="<?= $_SESSION['csrfToken'] ;?>" name="csrfToken"/>
                 <input type="reset" value="Annuler" class="btn btn-light"/>
                 <input type="submit" value="Enregistrer" class="btn btn-dark"/>
             </div>
