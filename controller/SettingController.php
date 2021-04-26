@@ -30,6 +30,7 @@ class SettingController {
 
     public function fillSessionData($settings) {
         session_start();
+        $_SESSION['imgFilePath'] = $settings['chemin_dossier_images'];
         $_SESSION['logo'] = $settings['image_logo'];
         $_SESSION['dateTimeMgmt'] = $settings['releve_heures_date_debut_fin'];
         $_SESSION['lengthMgmt'] = $settings['releve_heures_duree'];

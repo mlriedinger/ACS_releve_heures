@@ -2,7 +2,7 @@
            
     <div class="container-fluid d-flex align-items-center">
         <a class="navbar-brand" href="index.php?action=showHomePage">
-            <img src="<?=$_SESSION['logo']?>" alt="Logo" height="70vw"/>
+            <img src="<?=$_SESSION['imgFilePath'] . $_SESSION['logo']?>" alt="Logo" height="70vw"/>
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">

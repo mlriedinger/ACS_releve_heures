@@ -22,6 +22,7 @@ class SettingManager extends DatabaseConnection
         $pdo = $this->dbConnect($this->_dbUserForSettings, $this->_dbPasswordForSettings);
 
         $query = $pdo->prepare('SELECT 
+            chemin_dossier_images,
             image_logo, 
             releve_heures_date_debut_fin, 
             releve_heures_duree, 
