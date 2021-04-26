@@ -70,7 +70,10 @@ class RecordManager extends DatabaseConnection
             :id_login,
             :dateTimeStart, 
             :dateTimeEnd,
-            :recordDate,
+            CASE 
+                WHEN date_hrs_debut <> "0000-00-00 00:00:00" THEN DATE(:dateTimeStart)
+                ELSE :recordDate
+            END,
             CASE 
                 WHEN date_hrs_debut <> "0000-00-00 00:00:00" AND date_hrs_fin <> "0000-00-00 00:00:00" THEN TIMESTAMPDIFF(MINUTE, :dateTimeStart, :dateTimeEnd)
                 ELSE :workLength
