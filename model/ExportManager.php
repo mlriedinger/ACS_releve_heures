@@ -34,7 +34,7 @@ class ExportManager extends RecordManager {
             Releve.date_hrs_fin AS 'date_heure_fin',";
         }
         else if ($_SESSION['lengthMgmt'] == 1){
-            $sql .= "Releve.date_releve";
+            $sql .= "Releve.date_releve,";
         }
             
         $sql .= "Releve.tps_travail,";
@@ -143,7 +143,7 @@ class ExportManager extends RecordManager {
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête
-        // $query->debugDumpParams();
+        $query->debugDumpParams();
 
         return $rows;
     }
