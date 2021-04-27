@@ -2,12 +2,22 @@
 
 require 'autoloader.php';
 
+/**
+ * Classe qui permet de gérer les paramètres de l'application
+ */
 class SettingController {
-
+    
+    /**
+     * Rend la vue paramètres
+     */
     public function displaySettingsForm() {
         require('view/settingsForm.php');
     }
+    
 
+    /**
+     * Permet de récupérer les paramètres actuellement enregistrés en base de données
+     */
     public function getSettings() {
         $settingManager = new SettingManager();
         $settings = $settingManager->getSettings();
@@ -16,8 +26,15 @@ class SettingController {
             $this->fillSessionData($settings);
         }
     }
+    
 
-    public function updateSettings($settingInfo) {
+    /**
+     * Permet de mettre à jour les paramètres : en base de données, puis en variables de session
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     *
+     * @param  Setting $settingInfo
+     */
+    public function updateSettings(Setting $settingInfo) {
         $settingManager = new SettingManager();
         $isUpdateSuccessfull = $settingManager->updateSettings($settingInfo);
 
@@ -27,8 +44,14 @@ class SettingController {
             $this->displaySettingsForm();
         }
     }
+    
 
-    public function fillSessionData($settings) {
+    /**
+     * Permet de remplir les variables de session avec les paramètres lors de la connexion à l'application
+     *
+     * @param  Array $settings
+     */
+    public function fillSessionData(Array $settings) {
         session_start();
         $_SESSION['imgFilePath'] = $settings['chemin_dossier_images'];
         $_SESSION['logo'] = $settings['image_logo'];

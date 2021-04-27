@@ -1,25 +1,40 @@
 <?php
 
-/* On charge automatiquement les classes pour accéder à leurs méthodes */
 require 'autoloader.php';
 
+/**
+ * Classe qui permet de gérer l'authentification d'un utilisateur.
+ */
+
 class LoginController {
-
-    /* Fonctions pour gérer l'affichage des pages de connexion et d'accueil */
-
+    
+    /**
+     * Rend la vue de la page de connexion
+     *
+     * @param  String $errorCode (optionnel) : message d'erreur récupéré suite à une levée d'exception
+     * @param  String $errorMessage (optionnel) : code d'erreur récupéré suite à une levée d'exception
+     */
     public function displayLoginPage($errorCode="", $errorMessage=""){
         $errorCode;
         $errorMessage;
         require('view/login.php');
     }
+    
 
+    /**
+     * Rend la vue "Accueil" de l'application
+     */
     public function displayHomePage(){
         require('view/home.php');
     }
 
-
-    /* Fonction pour vérifier la combinaison login/mot de passe */
-
+    
+    /**
+     * Permet de vérifier la combinaison login/mot de passe
+     *
+     * @param  String $login
+     * @param  String $password
+     */
     public function verifyLogin($login, $password) {
         $loginManager = new LoginManager();
         $userData = $loginManager->getUserData($login, $password);
@@ -33,9 +48,12 @@ class LoginController {
         }
     }
 
-
-    /* Fonction pour remplir les variables de session avec les données utilisateur */
-
+    
+    /**
+     * Permet de remplir les variables de session avec les données utilisateur lors de la connexion à l'application
+     *
+     * @param  Array $userData
+     */
     public function fillSessionData($userData){
         session_start();
         $_SESSION['login'] = $userData['Utilisateur'];
@@ -49,9 +67,11 @@ class LoginController {
         $_SESSION['isDeleted'] = $userData['Supprimer'];
     }
 
-
-    /* Fonction pour gérer la déconnexion de l'application */
-
+    
+    /**
+     * Permet de gérer la déconnexion de l'application
+     *
+     */
     public function logout(){
         unset($_SESSION);
         if (ini_get("session.use_cookies")) {

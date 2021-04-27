@@ -1,64 +1,88 @@
 <?php
 session_start();
 
-/* On charge automatiquement les classes pour accéder à leurs méthodes */
 require 'autoloader.php';
 
+/**
+ * Classe qui permet de gérer l'enregistrement, la modification/suppression et l'affichage des relevés d'heures
+ */
 class RecordController {
-
-    /* Fonctions pour gérer l'affichage des pages :
-        * displayNewRecordForm() : page de saisie d'un nouveau relevé, 
-        * displayValidationForm() : page de validation de relevés en attente
-        * displayPersonalRecordsLog() : historique personnel, 
-        * displayTeamRecordsLog() : historique équipe
-        * displayAllRecordsLog() : historique global
-        * display ExportForm() : page export de données 
-    */
-
+    
+    /**
+     * Rend la vue de saisie d'un nouveau relevé
+     */
     public function displayNewRecordForm(){
         require('view/addNewRecord.php');
     }
+    
 
+    /**
+     * Rend la vue de validation de relevés en attente
+     */
     public function displayValidationForm(){
         require('view/recordsToCheck.php');
     }
+    
 
+    /**
+     * Rend la vue d'historique personnel
+     */
     public function displayPersonalRecordsLog(){
         require('view/personalRecordsLog.php');
     }
+    
 
+    /**
+     * Rend la vue d'historique équipe
+     */
     public function displayTeamRecordsLog(){
         require('view/teamRecordsLog.php');
     }
+    
 
+    /**
+     * Rend la vue d'historique global
+     */
     public function displayAllRecordsLog(){
         require('view/allUsersRecordsLog.php');
     }
-
+    
+    
+    /**
+     * Rend la vue d'export de données
+     */
     public function displayExportForm(){
         require('view/exportRecordsForm.php');
     }
     
-    
-    /* Fonction pour récupérer le formulaire de saisie (uniquement le formulaire) */
-
-    public function getRecordForm($recordInfo){
+       
+    /**
+     * Rend le formulaire de saisie de relevé (uniquement le formulaire)
+     *
+     * @param  Record $recordInfo
+     */
+    public function getRecordForm(Record $recordInfo){
         $recordId = $recordInfo->getRecordId();
         $userId = $recordInfo->getUserId();
         require('view/partials/recordForm.php');
     }
-
-
-    /* Fonction pour récupérer le formulaire de confirmation de suppression (uniquement le formulaire) */
-
+    
+    
+    /**
+     * Rend le formulaire de confirmation de suppression (uniquement le formulaire)
+     */
     public function getDeleteConfirmationForm(){
         require('view/partials/deleteConfirmationForm.php');
     }
 
-
-    /* Fonction pour enregistrer un nouveau relevé en BDD */
-
-    public function addNewRecord($recordInfo){
+    
+    /**
+     * Permet l'enregistrement d'un nouveau relevé d'heure
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     *
+     * @param  Record $recordInfo
+     */
+    public function addNewRecord(Record $recordInfo){
         $recordManager = new RecordManager();
         $isSendingSuccessfull = $recordManager->sendNewRecord($recordInfo);
 
@@ -72,10 +96,14 @@ class RecordController {
         }
     }
 
-
-    /* Fonction pour modifier un relevé qui n'a pas encore été validé */
-
-    public function updateRecord($recordInfo){
+   
+    /**
+     * Permet la modification d'un relevé qui n'a pas encore été validé
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     *
+     * @param  Record $recordInfo
+     */
+    public function updateRecord(Record $recordInfo){
         $recordManager = new RecordManager();
         $isUpdateSuccessfull = $recordManager->updateRecord($recordInfo);
         
@@ -84,10 +112,14 @@ class RecordController {
         echo '<script>window.history.go(-1);</script>';
     }
 
-
-    /* Fonction pour mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager */
-
-    public function updateRecordStatus($recordsCheckList){   
+    
+    /**
+     * Permet de mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     *
+     * @param  Array $recordsCheckList
+     */
+    public function updateRecordStatus(Array $recordsCheckList){   
         $recordManager = new RecordManager();
         $updateResults = [];
 
@@ -99,61 +131,86 @@ class RecordController {
         if(count($recordsCheckList) == count($updateResults)) $isUpdateSuccessfull = true;      
 
         $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
-        // Renvoie sur la dernière page visitée avant l'envoi du formulaire
         echo '<script>window.history.go(-1);</script>';
     }
 
-
-    /* Fonction pour "supprimer" un relevé d'heure (en réalité le rendre inactif) */
-
-    public function deleteRecord($recordInfo){
+    
+    /**
+     * Permet de "supprimer" un relevé d'heure (en réalité le rendre inactif)
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     *
+     * @param  Record $recordInfo
+     */
+    public function deleteRecord(Record $recordInfo){
         $recordManager = new RecordManager();
         $isDeleteSuccessfull = $recordManager->deleteRecord($recordInfo);
 
         $isDeleteSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
-        // Renvoie sur la dernière page visitée avant l'envoi du formulaire
         echo '<script>window.history.go(-1);</script>';
     }
 
-
-    /* Fonctions pour récupérer les relevés :
-        * getRecordData() : informations d'un relevé unique,
-        * getUserRecords() : relevés personnels,
-        * getTeamRecords() : relevés de l'équipe, 
-        * getAllUsersRecords() : tous les relevés
-        * exportRecords() : exporte les données au format CSV
-        * getOptionsData() : récupère la liste des managers et des salariés pour les afficher dans le formulaire d'export
-        Params :
-        * $typeOfRecords : type de relevés demandés (paramètre envoyé par la requête AJAX)
-        * $scope : périmètre de la requête (tout ou seulement une partie des relevés)
-        * $typeOfData : chaîne de caractères ("managers" ou "users")
-    */
-
-    public function getRecordData($recordInfo){
+    
+    /**
+     * Permet de récupérer les informations d'un relevé
+     *
+     * @param  Record $recordInfo
+     */
+    public function getRecordData(Record $recordInfo){
         $recordManager = new RecordManager();
         $recordManager->getRecord($recordInfo);
     }
+    
 
-    public function getUserRecords($recordInfo){
+    /**
+     * Permet de récupérer les relevés personnels de l'utilisateur
+     *
+     * @param  Record $recordInfo
+     */
+    public function getUserRecords(Record $recordInfo){
         $recordManager = new RecordManager();
         $recordManager->getRecordsFromUser($recordInfo);   
     }
+    
 
-    public function getTeamRecords($recordInfo){
+    /**
+     * Permet de récupérer les relevés des salariés appartenant à l'équipe dont l'utilisateur est le manager
+     *
+     * @param  Record $recordInfo
+     */
+    public function getTeamRecords(Record $recordInfo){
         $recordManager = new RecordManager();
         $recordManager->getRecordsFromTeam($recordInfo);
     }
+    
 
-    public function getAllUsersRecords($recordInfo){
+    /**
+     * Permet de récupérer tous les relevés
+     *
+     * @param  Record $recordInfo
+     */
+    public function getAllUsersRecords(Record $recordInfo){
         $recordManager = new RecordManager();
         $recordManager->getAllRecords($recordInfo);
     }
+    
 
-    public function exportRecords($recordInfo){
+    /**
+     * Permet d'exporter les relevés souhaités au format CSV
+     *
+     * @param  Record $recordInfo
+     */
+    public function exportRecords(Record $recordInfo){
         $exportManager = new ExportManager();
         $exportManager->exportRecords($recordInfo);
     }
+    
 
+    /**
+     * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour les afficher dans un <select>
+     *
+     * @param  String $typeOfData : "managers", "users" ou "worksites"
+     * @param  int $userId (optionnel) : ID du salarié nécessaire uniquement à la récupération des chantiers auxquels le salarié est affecté
+     */
     public function getOptionsData($typeOfData, $userId=""){
         $recordManager = new RecordManager();
         $recordManager->getDataForOptionSelect($typeOfData, $userId);
