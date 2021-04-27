@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-100">
 
     <head>
         <meta charset="utf-8"/>
@@ -19,8 +19,8 @@
         <link rel="stylesheet" href="public/css/style.css" />
     </head>
 
-    <body>
-        <div class="container">
+    <body class="d-flex flex-column h-100">
+        <div class="container justify-content-center">
 
             <div class="row justify-content-md-center">
 
@@ -46,7 +46,7 @@
 
             <div class="row justify-content-md-center">
 
-                <div class="col-lg-3 text-center ">
+                <div class="col-lg-3 text-center mt-3 mt-lg-5">
 
                     <form action="index.php?action=login" method="POST">
 
