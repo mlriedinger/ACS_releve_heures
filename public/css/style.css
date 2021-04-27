@@ -8,17 +8,22 @@ a:hover {
   text-decoration: none;
 }
 
+/* Override des classes Bootstrap */
+
 input[readonly], .form-control[readonly] {
   background-color: #fff;
 }
-
-/* Override des classes Bootstrap pour modifier la couleur des onglets historique */
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
   color: #fff;
   background-color: #212529;
   border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.nav-item {
+  font-size: 1.05em;
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* Masquer des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
@@ -30,4 +35,13 @@ input[readonly], .form-control[readonly] {
   .records_log_last_modification {
     display: none;
   }
+
+  .navbar-div {
+    flex-direction: row !important;
+  }
+
+  .navbar-div i {
+    margin-right: 2em;
+  }
+
 }

@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
            
-    <div class="container-fluid d-flex align-items-center">
+    <div class="container-fluid d-flex align-items-center mt-3 mb-3">
         <a class="navbar-brand" href="index.php?action=showHomePage">
             <img src="<?=$_SESSION['imgFilePath'] . $_SESSION['logo']?>" alt="Logo" height="70"/>
         </a>
@@ -11,74 +11,91 @@
 
         <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item ps-4">
-                    <a class="nav-link active" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
+                <li class="nav-item ps-5 mb-3 mb-lg-0">
+                    <div class="d-flex flex-column align-items-center navbar-div">
+                        <i class="bi bi-house"></i>
+                        <a class="nav-link text-center text-center active" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
+                    </div>
                 </li>
-                <li class="nav-item ps-4">
-                    <a class="nav-link" href="index.php?action=showNewRecordForm">Nouveau relevé</a>
+                <li class="nav-item ps-5 mb-3 mb-lg-0">
+                    <div class="d-flex flex-column align-items-center navbar-div">
+                        <i class="bi bi-clock-history"></i>
+                        <a class="nav-link text-center text-center" aria-current="page" href="index.php?action=showNewRecordForm">Nouveau relevé</a>
+                    </div>
                 </li>
 
                 <?php 
                 if($_SESSION['userGroup'] == 1 || $_SESSION['userGroup'] == 2){ 
                     ?>
-                    <li class="nav-item ps-4">
-                        <a class="nav-link" href="index.php?action=showRecordsToCheck">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
+                    <li class="nav-item ps-5 mb-3 mb-lg-0">
+                        <div class="d-flex flex-column align-items-center navbar-div">
+                            <i class="bi bi-journal-check"></i>
+                            <a class="nav-link text-center" aria-current="page" href="index.php?action=showRecordsToCheck">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
+                        </div>
                     </li>
 
-                    <li class="nav-item dropdown ps-4">
-                        <a class="nav-link dropdown-toggle" href="index.php?action=showPersonalRecordsLog" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Historique</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="index.php?action=showPersonalRecordsLog">Historique personnel</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="index.php?action=showTeamRecordsLog">Historique de l'équipe</a></li> 
-                            <?php 
-                            if($_SESSION['userGroup'] == 1) {
-                                ?>
-                                <li><a class="dropdown-item" href="index.php?action=showAllRecordsLog">Historique global</a></li>
-                            <?php
-                            } ?>
-                        </ul>
+                    <li class="nav-item dropdown ps-5 mb-3 mb-lg-0">
+                        <div class="d-flex flex-column align-items-center navbar-div">
+                            <i class="bi bi-journal-text"></i>    
+                            <a class="nav-link text-center dropdown-toggle" aria-current="page" href="index.php?action=showPersonalRecordsLog" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Historique</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="index.php?action=showPersonalRecordsLog">Historique personnel</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="index.php?action=showTeamRecordsLog">Historique de l'équipe</a></li> 
+                                <?php 
+                                if($_SESSION['userGroup'] == 1) {
+                                    ?>
+                                    <li><a class="dropdown-item" href="index.php?action=showAllRecordsLog">Historique global</a></li>
+                                <?php
+                                } ?>
+                            </ul>
+                        </div>
                     </li>
-            
-                    <?php 
-                    if($_SESSION['userGroup'] == 1){ 
-                        ?>
-                        <li class="nav-item ps-4">
-                            <a class="nav-link" href="index.php?action=showExportForm">Export</a>
-                        </li>
-                    <?php 
-                    } ?>
                 <?php 
                 } else { 
                     ?>
-                    <li class="nav-item ps-4">
-                        <a class="nav-link" href="index.php?action=showPersonalRecordsLog">Historique</a>
+                    <li class="nav-item ps-5 mb-3 mb-lg-0">
+                        <div class="d-flex flex-column align-items-center navbar-div">
+                            <i class="bi bi-journal-bookmark-fill"></i>
+                            <a class="nav-link text-center" href="index.php?action=showPersonalRecordsLog">Historique</a>
+                        </div>
                     </li>
                 <?php 
                 } ?>
-                </ul>
+            </ul> 
             
+            <ul class="navbar-nav mb-2 mb-lg-0">
             <?php 
-            if($_SESSION['userGroup'] == 1){
+            if($_SESSION['userGroup'] == 1){ 
                 ?>
-                <ul class="navbar-nav mb-2 mb-lg-0">
-                    <li class="nav-item ps-4">
-                        <a class="nav-link" href="index.php?action=showSettingsForm"><i class="fas fa-cogs pe-3"></i>Paramètres</a>
-                    </li>
-                </ul>
+                <li class="nav-item dropdown ps-5 mb-3 mb-lg-0">
+                    <div class="d-flex flex-column align-items-center navbar-div">
+                        <i class="bi bi-sliders"></i>    
+                        <a class="nav-link text-center dropdown-toggle" aria-current="page" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                            <li><a class="dropdown-item" href="index.php?action=showExportForm">Export</a></li>
+                            <li><a class="dropdown-item" href="index.php?action=showSettingsForm">Paramètres</a></li> 
+                            </ul>
+                    </div>
+                </li>
             <?php 
             } ?>
 
-            <div class="navbar-text ps-4">
-                <i class="fas fa-user pe-3"></i><?= $_SESSION['firstname'] . ' ' . $_SESSION['name']?>
-            </div>
+                <li class="nav-item ps-5 mb-3 mb-lg-0">
+                    <div class="d-flex flex-column align-items-center navbar-div">
+                        <i class="bi bi-person"></i>
+                        <span class="nav-link text-center"><?= $_SESSION['firstname'] . ' ' . $_SESSION['name']?></span>
+                    </div>
+                </li>
 
-            <ul class="navbar-nav ps-4 mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="index.php?action=logout">Déconnexion</a>    
+                
+                <li class="nav-item ps-5 mb-3 mb-lg-0">
+                    <div class="d-flex flex-column align-items-center navbar-div">
+                        <i class="bi bi-door-open"></i>
+                        <a class="nav-link text-center" aria-current="page" href="index.php?action=logout">Déconnexion</a>    
+                    </div>
                 </li>
             </ul>
-            
         </div>
     </div>
 </nav>
