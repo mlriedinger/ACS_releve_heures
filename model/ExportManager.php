@@ -2,27 +2,29 @@
 
 require_once 'RecordManager.php';
 
+/**
+ * Classe qui permet de gérer l'export de données.
+ * Hérite de RecordManager pour pouvoir utiliser la méthode addQueryScopeAndOrderByClause()
+ */
 class ExportManager extends RecordManager {
 
-    /* Fonction permettant d'exporter des données
-        Params: 
-        * $recordInfo : objet Record contenant 
-            - le type de relevés demandés (personnels, équipe, à valider ou tous)
-            - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-            - la date de début de période (facultatif)
-            - la date de fin de période (facultatif)
-            - l'id du manager (facultatif)
-            - l'id du salarié (facultatif)
-    */
-
-
+    /**
+     * Permet d'exporter les données au format CSV
+     *
+     * @param  Record $recordInfo
+     */
     public function exportRecords(Record $recordInfo){
         $rows = $this->getRecordsToExport($recordInfo);
         $fileName = $this->getFileName($recordInfo);
         $this->writeCsvFile($rows, $fileName);
     }
 
-
+    
+    /**
+     * Permet de construire la base de la requête SQL de récupération des relevés à exporter
+     *
+     * @return String $sql
+     */
     public function sqlRequestBasis(){
         $sql = "SELECT 
             Releve.ID AS 'num_releve',
@@ -68,8 +70,15 @@ class ExportManager extends RecordManager {
         return $sql;
     }
 
-
-    public function sqlRequestOptions(Record $recordInfo, $sql){
+    
+    /**
+     * Permet d'ajouter des options à la requête SQL de récupération des relevés à exporter
+     *
+     * @param  Record $recordInfo
+     * @param  String $sql
+     * @return String $sql
+     */
+    public function sqlRequestOptions(Record $recordInfo, String $sql){
         $periodStart = $recordInfo->getPeriodStart();
         $periodEnd = $recordInfo->getPeriodEnd();
         $managerId = $recordInfo->getManagerId();
@@ -82,7 +91,13 @@ class ExportManager extends RecordManager {
         return $sql;
     }
 
-
+    
+    /**
+     * Permet de remplir un tableau de valeurs pour l'exécution de la requête préparée
+     *
+     * @param  Record $recordInfo
+     * @return Array $queryParams
+     */
     public function fillQueryParamsArray(Record $recordInfo){
         $periodStart = $recordInfo->getPeriodStart();
         $periodEnd = $recordInfo->getPeriodEnd();
@@ -109,18 +124,13 @@ class ExportManager extends RecordManager {
         return $queryParams;
     }
 
-
-    /* Fonction permettant de récupérer la liste des relevés à exporter
-        Params: 
-            * $recordInfo : objet Record contenant 
-                - le type de relevés demandés (personnels, équipe, à valider ou tous)
-                - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-                - la date de début de période (facultatif)
-                - la date de fin de période (facultatif)
-                - l'id du manager (facultatif)
-                - l'id du salarié (facultatif)
-    */
-
+    
+    /**
+     * Permet de récupérer la liste des relevés à exporter
+     *
+     * @param  Record $recordInfo
+     * @return Array $rows
+     */
     public function getRecordsToExport(Record $recordInfo){
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $scope = $recordInfo->getScope();
@@ -143,23 +153,18 @@ class ExportManager extends RecordManager {
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
         // Décommenter la ligne suivante pour débugger la requête
-        $query->debugDumpParams();
+        // $query->debugDumpParams();
 
         return $rows;
     }
 
-
-    /* Fonction permettant de construire le nom du fichier d'export
-        Params: 
-        * $recordInfo : objet Record contenant 
-            - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-            - la date de début de période (facultatif)
-            - la date de fin de période (facultatif)
-            - l'id du manager (facultatif)
-            - l'id du salarié (facultatif)
-    */
-
-
+    
+    /**
+     * Permet de construire le nom du fichier d'export
+     *
+     * @param  Record $recordInfo
+     * @return String $fileName
+     */
     public function getFileName(Record $recordInfo){
         $scope = $recordInfo->getScope();
         $periodStart = $recordInfo->getPeriodStart();
@@ -180,14 +185,14 @@ class ExportManager extends RecordManager {
         return $fileName;
     }
 
-
-    /* Fonction permettant d'écrire un fichier CSV
-        Params: 
-        * $rows : contient le résultat de la requête getRecordsToExport()
-        * $fileName : contient le résultat de la fonction getFileName()
-    */
-
-    public function writeCsvFile($rows, $fileName){
+    
+    /**
+     * Permet d'écrire un fichier CSV
+     *
+     * @param  Array $rows
+     * @param  String $fileName
+     */
+    public function writeCsvFile(Array $rows, String $fileName){
         $columnNames = array();
         if(!empty($rows)){
             // On boucle sur la première ligne pour récupérer les en-têtes des colonnes

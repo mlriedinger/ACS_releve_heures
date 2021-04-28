@@ -5,11 +5,10 @@ require 'autoloader.php';
 /**
  * Classe qui permet de gérer l'authentification d'un utilisateur.
  */
-
 class LoginController {
     
     /**
-     * Rend la vue de la page de connexion
+     * Rend la vue de la page de connexion.
      *
      * @param  String $errorCode (optionnel) : message d'erreur récupéré suite à une levée d'exception
      * @param  String $errorMessage (optionnel) : code d'erreur récupéré suite à une levée d'exception
@@ -22,7 +21,7 @@ class LoginController {
     
 
     /**
-     * Rend la vue "Accueil" de l'application
+     * Rend la vue "Accueil" de l'application.
      */
     public function displayHomePage(){
         require('view/home.php');
@@ -30,7 +29,9 @@ class LoginController {
 
     
     /**
-     * Permet de vérifier la combinaison login/mot de passe
+     * Permet d'appeler le modèle pour vérifier la combinaison login/mot de passe.
+     * Renvoie vers la page de connexion avec une levée d'exception en cas d'échec d'authentification.
+     * Renvoie vers la page d'accueil et remplit les variables de session en cas de succès.
      *
      * @param  String $login
      * @param  String $password
@@ -50,7 +51,7 @@ class LoginController {
 
     
     /**
-     * Permet de remplir les variables de session avec les données utilisateur lors de la connexion à l'application
+     * Permet de remplir les variables de session avec les données utilisateur lors de la connexion à l'application.
      *
      * @param  Array $userData
      */
@@ -69,7 +70,8 @@ class LoginController {
 
     
     /**
-     * Permet de gérer la déconnexion de l'application
+     * Permet de gérer la déconnexion de l'application.
+     * Renvoie vers la page de connexion.
      *
      */
     public function logout(){

@@ -330,7 +330,7 @@
                                 $recordController->getOptionsData(inputValidation($_POST['typeOfData']));
                             }
                             if(inputValidation($_POST['scope']) === "add" && inputValidation($_POST['userId'] !== null)) {
-                                $recordController->getOptionsData(inputValidation($_POST['typeOfData']), inputValidation($_POST['userId']));
+                                $recordController->getOptionsData(inputValidation($_POST['typeOfData']), intval(inputValidation($_POST['userId'])));
                             }
                         }
                     } else throw new AuthenticationException();
