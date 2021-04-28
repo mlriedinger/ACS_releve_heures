@@ -46,21 +46,21 @@ function parseUniqueLineRequest(data) {
 /*  Appels AJAX pour récupèrer les résultats des requêtes PHP au format JSON et remplir dynamiquement les tableaux de relevés
     Params :
     * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'scope' : portée de la demande (tous, validés, en attente, supprimés)
+    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'status' : portée de la demande (tous, validés, en attente, supprimés)
     * parseMultipleLinesRequest : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function updatePersonalRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+function updatePersonalRecordsLog(typeOfRecords, status) {
+    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
 }
 
-function updateTeamRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+function updateTeamRecordsLog(typeOfRecords, status) {
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
 }
 
-function updateAllUsersRecordsLog(typeOfRecords, scope) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, parseMultipleLinesRequest, 'json');
+function updateAllUsersRecordsLog(typeOfRecords, status) {
+    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
 }
 
 
@@ -101,13 +101,13 @@ function getRecordData(recordId) {
 /*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et afficher dynamiquement le nombre de relevés en attente de validation
     Params :
     * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'scope' : portée de la demande (tous, validés, en attente, supprimés)
+    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'status' : portée de la demande (tous, validés, en attente, supprimés)
     * displayNumberOfRecordsTocheck : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function getNumberOfRecordsToCheck(typeOfRecords, scope) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'scope': scope }, displayNumberOfRecordsTocheck, 'json');
+function getNumberOfRecordsToCheck(typeOfRecords, status) {
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, displayNumberOfRecordsTocheck, 'json');
 }
 
 
@@ -119,6 +119,6 @@ function getNumberOfRecordsToCheck(typeOfRecords, scope) {
     * 'json' : format de données reçues par la requête AJAX
 */
 
-function getOptionsData(scope, optionType, userId) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, displayOptionsList, 'json');
+function getOptionsData(status, optionType, userId) {
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'status': status, 'userId': userId }, displayOptionsList, 'json');
 }

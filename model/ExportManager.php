@@ -14,14 +14,38 @@ class ExportManager extends RecordManager {
             - l'id du manager (facultatif)
             - l'id du salarié (facultatif)
     */
-
-
-    public function exportRecords(Record $recordInfo){
-        $rows = $this->getRecordsToExport($recordInfo);
-        $fileName = $this->getFileName($recordInfo);
+    public function exportRecords(Export $exportInfo){
+        $rows = $this->getRecordsToExport($exportInfo);
+        $fileName = $this->getFileName($exportInfo);
         $this->writeCsvFile($rows, $fileName);
     }
 
+    public function getRecordsToExport(Export $exportInfo){
+        $typeOfRecords = $exportInfo->getTypeOfRecords();
+        $status = $exportInfo->getStatus();
+
+        $pdo = $this->dbConnect();
+
+        // Construction de la requête SQL
+        $sql = $this->sqlRequestBasis();
+        $sql = $this->sqlAddExportOptions($exportInfo, $sql);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
+
+        $query = $pdo->prepare($sql);
+        $queryParams = $this->fillQueryParamsArray($exportInfo);
+        
+        if (sizeof($queryParams) != 0){    
+            $query->execute($queryParams);
+        }
+        else $query->execute();
+
+        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // Décommenter la ligne suivante pour débugger la requête
+        $query->debugDumpParams();
+
+        return $rows;
+    }
 
     public function sqlRequestBasis(){
         $sql = "SELECT 
@@ -29,22 +53,7 @@ class ExportManager extends RecordManager {
             Membre.Nom AS 'nom_salarie',
             Membre.Prenom AS 'prenom_salarie',";
         
-        if($_SESSION['dateTimeMgmt'] == 1) {
-            $sql .= "Releve.date_hrs_debut AS 'date_heure_debut',
-            Releve.date_hrs_fin AS 'date_heure_fin',";
-        }
-        else if ($_SESSION['lengthMgmt'] == 1){
-            $sql .= "Releve.date_releve,";
-        }
-            
-        $sql .= "Releve.tps_travail,";
-
-        if($_SESSION['breakMgmt'] == 1){
-            $sql .= " Releve.tps_pause,";
-        }
-        if($_SESSION['tripMgmt'] == 1){
-            $sql .= "Releve.tps_trajet,";
-        }
+        $sql = $this->sqlAddSettingsOptions($sql);
             
         $sql .= "Releve.commentaire,
             Releve.statut_validation AS 'statut_validation',
@@ -68,12 +77,33 @@ class ExportManager extends RecordManager {
         return $sql;
     }
 
+    public function sqlAddSettingsOptions($sql) {
+        if($_SESSION['dateTimeMgmt'] == 1) {
+            $sql .= "Releve.date_hrs_debut AS 'date_heure_debut',
+            Releve.date_hrs_fin AS 'date_heure_fin',";
+        }
+        else if ($_SESSION['lengthMgmt'] == 1){
+            $sql .= "Releve.date_releve,";
+        }
+            
+        $sql .= "Releve.tps_travail,";
 
-    public function sqlRequestOptions(Record $recordInfo, $sql){
-        $periodStart = $recordInfo->getPeriodStart();
-        $periodEnd = $recordInfo->getPeriodEnd();
-        $managerId = $recordInfo->getManagerId();
-        $userId = $recordInfo->getUserId();
+        if($_SESSION['breakMgmt'] == 1){
+            $sql .= " Releve.tps_pause,";
+        }
+        if($_SESSION['tripMgmt'] == 1){
+            $sql .= "Releve.tps_trajet,";
+        }
+
+        return $sql;
+    }
+
+
+    public function sqlAddExportOptions(Export $exportInfo, String $sql){
+        $periodStart = $exportInfo->getPeriodStart();
+        $periodEnd = $exportInfo->getPeriodEnd();
+        $managerId = $exportInfo->getManagerId();
+        $userId = $exportInfo->getUserId();
         
         if($periodStart != "" && $periodEnd != "") $sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
         if($managerId != "") $sql .= " AND Manager.ID = :managerId";
@@ -83,11 +113,11 @@ class ExportManager extends RecordManager {
     }
 
 
-    public function fillQueryParamsArray(Record $recordInfo){
-        $periodStart = $recordInfo->getPeriodStart();
-        $periodEnd = $recordInfo->getPeriodEnd();
-        $managerId = $recordInfo->getManagerId();
-        $userId = $recordInfo->getUserId();
+    public function fillQueryParamsArray(Export $exportInfo){
+        $periodStart = $exportInfo->getPeriodStart();
+        $periodEnd = $exportInfo->getPeriodEnd();
+        $managerId = $exportInfo->getManagerId();
+        $userId = $exportInfo->getUserId();
 
         $queryParams = array();
 
@@ -109,46 +139,6 @@ class ExportManager extends RecordManager {
         return $queryParams;
     }
 
-
-    /* Fonction permettant de récupérer la liste des relevés à exporter
-        Params: 
-            * $recordInfo : objet Record contenant 
-                - le type de relevés demandés (personnels, équipe, à valider ou tous)
-                - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-                - la date de début de période (facultatif)
-                - la date de fin de période (facultatif)
-                - l'id du manager (facultatif)
-                - l'id du salarié (facultatif)
-    */
-
-    public function getRecordsToExport(Record $recordInfo){
-        $typeOfRecords = $recordInfo->getTypeOfRecords();
-        $scope = $recordInfo->getScope();
-
-        $pdo = $this->dbConnect();
-
-        // Construction de la requête SQL
-        $sql = $this->sqlRequestBasis();
-        $sql = $this->sqlRequestOptions($recordInfo, $sql);
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
-
-        $query = $pdo->prepare($sql);
-        $queryParams = $this->fillQueryParamsArray($recordInfo);
-        
-        if (sizeof($queryParams) != 0){    
-            $query->execute($queryParams);
-        }
-        else $query->execute();
-
-        $rows = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        // Décommenter la ligne suivante pour débugger la requête
-        $query->debugDumpParams();
-
-        return $rows;
-    }
-
-
     /* Fonction permettant de construire le nom du fichier d'export
         Params: 
         * $recordInfo : objet Record contenant 
@@ -158,17 +148,15 @@ class ExportManager extends RecordManager {
             - l'id du manager (facultatif)
             - l'id du salarié (facultatif)
     */
-
-
-    public function getFileName(Record $recordInfo){
-        $scope = $recordInfo->getScope();
-        $periodStart = $recordInfo->getPeriodStart();
-        $periodEnd = $recordInfo->getPeriodEnd();
-        $managerId = $recordInfo->getManagerId();
-        $userId = $recordInfo->getUserId();
+    public function getFileName(Export $exportInfo){
+        $status = $exportInfo->getStatus();
+        $periodStart = $exportInfo->getPeriodStart();
+        $periodEnd = $exportInfo->getPeriodEnd();
+        $managerId = $exportInfo->getManagerId();
+        $userId = $exportInfo->getUserId();
 
         $fileNameDetails ="_";
-        $fileNameDetails .= $scope . "_records";
+        $fileNameDetails .= $status . "_records";
 
         if($managerId != "") $fileNameDetails .= "_manager_" . $managerId;
         if($userId != "") $fileNameDetails .= "_user_" . $userId;

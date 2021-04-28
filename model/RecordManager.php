@@ -26,25 +26,16 @@ class RecordManager extends DatabaseConnection
     */
     
     public function sendNewRecord(Record $recordInfo){
-        // On récupère les informations contenues dans l'objet $recordInfo
         $userId = $recordInfo->getUserId();
         $userGroup = $recordInfo->getUserGroup();
-        $worksite = $recordInfo->getWorksite();
+        $breakLength = $recordInfo->getBreakLength();
+        $comment = $recordInfo->getComment();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
         $recordDate = $recordInfo->getDate();
-        $workLengthHours = $recordInfo->getWorkLengthHours();
-        $workLengthMinutes = $recordInfo->getWorkLengthMinutes();
-        $breakLengthHours = $recordInfo->getBreakLengthHours();
-        $breakLengthMinutes = $recordInfo->getBreakLengthMinutes();
-        $tripLengthHours = $recordInfo->getTripLengthHours();
-        $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
-        $comment = $recordInfo->getComment();
-
-        // Conversion des heures en minutes
-        $totalWorkLengthInMinutes = $this->convertLengthIntoMinutes($workLengthHours, $workLengthMinutes);
-        $totalBreakLengthInMinutes = $this->convertLengthIntoMinutes($breakLengthHours, $breakLengthMinutes);
-        $totalTripLengthInMinutes = $this->convertLengthIntoMinutes($tripLengthHours, $tripLengthMinutes);
+        $tripLength = $recordInfo->getTripLength();
+        $workLength = $recordInfo->getWorkLength();
+        $worksite = $recordInfo->getWorksite();
         
         // Validation automatique des relevés saisis par un utilisateur de type admin
         $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
@@ -89,15 +80,15 @@ class RecordManager extends DatabaseConnection
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'recordDate' => $recordDate,
-            'workLength' => $totalWorkLengthInMinutes,
-            'pauseLength' => $totalBreakLengthInMinutes,
-            'tripLength' => $totalTripLengthInMinutes,
+            'workLength' => $workLength,
+            'pauseLength' => $breakLength,
+            'tripLength' => $tripLength,
             'validation_status' => $validation_status,
             'comment' => $comment
         ));
     
         // Décommenter la ligne suivante pour débugger la requête
-        $query->debugDumpParams();
+        // $query->debugDumpParams();
 
         if($attempt) $isSendingSuccessfull = true;
 
@@ -111,23 +102,15 @@ class RecordManager extends DatabaseConnection
     */
 
     public function updateRecord(Record $recordInfo){
-        // On récupère les informations contenues dans l'objet $recordInfo
-        $worksiteId = $recordInfo->getWorksite();
-        $recordId = $recordInfo->getRecordId();
+        $breakLength = $recordInfo->getBreakLength();
+        $comment = $recordInfo->getComment();
         $dateTimeStart = $recordInfo->getDateTimeStart();
         $dateTimeEnd = $recordInfo->getDateTimeEnd();
         $recordDate = $recordInfo->getDate();
-        $workLengthHours = $recordInfo->getWorkLengthHours();
-        $workLengthMinutes = $recordInfo->getWorkLengthMinutes();
-        $breakLengthHours = $recordInfo->getBreakLengthHours();
-        $breakLengthMinutes = $recordInfo->getBreakLengthMinutes();
-        $tripLengthHours = $recordInfo->getTripLengthHours();
-        $tripLengthMinutes = $recordInfo->getTripLengthMinutes();
-        $comment = $recordInfo->getComment();
-
-        $totalWorkLengthInMinutes = $this->convertLengthIntoMinutes($workLengthHours, $workLengthMinutes);
-        $totalBreakLengthInMinutes = $this->convertLengthIntoMinutes($breakLengthHours, $breakLengthMinutes);
-        $totalTripLengthInMinutes = $this->convertLengthIntoMinutes($tripLengthHours, $tripLengthMinutes);
+        $recordId = $recordInfo->getRecordId();
+        $tripLength = $recordInfo->getTripLength();
+        $workLength = $recordInfo->getWorkLength();
+        $worksiteId = $recordInfo->getWorksite();
 
         $isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
@@ -153,9 +136,9 @@ class RecordManager extends DatabaseConnection
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'recordDate' => $recordDate,
-            'workLength' =>  $totalWorkLengthInMinutes,
-            'pauseLength' => $totalBreakLengthInMinutes,
-            'tripLength' => $totalTripLengthInMinutes,
+            'workLength' =>  $workLength,
+            'pauseLength' => $breakLength,
+            'tripLength' => $tripLength,
             'comment' => $comment
         ));
 
@@ -197,7 +180,6 @@ class RecordManager extends DatabaseConnection
     */
 
     public function deleteRecord(Record $recordInfo){
-        // On récupère les informations contenues dans l'objet $recordInfo
         $recordId = $recordInfo->getRecordId();
         $comment = $recordInfo->getComment();
 
@@ -263,13 +245,13 @@ class RecordManager extends DatabaseConnection
     /* Méthode qui permet d'ajouter des clauses dans le WHERE d'une requête et d'ajouter une clause ORDER BY
         Params : 
         * $sql : une chaîne de caractères contenant le début de la requête SQL
-        * $scope : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
+        * $status : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
         * $typeOfRecords : une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
         Retourne la chaîne $sql complétée
     */
 
-    public function addQueryScopeAndOrderByClause(String $sql, String $scope, String $typeOfRecords){
-        switch($scope) {
+    public function addQueryScopeAndOrderByClause(String $sql, String $status, String $typeOfRecords){
+        switch($status) {
             case "all":
                 if($typeOfRecords != "export") $sql .= " AND Releve.supprimer = 0";
                 break;
@@ -312,7 +294,7 @@ class RecordManager extends DatabaseConnection
 
         $userId = $recordInfo->getUserId();
         $typeOfRecords = $recordInfo->getTypeOfRecords();
-        $scope = $recordInfo->getScope();
+        $status = $recordInfo->getStatus();
 
         $sql = "SELECT 
             t_chantier.Nom AS 'chantier', 
@@ -334,7 +316,7 @@ class RecordManager extends DatabaseConnection
             ON Releve.id_chantier = t_chantier.ID
         WHERE Releve.id_login = :userId";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
@@ -360,9 +342,9 @@ class RecordManager extends DatabaseConnection
     */
 
     public function getRecordsFromTeam(Record $recordInfo){
-        $managerId = $recordInfo->getManagerId();
+        $managerId = $recordInfo->getUserId();
         $typeOfRecords = $recordInfo->getTypeOfRecords();
-        $scope = $recordInfo->getScope();
+        $status = $recordInfo->getStatus();
 
         $pdo = $this->dbConnect();
 
@@ -400,7 +382,7 @@ class RecordManager extends DatabaseConnection
                     ON Releve.id_login = t_login.ID
                 WHERE Releve.id_chantier = :worksite";
 
-                $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
+                $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
                 $sql .= ")
                 EXCEPT
@@ -429,7 +411,7 @@ class RecordManager extends DatabaseConnection
                     WHERE Releve.id_chantier = :worksite 
                     AND Releve.id_login = :managerId";
 
-                $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
+                $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
                 $sql .= ")";
     
             $query = $pdo->prepare($sql);
@@ -460,7 +442,7 @@ class RecordManager extends DatabaseConnection
         $pdo = $this->dbConnect();
 
         $typeOfRecords = $recordInfo->getTypeOfRecords();
-        $scope = $recordInfo->getScope();
+        $status = $recordInfo->getStatus();
 
         $sql = "SELECT
             Equipe.id_chantier AS 'id_chantier',
@@ -499,7 +481,7 @@ class RecordManager extends DatabaseConnection
         WHERE Equipe.chef_equipe = 1    
         ";
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $scope, $typeOfRecords);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
         $query->execute();

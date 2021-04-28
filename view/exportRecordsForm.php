@@ -17,28 +17,28 @@ $heading = "Exporter des relevés";
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="radio" name="scope" value="all" aria-label="Bouton radio permettant de sélectionner tous les relevés" checked />
+                        <input class="form-check-input mt-0" type="radio" name="status" value="all" aria-label="Bouton radio permettant de sélectionner tous les relevés" checked />
                     </div>
                     <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Tous les relevés (par défaut)" readonly/>
                 </div>
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="radio" name="scope" value="valid" aria-label="Bouton radio permettant de sélectionner uniquement les relevés validés" />
+                        <input class="form-check-input mt-0" type="radio" name="status" value="valid" aria-label="Bouton radio permettant de sélectionner uniquement les relevés validés" />
                     </div>
                     <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés &#34;validés&#34;" readonly/>
                 </div>
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="radio" name="scope" value="unchecked" aria-label="Bouton radio permettant de sélectionner uniquement les relevés en attente" />
+                        <input class="form-check-input mt-0" type="radio" name="status" value="unchecked" aria-label="Bouton radio permettant de sélectionner uniquement les relevés en attente" />
                     </div>
                     <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés &#34;en attente&#34;" readonly/>
                 </div>
 
                 <div class="input-group mb-2">
                     <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="radio" name="scope" value="deleted" aria-label="Bouton radio permettant de sélectionner uniquement les relevés supprimés" />
+                        <input class="form-check-input mt-0" type="radio" name="status" value="deleted" aria-label="Bouton radio permettant de sélectionner uniquement les relevés supprimés" />
                     </div>
                     <input type="text" class="form-control" aria-label="Sélectionner tous les relevés" value="Uniquement les relevés supprimés" readonly/>
                 </div>
