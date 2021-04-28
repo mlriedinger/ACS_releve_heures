@@ -11,10 +11,9 @@ class SettingController {
      * Rend la vue paramètres
      */
     public function displaySettingsForm() {
-        require('view/settingsForm.php');
+        require 'view/settingsForm.php';
     }
     
-
     /**
      * Permet de récupérer les paramètres actuellement enregistrés en base de données
      */
@@ -27,7 +26,6 @@ class SettingController {
         }
     }
     
-
     /**
      * Permet de mettre à jour les paramètres : en base de données, puis en variables de session
      * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
@@ -45,7 +43,6 @@ class SettingController {
         }
     }
     
-
     /**
      * Permet de remplir les variables de session avec les paramètres lors de la connexion à l'application
      *

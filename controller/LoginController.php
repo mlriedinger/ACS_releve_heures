@@ -16,17 +16,15 @@ class LoginController {
     public function displayLoginPage($errorCode="", $errorMessage=""){
         $errorCode;
         $errorMessage;
-        require('view/login.php');
+        require 'view/login.php';
     }
-    
 
     /**
      * Rend la vue "Accueil" de l'application.
      */
     public function displayHomePage(){
-        require('view/home.php');
+        require 'view/home.php';
     }
-
     
     /**
      * Permet d'appeler le modèle pour vérifier la combinaison login/mot de passe.
@@ -48,7 +46,6 @@ class LoginController {
             $this->displayHomePage();
         }
     }
-
     
     /**
      * Permet de remplir les variables de session avec les données utilisateur lors de la connexion à l'application.
@@ -67,7 +64,6 @@ class LoginController {
         $_SESSION['isActive'] = $userData['CompteActif'];
         $_SESSION['isDeleted'] = $userData['Supprimer'];
     }
-
     
     /**
      * Permet de gérer la déconnexion de l'application.

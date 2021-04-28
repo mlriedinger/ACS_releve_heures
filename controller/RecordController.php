@@ -9,73 +9,34 @@ require 'autoloader.php';
 class RecordController {
     
     /**
-     * Rend la vue de saisie d'un nouveau relevé
+     * Rend la vue dont le nom est passé en paramètre
+     *
+     * @param  String $viewFile
      */
-    public function displayNewRecordForm(){
-        require('view/addNewRecord.php');
+    public function displayView(String $viewFile) {
+        require 'view/'.$viewFile.'.php';
     }
-    
-
-    /**
-     * Rend la vue de validation de relevés en attente
-     */
-    public function displayValidationForm(){
-        require('view/recordsToCheck.php');
-    }
-    
-
-    /**
-     * Rend la vue d'historique personnel
-     */
-    public function displayPersonalRecordsLog(){
-        require('view/personalRecordsLog.php');
-    }
-    
-
-    /**
-     * Rend la vue d'historique équipe
-     */
-    public function displayTeamRecordsLog(){
-        require('view/teamRecordsLog.php');
-    }
-    
-
-    /**
-     * Rend la vue d'historique global
-     */
-    public function displayAllRecordsLog(){
-        require('view/allUsersRecordsLog.php');
-    }
-    
     
     /**
-     * Rend la vue d'export de données
+     * Rend la vue partielle dont le nom est passé en paramètre
+     *
+     * @param  String $partialFile
      */
-    public function displayExportForm(){
-        require('view/exportRecordsForm.php');
+    public function displayPartial(String $partialFile) {
+        require 'view/partials/'.$partialFile.'.php';
     }
-    
-       
+     
     /**
      * Rend le formulaire de saisie de relevé (uniquement le formulaire)
      *
      * @param  Record $recordInfo
      */
-    public function getRecordForm(Record $recordInfo){
-        $recordId = $recordInfo->getRecordId();
-        $userId = $recordInfo->getUserId();
-        require('view/partials/recordForm.php');
-    }
-    
-    
-    /**
-     * Rend le formulaire de confirmation de suppression (uniquement le formulaire)
-     */
-    public function getDeleteConfirmationForm(){
-        require('view/partials/deleteConfirmationForm.php');
+    public function getRecordForm(int $record, int $user){
+        $recordId = $record;
+        $userId = $user;
+        $this->displayPartial('recordForm');
     }
 
-    
     /**
      * Permet l'enregistrement d'un nouveau relevé d'heure
      * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
@@ -96,7 +57,6 @@ class RecordController {
         }
     }
 
-   
     /**
      * Permet la modification d'un relevé qui n'a pas encore été validé
      * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
@@ -112,7 +72,6 @@ class RecordController {
         echo '<script>window.history.go(-1);</script>';
     }
 
-    
     /**
      * Permet de mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager
      * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
@@ -134,9 +93,8 @@ class RecordController {
         echo '<script>window.history.go(-1);</script>';
     }
 
-    
     /**
-     * Permet de "supprimer" un relevé d'heure (en réalité le rendre inactif)
+     * Permet de "supprimer" un relevé d'heure (en réalité le rendre inactif).
      * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
      *
      * @param  Record $recordInfo
@@ -149,9 +107,8 @@ class RecordController {
         echo '<script>window.history.go(-1);</script>';
     }
 
-    
     /**
-     * Permet de récupérer les informations d'un relevé
+     * Permet de récupérer les informations d'un relevé.
      *
      * @param  Record $recordInfo
      */
@@ -160,50 +117,30 @@ class RecordController {
         $recordManager->getRecord($recordInfo);
     }
     
-
     /**
-     * Permet de récupérer les relevés personnels de l'utilisateur
+     * Permet de récupérer une liste de relevés selon un périmètre passé en second paramètre.
+     * Par exemple, getRecords($recordInfo, 'user') permet de récupérer tous les relevés d'un utilisateur.
      *
      * @param  Record $recordInfo
+     * @param  String $scope : "user", "team" ou "all", correspond au périmètre de la recherche
      */
-    public function getUserRecords(Record $recordInfo){
+    public function getRecords(Record $recordInfo, String $scope) {
         $recordManager = new RecordManager();
-        $recordManager->getRecordsFromUser($recordInfo);   
-    }
-    
 
-    /**
-     * Permet de récupérer les relevés des salariés appartenant à l'équipe dont l'utilisateur est le manager
-     *
-     * @param  Record $recordInfo
-     */
-    public function getTeamRecords(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $recordManager->getRecordsFromTeam($recordInfo);
+        switch($scope) {
+            case "user":
+                $recordManager->getRecordsFromUser($recordInfo);
+                break;
+            case "team":
+                $recordManager->getRecordsFromTeam($recordInfo);
+                break;
+            case "all":
+                $recordManager->getAllRecords($recordInfo);
+                break;
+            default:
+                throw new InvalidParameterException();
+        }
     }
-    
-
-    /**
-     * Permet de récupérer tous les relevés
-     *
-     * @param  Record $recordInfo
-     */
-    public function getAllUsersRecords(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $recordManager->getAllRecords($recordInfo);
-    }
-    
-
-    /**
-     * Permet d'exporter les relevés souhaités au format CSV
-     *
-     * @param  Record $recordInfo
-     */
-    public function exportRecords(Record $recordInfo){
-        $exportManager = new ExportManager();
-        $exportManager->exportRecords($recordInfo);
-    }
-    
 
     /**
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour les afficher dans un <select>
