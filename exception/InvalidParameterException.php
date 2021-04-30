@@ -1,7 +1,7 @@
 <?php
     
     /**
-     * Classe qui permet de gérer un problème lié à un champs de formulaire non rempli
+     * Classe qui permet de gérer un problème lié à un champs de formulaire non rempli.
      */
     class InvalidParameterException extends Exception {
         

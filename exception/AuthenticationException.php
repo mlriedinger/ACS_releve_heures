@@ -1,7 +1,7 @@
 <?php
     
     /**
-     * Classe d'exception qui permet de gérer un problème d'authentification à l'application
+     * Classe d'exception qui permet de gérer un problème d'authentification à l'application.
      */
     class AuthenticationException extends Exception {
         

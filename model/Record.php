@@ -1,5 +1,8 @@
 <?php 
 
+/**
+ * Classe qui gère les informations nécessaires à l'ajout ou la modification d'un relevé.
+ */
 class Record {
 
     // Attributes
@@ -14,10 +17,8 @@ class Record {
     private $_typeOfRecords;
     private $_workLength;
     private $_worksite;
-
     private $_userId;
     private $_userGroup;
-
 
     // Constructeur
     public function __construct() {
@@ -29,7 +30,6 @@ class Record {
         $_workLength = $this->setWorkLength(0);
     }
     
-
     // Mutateurs (setters)
     public function setBreakLength(int $breakLength){
         $this->_breakLength = $breakLength;
@@ -95,7 +95,6 @@ class Record {
         $this->_userGroup = $userGroup;
         return $this;
     }
-
 
     // Accesseurs (getters)
     public function getBreakLength(){

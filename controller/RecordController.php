@@ -4,12 +4,12 @@ session_start();
 require 'autoloader.php';
 
 /**
- * Classe qui permet de gérer l'enregistrement, la modification/suppression et l'affichage des relevés d'heures
+ * Classe qui permet de gérer l'enregistrement, la modification/suppression et l'affichage des relevés d'heures.
  */
 class RecordController {
     
     /**
-     * Rend la vue dont le nom est passé en paramètre
+     * Rend la vue dont le nom est passé en paramètre.
      *
      * @param  String $viewFile
      */
@@ -18,7 +18,7 @@ class RecordController {
     }
     
     /**
-     * Rend la vue partielle dont le nom est passé en paramètre
+     * Rend la vue partielle dont le nom est passé en paramètre.
      *
      * @param  String $partialFile
      */
@@ -27,7 +27,7 @@ class RecordController {
     }
      
     /**
-     * Rend le formulaire de saisie de relevé (uniquement le formulaire)
+     * Rend le formulaire de saisie de relevé (uniquement le formulaire).
      *
      * @param  Record $recordInfo
      */
@@ -38,8 +38,9 @@ class RecordController {
     }
 
     /**
-     * Permet l'enregistrement d'un nouveau relevé d'heure
-     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     * Permet l'enregistrement d'un nouveau relevé d'heure.
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur.
+     * Renvoie vers la page d'historique personnel en cas de succès, sinon vers le formulaire de saisie d'un nouveau relevé en cas.
      *
      * @param  Record $recordInfo
      */
@@ -58,8 +59,9 @@ class RecordController {
     }
 
     /**
-     * Permet la modification d'un relevé qui n'a pas encore été validé
-     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     * Permet la modification d'un relevé qui n'a pas encore été validé.
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur.
+     * Renvoie vers la dernière page visitée avant l'envoi du formulaire.
      *
      * @param  Record $recordInfo
      */
@@ -68,13 +70,13 @@ class RecordController {
         $isUpdateSuccessfull = $recordManager->updateRecord($recordInfo);
         
         $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
-        // Renvoie sur la dernière page visitée avant l'envoi du formulaire
         echo '<script>window.history.go(-1);</script>';
     }
 
     /**
-     * Permet de mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager
-     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     * Permet de mettre à jour le statut des relevés (validation) en fonction de la sélection faite par le manager.
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur.
+     * Renvoie vers la dernière page visitée avant l'envoi du formulaire.
      *
      * @param  Array $recordsCheckList
      */
@@ -96,6 +98,7 @@ class RecordController {
     /**
      * Permet de "supprimer" un relevé d'heure (en réalité le rendre inactif).
      * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     * Renvoie vers la dernière page visitée avant l'envoi du formulaire.
      *
      * @param  Record $recordInfo
      */
@@ -119,7 +122,7 @@ class RecordController {
     
     /**
      * Permet de récupérer une liste de relevés selon un périmètre passé en second paramètre.
-     * Par exemple, getRecords($recordInfo, 'user') permet de récupérer tous les relevés d'un utilisateur.
+     * Par exemple, getRecords($recordInfo, 'user') permet de récupérer les relevés d'un utilisateur.
      *
      * @param  Record $recordInfo
      * @param  String $scope : "user", "team" ou "all", correspond au périmètre de la recherche

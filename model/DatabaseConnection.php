@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Classe qui gère la connexion à la base de données
+ * Classe qui gère la connexion à la base de données.
  */
 class DatabaseConnection {
     
@@ -12,10 +12,8 @@ class DatabaseConnection {
     private $_dbPassword;
     protected $_config;
         
-
     /**
-     * Constructeur qui lit le fichier "config.ini" et récupère les informations nécessaires à la connexion à la base de données
-     *
+     * Constructeur qui lit le fichier "config.ini" et récupère les informations nécessaires à la connexion à la base de données.
      */
     public function __construct(){
         $this->_config = parse_ini_file("config.ini");
@@ -26,16 +24,16 @@ class DatabaseConnection {
         $this->_dbPassword = $this->_config['dbPassword'];
     }
 
-    
     /**
-     * Permet de se connecter à la base de données
+     * Permet de se connecter à la base de données.
+     * Retourne un objet de type PDO en cas de succès, sinon une exception PDO est levée.
      *
      * @param  String $dbUser (optionnel)
      * @param  String $dbPassword (optionnel)
      * @param  String $dbHost (optionnel)
      * @param  String $dbPort (optionnel)
      * @param  String $dbName (optionnel)
-     * @return PDO : retourne un objet de type PDO en cas de succès, sinon une erreur
+     * @return PDO $pdo
      */
     protected function dbConnect($dbUser = "", $dbPassword = "", $dbHost = "", $dbPort = "", $dbName = ""){
         if($dbUser != "") $this->_dbUser = $dbUser;

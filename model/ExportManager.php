@@ -4,7 +4,7 @@ require_once 'RecordManager.php';
 
 /**
  * Classe qui permet de gérer l'export de données.
- * Hérite de RecordManager pour pouvoir utiliser la méthode addQueryScopeAndOrderByClause()
+ * Hérite de RecordManager pour pouvoir utiliser la méthode addQueryScopeAndOrderByClause().
  */
 class ExportManager extends RecordManager {
 
@@ -17,13 +17,30 @@ class ExportManager extends RecordManager {
             - la date de fin de période (facultatif)
             - l'id du manager (facultatif)
             - l'id du salarié (facultatif)
-    */
+    */    
+
+    /**
+     * Permet d'exporter des données selon les options sélectionnées dans le formulaire d'export.
+     * 3 étapes : 
+     * - récupérer le contenu à exporter, c'est-à-dire la liste des relevés
+     * - écrire un nom de fichier pertinent en fonction des données exportées
+     * - écrire le fichier CSV
+     *
+     * @param  Export $exportInfo
+     */
     public function exportRecords(Export $exportInfo){
         $rows = $this->getRecordsToExport($exportInfo);
         $fileName = $this->getFileName($exportInfo);
         $this->writeCsvFile($rows, $fileName);
     }
-
+    
+    /**
+     * Permet de récupérer le contenu à exporter, c'est-à-dire la liste des relevés, selon les options choisies dans le formulaire d'export.
+     * Retourne un tableau de relevés.
+     *
+     * @param  Export $exportInfo
+     * @return Array $rows
+     */
     public function getRecordsToExport(Export $exportInfo){
         $typeOfRecords = $exportInfo->getTypeOfRecords();
         $status = $exportInfo->getStatus();
@@ -38,19 +55,20 @@ class ExportManager extends RecordManager {
         $query = $pdo->prepare($sql);
         $queryParams = $this->fillQueryParamsArray($exportInfo);
         
-        if (sizeof($queryParams) != 0){    
+        if(sizeof($queryParams) != 0){    
             $query->execute($queryParams);
         }
         else $query->execute();
-
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        // Décommenter la ligne suivante pour débugger la requête
-        $query->debugDumpParams();
 
         return $rows;
     }
-
+    
+    /**
+     * Permet de construire la base de la requête SQL pour récupérer les relevés correspondants au formulaire.
+     *
+     * @return String $sql
+     */
     public function sqlRequestBasis(){
         $sql = "SELECT 
             Releve.ID AS 'num_releve',
@@ -80,7 +98,13 @@ class ExportManager extends RecordManager {
 
         return $sql;
     }
-
+    
+    /**
+     * Permet de compléter la requête SQL en fonction des paramètres de saisie de l'application.
+     *
+     * @param  String $sql
+     * @return String $sql
+     */
     public function sqlAddSettingsOptions($sql) {
         if($_SESSION['dateTimeMgmt'] == 1) {
             $sql .= "Releve.date_hrs_debut AS 'date_heure_debut',
@@ -102,7 +126,14 @@ class ExportManager extends RecordManager {
         return $sql;
     }
 
-
+    /**
+     * Permet d'ajouter des options à la requêtes SQL.
+     * Par exemple, récupérer uniquement des relevés entre 2 dates, et/ou d'un salarié (ou manager) en particulier.
+     *
+     * @param  Export $exportInfo
+     * @param  String $sql
+     * @return String $sql
+     */
     public function sqlAddExportOptions(Export $exportInfo, String $sql){
         $periodStart = $exportInfo->getPeriodStart();
         $periodEnd = $exportInfo->getPeriodEnd();
@@ -116,7 +147,12 @@ class ExportManager extends RecordManager {
         return $sql;
     }
 
-
+    /**
+     * Permet de construire le tableau de paramètres qui seront passés lors de l'exécution de la requête SQL.
+     *
+     * @param  Export $exportInfo
+     * @return Array $queryParams
+     */
     public function fillQueryParamsArray(Export $exportInfo){
         $periodStart = $exportInfo->getPeriodStart();
         $periodEnd = $exportInfo->getPeriodEnd();
@@ -142,16 +178,13 @@ class ExportManager extends RecordManager {
 
         return $queryParams;
     }
-
-    /* Fonction permettant de construire le nom du fichier d'export
-        Params: 
-        * $recordInfo : objet Record contenant 
-            - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-            - la date de début de période (facultatif)
-            - la date de fin de période (facultatif)
-            - l'id du manager (facultatif)
-            - l'id du salarié (facultatif)
-    */
+ 
+    /**
+     * Permet de construire le nom du fichier d'export en fonction des champs sélectionnés dans le formulaire d'export.
+     *
+     * @param  Export $exportInfo
+     * @return String $fileName
+     */
     public function getFileName(Export $exportInfo){
         $status = $exportInfo->getStatus();
         $periodStart = $exportInfo->getPeriodStart();
@@ -172,39 +205,34 @@ class ExportManager extends RecordManager {
         return $fileName;
     }
 
-    
     /**
-     * Permet d'écrire un fichier CSV
+     * Permet d'écrire un fichier CSV.
      *
      * @param  Array $rows
      * @param  String $fileName
      */
     public function writeCsvFile(Array $rows, String $fileName){
         $columnNames = array();
+
         if(!empty($rows)){
-            // On boucle sur la première ligne pour récupérer les en-têtes des colonnes
             $firstRow = $rows[0];
-            foreach($firstRow as $colName => $val){
+
+            foreach($firstRow as $colName => $value){
                 $columnNames[] = $colName;
             }
         }
 
-        // Commenter les lignes suivantes pour débugger la requête
         header("Content-type: text/csv ; charset=UTF-8");
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
 
         // On crée un pointeur de fichier dans le flux output pour envoyer le fichier directement au navigateur
         $filePointer = fopen('php://output', 'w');
-
-        // On insère les en-têtes de colonnes au format CSV
         fputcsv($filePointer, $columnNames);
 
-        // On boucle sur les lignes récupérées de la requête pour les insérer dans le fichier au format CSV
         foreach ($rows as $row) {
             fputcsv($filePointer, $row);
         }
 
-        // On ferme le pointeur de fichier
         fclose($filePointer);
     }
 }

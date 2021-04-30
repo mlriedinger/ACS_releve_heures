@@ -1,5 +1,5 @@
 /* Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie plusieurs lignes et de les insérer dans le tableau 
-    Param :
+    @param :
     * data : correspond au tableau contenant les résultats de la requête AJAX
 */
 

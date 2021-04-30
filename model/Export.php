@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Classe qui gère les informations nécessaires à l'export de données de l'application.
+ */
 class Export {
 
     // Attributs

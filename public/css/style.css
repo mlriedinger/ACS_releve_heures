@@ -1,3 +1,5 @@
+/* Mise en forme de l'application hors Bootstrap */
+
 h1 {
   color: #808080;
 }
@@ -8,7 +10,7 @@ a:hover {
   text-decoration: none;
 }
 
-/* Override des classes Bootstrap */
+/* Ré-écriture de classes Bootstrap */
 
 input[readonly], .form-control[readonly] {
   background-color: #fff;
@@ -26,7 +28,7 @@ input[readonly], .form-control[readonly] {
   font-family: 'Open Sans', sans-serif;
 }
 
-/* Masquer des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
+/* Masque des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
 
 @media (min-width: 320px)
   and (max-width: 812px)

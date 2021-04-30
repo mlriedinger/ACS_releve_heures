@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Classe qui gère les informations nécessaires à la modification des paramètres de l'application.
+ */
 class Setting {
 
     // Attributes

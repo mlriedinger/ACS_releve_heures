@@ -49,10 +49,11 @@ class LoginController {
     
     /**
      * Permet de remplir les variables de session avec les données utilisateur lors de la connexion à l'application.
+     * Génère un token CSRF aléatoire pour sécuriser les formulaires qui seront ultérieurement remplis par l'utilisateur.
      *
      * @param  Array $userData
      */
-    public function fillSessionData($userData){
+    public function fillSessionData(Array $userData){
         session_start();
         $_SESSION['login'] = $userData['Utilisateur'];
         $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
@@ -62,7 +63,6 @@ class LoginController {
         $_SESSION['firstname'] = $userData['Prenom'];
         $_SESSION['isAdmin'] = $userData['Administrateur'];
         $_SESSION['isActive'] = $userData['CompteActif'];
-        $_SESSION['isDeleted'] = $userData['Supprimer'];
     }
     
     /**

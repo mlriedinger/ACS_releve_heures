@@ -1,14 +1,13 @@
 <?php
 
-/* On appelle la classe qui gère la connexion à la BDD */
 require_once 'DatabaseConnection.php';
 
-/* Classe qui gère l'envoi et la récupération de données de la BDD 
-    * [INFO] Classe-fille de DatabaseConnection pour pouvoir hériter de la méthode dbConnect()
-*/
+/**
+ * Classe qui permet de gérer la modification et la récupération de paramètres de l'application.
+ * Hérite de DatabseConnection pour pouvoir utiliser la méthode dbConnect().
+ */
+class SettingManager extends DatabaseConnection {
 
-class SettingManager extends DatabaseConnection 
-{
     private $_dbUserForSettings;
     private $_dbPasswordForSettings;
 
@@ -17,7 +16,13 @@ class SettingManager extends DatabaseConnection
         $this->_dbUserForSettings = $this->_config['dbUserForSettings'];
         $this->_dbPasswordForSettings = $this->_config['dbPasswordForSettings'];
     }
-
+    
+    /**
+     * Ouvre une connexion à la base de données avec l'utilisateur ayant uniquement un droit de lecture sur la table paramètres.
+     * Récupère les paramètres existants.
+     *
+     * @return Array $settings
+     */
     public function getSettings() {
         $pdo = $this->dbConnect($this->_dbUserForSettings, $this->_dbPasswordForSettings);
 
@@ -32,13 +37,17 @@ class SettingManager extends DatabaseConnection
         WHERE ID = :id');
         $query->execute(array('id' => 2));
         $settings = $query->fetch(PDO::FETCH_ASSOC);
-
-        // Décommenter la ligne suivante pour débugger la requête
-        // $query->debugDumpParams();
  
         return $settings;
     }
-
+    
+    /**
+     * Permet de mettre à jour les paramètres de l'application.
+     * ATTENTION ! L'ID de la société est écrit en dur dans la requête !
+     *
+     * @param  Setting $settingInfo
+     * @return boolean $updateAttempt
+     */
     public function updateSettings(Setting $settingInfo) {
         $dateTimeMgmt = $settingInfo->getDateTimeMgmt();
         $timeLengthMgmt = $settingInfo->getLengthMgmt();

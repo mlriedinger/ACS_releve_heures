@@ -3,19 +3,19 @@
 require 'autoloader.php';
 
 /**
- * Classe qui permet de gérer les paramètres de l'application
+ * Classe qui permet de gérer les paramètres de l'application.
  */
 class SettingController {
     
     /**
-     * Rend la vue paramètres
+     * Rend la vue paramètres.
      */
     public function displaySettingsForm() {
         require 'view/settingsForm.php';
     }
     
     /**
-     * Permet de récupérer les paramètres actuellement enregistrés en base de données
+     * Permet de récupérer les paramètres enregistrés en base de données.
      */
     public function getSettings() {
         $settingManager = new SettingManager();
@@ -27,8 +27,8 @@ class SettingController {
     }
     
     /**
-     * Permet de mettre à jour les paramètres : en base de données, puis en variables de session
-     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     * Permet de mettre à jour les paramètres : en base de données, puis en variables de session.
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur.
      *
      * @param  Setting $settingInfo
      */
@@ -44,7 +44,7 @@ class SettingController {
     }
     
     /**
-     * Permet de remplir les variables de session avec les paramètres lors de la connexion à l'application
+     * Permet de remplir les variables de session avec les paramètres lors de la connexion à l'application.
      *
      * @param  Array $settings
      */
