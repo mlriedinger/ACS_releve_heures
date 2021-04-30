@@ -36,7 +36,7 @@ $heading = "Historique personnel";
                             <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="workTime">Travail</th>' : ""; ?>
                             <?= $_SESSION['breakMgmt'] == 1 ? '<th scope="col" id="breakTime">Pause</th>' : ""; ?>
                             <?= $_SESSION['tripMgmt'] == 1 ? '<th scope="col" id="tripTime">Trajet</th>' : ""; ?>
-                            <th scope="col" id="comment">Commentaire</th>
+                            <th scope="col" class="records_log_comment" id="comment">Commentaire</th>
                             <th scope="col" id="status">Statut</th>
                             <th scope="col" id="updateDate" class="records_log_last_modification">Modifié le</th>
                             <th scope="col" id="edit"></th>

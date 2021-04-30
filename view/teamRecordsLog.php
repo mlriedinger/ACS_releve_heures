@@ -33,9 +33,9 @@ $heading = "Historique de l'équipe";
                             <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="workTime">Temps de travail</th>' : ""; ?>
                             <?= $_SESSION['breakMgmt'] == 1 ? '<th scope="col" id="breakTime">Temps de pause</th>' : ""; ?>
                             <?= $_SESSION['tripMgmt'] == 1 ? '<th scope="col" id="tripTime">Temps de trajet</th>' : ""; ?>
-                            <th scope="col" id="comment">Commentaire</th>
+                            <th scope="col" class="records_log_comment" id="comment">Commentaire</th>
                             <th scope="col" id="status">Statut</th>
-                            <th scope="col" id="updateDate">Modifié le</th>
+                            <th scope="col" class="records_log_last_modification" id="updateDate">Modifié le</th>
                             <th scope="col" id="edit"></th>
                             <th scope="col" id="delete"></th>
                         </tr>
