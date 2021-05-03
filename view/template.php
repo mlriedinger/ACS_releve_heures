@@ -46,6 +46,6 @@
         <script id="mainScript" src="public/js/main.js"></script>
         <?= $script ?>
 
-        <?php include('partials/initalizeToastScript.php'); ?>
+        <?php include('partials/toastInitializationScript.php'); ?>
     </body>
 </html>
