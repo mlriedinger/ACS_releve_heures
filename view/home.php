@@ -7,10 +7,10 @@ $heading = "Accueil<br/>(à personnaliser)";
 
 <?php ob_start(); ?>
     <div class="row mb-5">
-        <div class="col mt-5">
+        <div class="col-lg mt-5">
             <img src="<?= $_SESSION['imgFilePath']. "illustration.svg"?>" alt="Illustration d'organisation" height="300">
         </div>
-        <div class="col mt-5">
+        <div class="col-lg mt-5">
             <p class="fs-3">Aliquam gravida egestas eleifend.</p>
             <p style="text-align: justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget molestie eros. Aliquam sed enim eget leo lacinia pretium id sit amet mauris. Aenean sed pharetra massa. 
                 Vestibulum nibh erat, accumsan vitae elit in, semper commodo ipsum. Phasellus rhoncus feugiat ligula, et ultrices tortor efficitur vel. 
