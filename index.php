@@ -18,9 +18,9 @@ if(isset($_GET['action'])) {
             // Connexion
             case "login":
                 if(isset($_POST['login']) && isset($_POST['password']) || $_POST['login'] != "" || $_POST['password'] != "") {
-                    $settingController->getSettings();
-                    $loginController->verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
-                } else throw new InvalidParameterException();
+                        $settingController->getSettings();
+                        $loginController->verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
+                    } else throw new InvalidParameterException();
                 break;
 
             // Déconnexion

@@ -25,7 +25,7 @@ class SettingManager extends DatabaseConnection {
      */
     public function getSettings() {
         $pdo = $this->dbConnect($this->_dbUserForSettings, $this->_dbPasswordForSettings);
-
+        
         $query = $pdo->prepare('SELECT 
             chemin_dossier_images,
             image_logo, 
@@ -69,9 +69,6 @@ class SettingManager extends DatabaseConnection {
             'tripLengthMgmt' => $tripLengthMgmt,
             'breakLengthMgmt' => $breakLengthMgmt,
             'id' => 2));
-
-        // Décommenter la ligne suivante pour débugger la requête
-        // $query->debugDumpParams();
 
         return $updateAttempt;
     }
