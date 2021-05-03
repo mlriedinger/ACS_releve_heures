@@ -30,63 +30,57 @@ if(isset($_GET['action'])) {
 
             // Vue "Accueil"
             case "showHomePage":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
                     $loginController->displayHomePage();
-                } else throw new AuthenticationException();
                 break;
 
             // Vue "Nouveau Relevé"
             case "showNewRecordForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
                     $recordController->displayView('addNewRecord');
-                } else throw new AuthenticationException();
                 break;
 
             // Vue "Validation des relevés en attente"
             case "showRecordsToCheck":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2') {
                     $recordController->displayView('recordsToCheck');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue "Historique personnel"
             case "showPersonalRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
                     $recordController->displayView('personalRecordsLog');
-                } else throw new AuthenticationException();
                 break;
 
             // Vue historique équipe
             case "showTeamRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2') {
                     $recordController->displayView('teamRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue historique global
             case "showAllRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
+                if($_SESSION['userGroup'] == '1') {
                     $recordController->displayView('allUsersRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue export
             case "showExportForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
+                if($_SESSION['userGroup'] == '1') {
                     $exportController->displayExportForm();
                 } else throw new AuthenticationException();
                 break;
 
             // Vue paramètres de saisie
             case "showSettingsForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
+                if($_SESSION['userGroup'] == '1') {
                     $settingController->displaySettingsForm();
                 } else throw new AuthenticationException();
                 break;
             
             // Mise à jour des paramètres de saisie
             case "updateSettings":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
+                if($_SESSION['userGroup'] == '1') {
                     $settingInfo = new Setting();
                     $settingInfo = fillSettingInfos($settingInfo);
 

@@ -14,7 +14,9 @@ class RecordController {
      * @param  String $viewFile
      */
     public function displayView(String $viewFile) {
-        require 'view/'.$viewFile.'.php';
+        if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
+            require 'view/'.$viewFile.'.php';
+        } else throw new AuthenticationException();
     }
     
     /**
