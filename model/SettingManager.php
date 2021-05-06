@@ -21,7 +21,7 @@ class SettingManager extends DatabaseConnection {
      * Ouvre une connexion à la base de données avec l'utilisateur ayant uniquement un droit de lecture sur la table paramètres.
      * Récupère les paramètres existants.
      *
-     * @return Array $settings
+     * @return array $settings
      */
     public function getSettings() {
         $pdo = $this->dbConnect($this->_dbUserForSettings, $this->_dbPasswordForSettings);
@@ -46,7 +46,7 @@ class SettingManager extends DatabaseConnection {
      * ATTENTION ! L'ID de la société est écrit en dur dans la requête !
      *
      * @param  Setting $settingInfo
-     * @return boolean $updateAttempt
+     * @return bool $updateAttempt
      */
     public function updateSettings(Setting $settingInfo) {
         $dateTimeMgmt = $settingInfo->getDateTimeMgmt();

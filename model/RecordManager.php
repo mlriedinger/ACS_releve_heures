@@ -29,7 +29,7 @@ class RecordManager extends DatabaseConnection {
      * Permet d'enregistrer un nouveau relevé.
      *
      * @param  Record $recordInfo
-     * @return boolean $isSendingSuccessfull
+     * @return bool $isSendingSuccessfull
      */
     public function sendNewRecord(Record $recordInfo){
         $userId = $recordInfo->getUserId();
@@ -102,7 +102,7 @@ class RecordManager extends DatabaseConnection {
      * Permet de mettre à jour un relevé tant qu'il n'a pas été validé par un N+1.
      *
      * @param  Record $recordInfo
-     * @return boolean $isUpdateSuccessfull
+     * @return bool $isUpdateSuccessfull
      */
     public function updateRecord(Record $recordInfo){
         $breakLength = $recordInfo->getBreakLength();
@@ -154,7 +154,7 @@ class RecordManager extends DatabaseConnection {
      * Prmet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1.
      *
      * @param  int $recordId
-     * @return boolean $isUpdateSuccessfull
+     * @return bool $isUpdateSuccessfull
      */
     public function updateRecordStatus(int $recordId){
         $isUpdateSuccessfull = false;      
@@ -174,7 +174,7 @@ class RecordManager extends DatabaseConnection {
      * Permet de "supprimer" un relevé (le rendre inactif).
      *
      * @param  Record $recordInfo
-     * @return boolean $isDeleteSuccessfull
+     * @return bool $isDeleteSuccessfull
      */
     public function deleteRecord(Record $recordInfo){
         $recordId = $recordInfo->getRecordId();
@@ -203,7 +203,7 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $recordData
+     * @return string $recordData
      */
     public function getRecord(Record $recordInfo){
         $recordId = $recordInfo->getRecordId();
@@ -235,12 +235,12 @@ class RecordManager extends DatabaseConnection {
      * Permet d'ajouter des lignes dans la clause WHERE et d'ajouter une clause ORDER BY.
      * Retourne la chaîne $sql complétée.
      *
-     * @param  String $sql : une chaîne de caractères contenant le début de la requête SQL
-     * @param  String $status : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
-     * @param  String $typeOfRecords: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
-     * @return String $sql
+     * @param  string $sql : une chaîne de caractères contenant le début de la requête SQL
+     * @param  string $status : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
+     * @param  string $typeOfRecords: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
+     * @return string $sql
      */
-    public function addQueryScopeAndOrderByClause(String $sql, String $status, String $typeOfRecords){
+    public function addQueryScopeAndOrderByClause(string $sql, string $status, string $typeOfRecords){
         switch($status) {
             case "all":
                 if($typeOfRecords != "export") $sql .= " AND Releve.supprimer = 0";
@@ -277,7 +277,7 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $userRecords
+     * @return string $userRecords
      */
     public function getRecordsFromUser(Record $recordInfo){
         $pdo = $this->dbConnect();
@@ -324,7 +324,7 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $teamRecords
+     * @return string $teamRecords
      */
     public function getRecordsFromTeam(Record $recordInfo){
         $managerId = $recordInfo->getUserId();
@@ -417,7 +417,7 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $records
+     * @return string $records
      */
     public function getAllRecords(Record $recordInfo){
         $pdo = $this->dbConnect();
@@ -481,11 +481,11 @@ class RecordManager extends DatabaseConnection {
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour alimenter un input <select> (formulaire de saisie ou d'export).
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
-     * @param  String $type
+     * @param  string $type
      * @param  int $userId
-     * @return json $data
+     * @return string $data
      */
-    public function getDataForOptionSelect(String $type, int $userId){
+    public function getDataForOptionSelect(string $type, int $userId){
         $pdo = $this->dbConnect();
 
         $sql ="";

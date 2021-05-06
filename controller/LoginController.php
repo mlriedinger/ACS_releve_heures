@@ -10,10 +10,10 @@ class LoginController {
     /**
      * Rend la vue de la page de connexion.
      *
-     * @param  String $errorCode (optionnel) : message d'erreur récupéré suite à une levée d'exception
-     * @param  String $errorMessage (optionnel) : code d'erreur récupéré suite à une levée d'exception
+     * @param  string $errorCode (optionnel) : message d'erreur récupéré suite à une levée d'exception
+     * @param  string $errorMessage (optionnel) : code d'erreur récupéré suite à une levée d'exception
      */
-    public function displayLoginPage($errorCode="", $errorMessage=""){
+    public function displayLoginPage(string $errorCode="", string $errorMessage=""){
         $errorCode;
         $errorMessage;
         require 'view/login.php';
@@ -31,10 +31,10 @@ class LoginController {
      * Renvoie vers la page de connexion avec une levée d'exception en cas d'échec d'authentification.
      * Renvoie vers la page d'accueil et remplit les variables de session en cas de succès.
      *
-     * @param  String $login
-     * @param  String $password
+     * @param  string $login
+     * @param  string $password
      */
-    public function verifyLogin($login, $password) {
+    public function verifyLogin(string $login, string $password) {
         $loginManager = new LoginManager();
         $userData = $loginManager->getUserData($login, $password);
 
@@ -51,10 +51,10 @@ class LoginController {
      * Permet de remplir les variables de session avec les données utilisateur lors de la connexion à l'application.
      * Génère un token CSRF aléatoire pour sécuriser les formulaires qui seront ultérieurement remplis par l'utilisateur.
      *
-     * @param  Array $userData
+     * @param  array $userData
      */
-    public function fillSessionData(Array $userData){
-        session_start();
+    public function fillSessionData(array $userData){
+        session_start(); 
         $_SESSION['login'] = $userData['Utilisateur'];
         $_SESSION['csrfToken'] = bin2hex(random_bytes(32));
         $_SESSION['userId'] = $userData['ID'];

@@ -11,18 +11,18 @@ class RecordController {
     /**
      * Rend la vue dont le nom est passé en paramètre.
      *
-     * @param  String $viewFile
+     * @param  string $viewFile
      */
-    public function displayView(String $viewFile) {
+    public function displayView(string $viewFile) {
         require 'view/'.$viewFile.'.php';
     }
     
     /**
      * Rend la vue partielle dont le nom est passé en paramètre.
      *
-     * @param  String $partialFile
+     * @param  string $partialFile
      */
-    public function displayPartial(String $partialFile) {
+    public function displayPartial(string $partialFile) {
         require 'view/partials/'.$partialFile.'.php';
     }
      
@@ -78,9 +78,9 @@ class RecordController {
      * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur.
      * Renvoie vers la dernière page visitée avant l'envoi du formulaire.
      *
-     * @param  Array $recordsCheckList
+     * @param  array $recordsCheckList
      */
-    public function updateRecordStatus(Array $recordsCheckList){   
+    public function updateRecordStatus(array $recordsCheckList){   
         $recordManager = new RecordManager();
         $updateResults = [];
 
@@ -125,9 +125,9 @@ class RecordController {
      * Par exemple, getRecords($recordInfo, 'user') permet de récupérer les relevés d'un utilisateur.
      *
      * @param  Record $recordInfo
-     * @param  String $scope : "user", "team" ou "all", correspond au périmètre de la recherche
+     * @param  string $scope : "user", "team" ou "all", correspond au périmètre de la recherche
      */
-    public function getRecords(Record $recordInfo, String $scope) {
+    public function getRecords(Record $recordInfo, string $scope) {
         $recordManager = new RecordManager();
 
         switch($scope) {
@@ -148,10 +148,10 @@ class RecordController {
     /**
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour les afficher dans un <select>
      *
-     * @param  String $typeOfData : "managers", "users" ou "worksites"
-     * @param  int $userId (optionnel) : ID du salarié nécessaire uniquement à la récupération des chantiers auxquels le salarié est affecté
+     * @param  string $typeOfData : "managers", "users" ou "worksites"
+     * @param  string $userId (optionnel) : ID du salarié nécessaire uniquement à la récupération des chantiers auxquels le salarié est affecté
      */
-    public function getOptionsData($typeOfData, $userId=""){
+    public function getOptionsData(string $typeOfData, string $userId="") {
         $recordManager = new RecordManager();
         $recordManager->getDataForOptionSelect($typeOfData, $userId);
     }

@@ -36,7 +36,7 @@ class Record {
         return $this;
     }
 
-    public function setComment(String $comment){
+    public function setComment(string $comment){
         $this->_comment = $comment;
         return $this;
     }

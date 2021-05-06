@@ -8,17 +8,6 @@ require_once 'RecordManager.php';
  */
 class ExportManager extends RecordManager {
 
-    /* Fonction permettant d'exporter des données
-        Params: 
-        * $recordInfo : objet Record contenant 
-            - le type de relevés demandés (personnels, équipe, à valider ou tous)
-            - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-            - la date de début de période (facultatif)
-            - la date de fin de période (facultatif)
-            - l'id du manager (facultatif)
-            - l'id du salarié (facultatif)
-    */    
-
     /**
      * Permet d'exporter des données selon les options sélectionnées dans le formulaire d'export.
      * 3 étapes : 
@@ -39,7 +28,7 @@ class ExportManager extends RecordManager {
      * Retourne un tableau de relevés.
      *
      * @param  Export $exportInfo
-     * @return Array $rows
+     * @return array $rows
      */
     public function getRecordsToExport(Export $exportInfo){
         $typeOfRecords = $exportInfo->getTypeOfRecords();
@@ -67,7 +56,7 @@ class ExportManager extends RecordManager {
     /**
      * Permet de construire la base de la requête SQL pour récupérer les relevés correspondants au formulaire.
      *
-     * @return String $sql
+     * @return string $sql
      */
     public function sqlRequestBasis(){
         $sql = "SELECT 
@@ -102,8 +91,8 @@ class ExportManager extends RecordManager {
     /**
      * Permet de compléter la requête SQL en fonction des paramètres de saisie de l'application.
      *
-     * @param  String $sql
-     * @return String $sql
+     * @param  string $sql
+     * @return string $sql
      */
     public function sqlAddSettingsOptions($sql) {
         if($_SESSION['dateTimeMgmt'] == 1) {
@@ -131,10 +120,10 @@ class ExportManager extends RecordManager {
      * Par exemple, récupérer uniquement des relevés entre 2 dates, et/ou d'un salarié (ou manager) en particulier.
      *
      * @param  Export $exportInfo
-     * @param  String $sql
-     * @return String $sql
+     * @param  string $sql
+     * @return string $sql
      */
-    public function sqlAddExportOptions(Export $exportInfo, String $sql){
+    public function sqlAddExportOptions(Export $exportInfo, string $sql){
         $periodStart = $exportInfo->getPeriodStart();
         $periodEnd = $exportInfo->getPeriodEnd();
         $managerId = $exportInfo->getManagerId();
@@ -151,7 +140,7 @@ class ExportManager extends RecordManager {
      * Permet de construire le tableau de paramètres qui seront passés lors de l'exécution de la requête SQL.
      *
      * @param  Export $exportInfo
-     * @return Array $queryParams
+     * @return array $queryParams
      */
     public function fillQueryParamsArray(Export $exportInfo){
         $periodStart = $exportInfo->getPeriodStart();
@@ -183,7 +172,7 @@ class ExportManager extends RecordManager {
      * Permet de construire le nom du fichier d'export en fonction des champs sélectionnés dans le formulaire d'export.
      *
      * @param  Export $exportInfo
-     * @return String $fileName
+     * @return string $fileName
      */
     public function getFileName(Export $exportInfo){
         $status = $exportInfo->getStatus();
@@ -208,10 +197,10 @@ class ExportManager extends RecordManager {
     /**
      * Permet d'écrire un fichier CSV.
      *
-     * @param  Array $rows
-     * @param  String $fileName
+     * @param  array $rows
+     * @param  string $fileName
      */
-    public function writeCsvFile(Array $rows, String $fileName){
+    public function writeCsvFile(array $rows, string $fileName){
         $columnNames = array();
 
         if(!empty($rows)){

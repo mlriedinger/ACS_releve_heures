@@ -46,9 +46,9 @@ class SettingController {
     /**
      * Permet de remplir les variables de session avec les paramètres lors de la connexion à l'application.
      *
-     * @param  Array $settings
+     * @param  array $settings
      */
-    public function fillSessionData(Array $settings) {
+    public function fillSessionData(array $settings) {
         session_start();
         $_SESSION['imgFilePath'] = $settings['chemin_dossier_images'];
         $_SESSION['logo'] = $settings['image_logo'];

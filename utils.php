@@ -4,7 +4,7 @@
  * Permet d'assainir les données reçues de l'utilisateur.
  *
  * @param  mixed $data : donnée issue d'un input de formulaire
- * @return $data : donnée assainie
+ * @return mixed $data : donnée assainie
  */
 function inputValidation($data) {
     $data = trim($data);
