@@ -473,9 +473,6 @@ class RecordManager extends DatabaseConnection {
         echo json_encode($records);
     }
 
-    /* Fonction permettant de récupérer la liste des managers et des salariés pour alimenter la rubrique select du formulaire d'export
-        * $type : chaîne de caractères correspondant au type d'utilisateurs à récupérer ("managers" ou "users")
-    */
     
     /**
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour alimenter un input <select> (formulaire de saisie ou d'export).
