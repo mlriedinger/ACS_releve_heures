@@ -31,7 +31,7 @@ class RecordManager extends DatabaseConnection {
      * @param  Record $recordInfo
      * @return bool $isSendingSuccessfull
      */
-    public function sendNewRecord(Record $recordInfo){
+    public function addNewRecord(Record $recordInfo){
         $userId = $recordInfo->getUserId();
         $userGroup = $recordInfo->getUserGroup();
         $breakLength = $recordInfo->getBreakLength();
@@ -93,9 +93,33 @@ class RecordManager extends DatabaseConnection {
             'comment' => $comment
         ));
 
-        if($attempt) $isSendingSuccessfull = true;
+        $pdo->lastInsertId();
 
-        return $isSendingSuccessfull;
+        return $pdo->lastInsertId();
+    }
+
+    public function addDetails(Record $recordInfo, int $lastInsertId) {
+        $workstations = $recordInfo->getWorkstations();
+
+        foreach($workstations as $workstation){
+            // récupérer l'id du poste
+            // récupérer la durée
+            // faire l'insert
+        }
+
+        $query = $pdo->prepare('INSERT INTO t_saisie_heure_detail
+        VALUES (
+        :id,
+        :id_releve, 
+        :id_poste, 
+        :duree)');
+        $query->execute(array(
+            'id' => 0,
+            'id_releve' => $lastInsertId,
+            'id_poste' => $workstation,
+            'duree' => $length
+        ));
+
     }
     
     /**
