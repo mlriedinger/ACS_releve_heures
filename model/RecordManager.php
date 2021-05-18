@@ -329,6 +329,8 @@ class RecordManager extends DatabaseConnection {
     public function getRecordsFromTeam(Record $recordInfo){
         $managerId = $recordInfo->getUserId();
         $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $teamRecords["typeOfRecords"] = $typeOfRecords;
+        $teamRecords["records"] = [];
         $status = $recordInfo->getStatus();
 
         $pdo = $this->dbConnect();
@@ -404,12 +406,13 @@ class RecordManager extends DatabaseConnection {
                 'worksite' => $worksite['id_chantier'],
                 'managerId' => $managerId
             ));
-            $teamRecords["typeOfRecords"] = $typeOfRecords;
-            $teamRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-    
-            header("Content-Type: text/json");
-            echo json_encode($teamRecords);
+            $records = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            $teamRecords["records"] = array_merge($teamRecords["records"], $records);
+
         }
+        header("Content-Type: text/json");
+        echo json_encode($teamRecords);
     }  
     
     /**
