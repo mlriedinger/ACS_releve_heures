@@ -96,22 +96,6 @@ function fillWorkByLengthInfos($recordInfo) {
 }
 
 /**
- * Permet d'ajouter un poste de travail.
- *
- * @param  Record $recordInfo : un objet de type Record
- * @return Record $recordInfo : l'objet Record rempli
- */
-function fillWorkstationsArray($recordInfo) {
-    foreach(array_keys($_POST['workstationLengthHours']) as $workstationId){
-        $hours = intval($_POST['workstationLengthHours'][$workstationId]);
-        $minutes = intval($_POST['workstationLengthMinutes'][$workstationId]);
-        $length = convertLengthIntoMinutes($hours, $minutes);
-        $workstation = new Workstation($workstationId, $length);
-        $recordInfo->addWorkstation($workstation);
-    }
-}
-
-/**
  * Permet d'ajouter un temps de pause sous forme de durée.
  *
  * @param  Record $recordInfo : un objet de type Record

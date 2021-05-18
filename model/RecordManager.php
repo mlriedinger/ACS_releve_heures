@@ -97,30 +97,6 @@ class RecordManager extends DatabaseConnection {
 
         return $pdo->lastInsertId();
     }
-
-    public function addDetails(Record $recordInfo, int $lastInsertId) {
-        $workstations = $recordInfo->getWorkstations();
-
-        foreach($workstations as $workstation){
-            // récupérer l'id du poste
-            // récupérer la durée
-            // faire l'insert
-        }
-
-        $query = $pdo->prepare('INSERT INTO t_saisie_heure_detail
-        VALUES (
-        :id,
-        :id_releve, 
-        :id_poste, 
-        :duree)');
-        $query->execute(array(
-            'id' => 0,
-            'id_releve' => $lastInsertId,
-            'id_poste' => $workstation,
-            'duree' => $length
-        ));
-
-    }
     
     /**
      * Permet de mettre à jour un relevé tant qu'il n'a pas été validé par un N+1.

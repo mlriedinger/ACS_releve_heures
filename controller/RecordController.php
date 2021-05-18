@@ -45,10 +45,10 @@ class RecordController {
      * @param  Record $recordInfo
      */
     public function addNewRecord(Record $recordInfo){
-        $lastInsertRecordId = $this->_recordManager->addNewRecord($recordInfo);
-        $this->_recordManager->addDetails($recordInfo, $lastInsertRecordId);
+        $recordManager = new RecordManager();
+        $isSendingSuccessfull = $recordManager->addNewRecord($recordInfo);
 
-        if($lastInsertRecordId > 0) {
+        if($isSendingSuccessfull) {
             $_SESSION['success'] = true;
             header('Location: index.php?action=showPersonalRecordsLog');
         }
