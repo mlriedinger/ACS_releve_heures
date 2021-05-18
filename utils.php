@@ -45,8 +45,8 @@ function fillBasicRecordInfos(Record $recordInfo) {
     if($_SESSION['dateTimeMgmt'] == '1' && !empty($_POST['datetimeStart']) && !empty($_POST['datetimeEnd'])) {
         fillWorkByDateTimeInfos($recordInfo);
     }
-    // Sinon, si le paramètre "Mode de saisie des relevés" est "durée" ou "durée ventilée par postes"
-    else if(($_SESSION['lengthMgmt'] == '1' || $_SESSION['lengthByCategoryMgmt'] == 1) && !empty($_POST['recordDate']) && (!empty($_POST['workLengthHours']) || !empty($_POST['workLengthMinutes']))) {
+    // Sinon, si le paramètre "Mode de saisie des relevés" est "durée" 
+    else if($_SESSION['lengthMgmt'] == '1' && !empty($_POST['recordDate']) && (!empty($_POST['workLengthHours']) || !empty($_POST['workLengthMinutes']))) {
         fillWorkByLengthInfos($recordInfo);
     }
 
@@ -89,11 +89,7 @@ function fillWorkByLengthInfos($recordInfo) {
     $totalWorkLength = convertLengthIntoMinutes($workHours, $workMinutes);
 
     if($totalWorkLength > 0) {
-        if($_SESSION['lengthByCategoryMgmt'] == 1){
-            fillWorkstationsArray($recordInfo);
-        } else {
-            $recordInfo->setWorkLength($totalWorkLength);
-        }
+        $recordInfo->setWorkLength($totalWorkLength);
     } else {
         throw new InvalidParameterException();
     }
