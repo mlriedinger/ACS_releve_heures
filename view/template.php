@@ -22,6 +22,9 @@
         
         <!-- Toujours mettre la feuille de style en dernière position ! -->
         <link rel="stylesheet" href="public/css/style.css" />
+
+        <!-- CDN pour charger jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
 
     <body class="d-flex flex-column h-100">
