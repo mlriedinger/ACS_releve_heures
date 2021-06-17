@@ -46,6 +46,8 @@ $heading = "Accueil<br/>(à personnaliser)";
         window.onload = function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
             getCurrentDate();
+            var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(1) > div > a";
+            updateNavBarActiveAttribute(menuItemSelector);
     }
 
         function getCurrentDate() {
@@ -55,6 +57,7 @@ $heading = "Accueil<br/>(à personnaliser)";
             currentDate = document.getElementById("currentDate");
             currentDate.innerHTML = today.toLocaleDateString('fr-FR', options);
         }
+
     </script>
 
 <?php $script = ob_get_clean(); ?>

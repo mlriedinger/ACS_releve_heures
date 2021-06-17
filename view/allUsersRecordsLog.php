@@ -65,6 +65,8 @@ $heading = "Historique global";
         window.onload = function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
             updateAllUsersRecordsLog('All', 'all');
+            var menuItemSelector = "#navbarDropdown";
+            updateNavBarActiveAttribute(menuItemSelector);
         };
     </script>
     <?php include('partials/recordFormScripts.php'); ?>

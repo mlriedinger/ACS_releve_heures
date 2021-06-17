@@ -113,6 +113,8 @@ $heading = "Exporter des relevés";
         window.onload = function(){
             getOptionsData('export', 'managers');
             getOptionsData('export', 'users');
+            var menuItemSelector = "#navbarDropdown2";
+            updateNavBarActiveAttribute(menuItemSelector);
     }
     </script>
 <?php $script = ob_get_clean(); ?>

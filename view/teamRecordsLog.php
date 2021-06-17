@@ -60,6 +60,8 @@ $heading = "Historique de l'équipe";
         window.onload = function(){
             getNumberOfRecordsToCheck('Check', 'unchecked');
             updateTeamRecordsLog('Team', 'all');
+            var menuItemSelector = "#navbarDropdown";
+            updateNavBarActiveAttribute(menuItemSelector);
         }
     </script>
     <?php include('partials/recordFormScripts.php'); ?>
