@@ -42,3 +42,8 @@ function displayNumberOfRecordsTocheck(data) {
         document.getElementById("notificationIcon").hidden = true;
     }
 }
+
+function updateNavBarActiveAttribute(selector) {
+    var menuItem = document.querySelector(selector);
+    menuItem.classList.add("active");
+}

@@ -15,6 +15,8 @@ $heading = "Nouveau relevé";
     <script>
         window.onload = function() {
             getOptionsData('add', 'worksites', <?= $_SESSION['userId']?>);
+            var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(2) > div > a";
+            updateNavBarActiveAttribute(menuItemSelector);
         }
     </script>
 <?php $script = ob_get_clean(); ?>

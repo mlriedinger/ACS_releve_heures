@@ -52,6 +52,8 @@ $heading = "Validations en attente";
         window.onload = function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
             updateTeamRecordsLog('Check', 'unchecked');
+            var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > a";
+            updateNavBarActiveAttribute(menuItemSelector);
         };
     </script>
 

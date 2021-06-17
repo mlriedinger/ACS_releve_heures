@@ -63,6 +63,8 @@ $heading = "Historique personnel";
         window.onload = function(){
             getNumberOfRecordsToCheck('Check', 'unchecked');
             updatePersonalRecordsLog('Personal', 'all');
+            var menuItemSelector = "#navbarDropdown";
+            updateNavBarActiveAttribute(menuItemSelector);
         }
     </script>
     <?php include('partials/recordFormScripts.php'); ?>

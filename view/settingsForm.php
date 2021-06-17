@@ -55,6 +55,12 @@ $heading = "Paramètres";
 
 <?php ob_start(); ?>  
     <script>
+        window.onload = function(){
+            var menuItemSelector = "#navbarDropdown2";
+            updateNavBarActiveAttribute(menuItemSelector);
+        }
+    </script>
+    <script>
         let dateTimeSwitch = document.getElementById("dateTimeMgmtSwitch");
         let timeLengthSwitch = document.getElementById("lengthMgmtSwitch");
 
