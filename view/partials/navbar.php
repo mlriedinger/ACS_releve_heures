@@ -14,7 +14,7 @@
                 <li class="nav-item ps-5 mb-3 mb-lg-0">
                     <div class="d-flex flex-column align-items-center navbar-div">
                         <i class="bi bi-house"></i>
-                        <a class="nav-link text-center text-center active" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
+                        <a class="nav-link text-center text-center" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
                     </div>
                 </li>
                 <li class="nav-item ps-5 mb-3 mb-lg-0">
