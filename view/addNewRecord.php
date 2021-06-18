@@ -6,7 +6,11 @@ $heading = "Nouveau relevé";
 ?>
 
 <?php ob_start(); ?>
-
+    <div class="row mb-5">
+        <div class="col-lg mt-5 text-center">
+            <img src="<?= $_SESSION['imgFilePath']. "illustration.svg"?>" alt="Illustration mobile" height="300">
+        </div>
+    </div>
     <?php include 'partials/recordForm.php'; ?>
 
 <?php $content = ob_get_clean(); ?>

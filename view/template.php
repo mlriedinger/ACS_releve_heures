@@ -29,7 +29,7 @@
     <body class="d-flex flex-column h-100">
         <header><?php include 'partials/navbar.php'; ?></header>
     
-        <main class="flex-shrink-0">
+        <main class="flex-shrink-0" id="<?= $id ?>">
             <div class="container">
                 <h2 class="display-6 mt-5 mb-5 text-center"> <?= $heading ?> </h2>
                 

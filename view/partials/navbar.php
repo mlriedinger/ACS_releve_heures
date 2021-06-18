@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
            
     <div class="container-fluid d-flex align-items-center mt-3 mb-3">
         <a class="navbar-brand" href="index.php?action=showHomePage">
