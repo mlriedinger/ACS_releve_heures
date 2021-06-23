@@ -1,18 +1,12 @@
 <?php
 
+require_once 'AbstractController.php';
 require 'autoloader.php';
 
 /**
  * Classe qui permet de gérer les paramètres de l'application.
  */
-class SettingController {
-    
-    /**
-     * Rend la vue paramètres.
-     */
-    public function displaySettingsForm() {
-        require 'view/settingsForm.php';
-    }
+class SettingController extends AbstractController {
     
     /**
      * Permet de récupérer les paramètres enregistrés en base de données.
@@ -39,7 +33,7 @@ class SettingController {
         if($isUpdateSuccessfull) {
             $this->getSettings();
             $_SESSION['success'] = true;
-            $this->displaySettingsForm();
+            $this->displayView('settingsForm');
         }
     }
     

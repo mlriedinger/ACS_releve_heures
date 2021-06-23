@@ -43,7 +43,7 @@ class ExportManager extends RecordManager {
 
         $query = $pdo->prepare($sql);
         $queryParams = $this->fillQueryParamsArray($exportInfo);
-        
+		
         if(sizeof($queryParams) != 0){    
             $query->execute($queryParams);
         }
@@ -71,19 +71,19 @@ class ExportManager extends RecordManager {
             Releve.date_hrs_creation AS 'date_heure_creation',
             Releve.date_hrs_modif AS 'date_heure_modification',
             Releve.supprimer AS 'releve_supprime',
-            Chantier.Nom AS 'chantier',
+            Affaire.Nom AS 'affaire',
             Manager.Nom AS 'nom_manager',
             Manager.Prenom AS 'prenom_manager'
-        FROM t_equipe AS Equipe
-        INNER JOIN t_chantier AS Chantier
-            ON Equipe.id_chantier = Chantier.ID
-        INNER JOIN t_saisie_heure AS Releve
-            ON Chantier.ID = Releve.id_chantier
-        INNER JOIN t_login AS Manager
-            ON Equipe.id_login = Manager.ID
-        INNER JOIN t_login AS Membre
-            ON Releve.id_login = Membre.ID
-        WHERE Equipe.chef_equipe = 1";
+        FROM t_saisie_heure AS Releve
+		   
+		INNER JOIN t_affaires AS Affaire
+			ON Releve.id_affaire = Affaire.ID
+		   
+		INNER JOIN t_login AS Membre
+		   ON Releve.id_login = Membre.ID
+		   
+		INNER JOIN t_login AS Manager
+			ON Releve.id_manager = Manager.ID";
 
         return $sql;
     }
@@ -128,8 +128,14 @@ class ExportManager extends RecordManager {
         $periodEnd = $exportInfo->getPeriodEnd();
         $managerId = $exportInfo->getManagerId();
         $userId = $exportInfo->getUserId();
-        
-        if($periodStart != "" && $periodEnd != "") $sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
+		
+        if($periodStart != "" && $periodEnd != "") {
+			if($_SESSION['dateTimeMgmt'] == 1) {
+				$sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
+			} else if ($_SESSION['lengthMgmt'] == 1){
+				$sql .= " AND Releve.date_releve >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
+			}
+		}
         if($managerId != "") $sql .= " AND Manager.ID = :managerId";
         if($userId != "") $sql .= " AND Membre.ID = :userId";
 
