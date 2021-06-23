@@ -1,30 +1,13 @@
 <?php
 session_start();
 
+require_once 'AbstractController.php';
 require 'autoloader.php';
 
 /**
- * Classe qui permet de gérer l'enregistrement, la modification/suppression et l'affichage des relevés d'heures.
+ * Classe qui permet de gérer l'enregistrement, la modification/suppression et l'affichage des relevés d'heures. Classe-fille d'AbstractController pour hériter des méthodes permettant de rendre une vue.
  */
-class RecordController {
-    
-    /**
-     * Rend la vue dont le nom est passé en paramètre.
-     *
-     * @param  string $viewFile
-     */
-    public function displayView(string $viewFile) {
-        require 'view/'.$viewFile.'.php';
-    }
-    
-    /**
-     * Rend la vue partielle dont le nom est passé en paramètre.
-     *
-     * @param  string $partialFile
-     */
-    public function displayPartial(string $partialFile) {
-        require 'view/partials/'.$partialFile.'.php';
-    }
+class RecordController extends AbstractController {
      
     /**
      * Rend le formulaire de saisie de relevé (uniquement le formulaire).
@@ -97,7 +80,7 @@ class RecordController {
 
     /**
      * Permet de "supprimer" un relevé d'heure (en réalité le rendre inactif).
-     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur
+     * Enregistre un booléen en variable de session pour déclencher l'affichage d'une notification à l'utilisateur en cas de succès ou d'erreur.
      * Renvoie vers la dernière page visitée avant l'envoi du formulaire.
      *
      * @param  Record $recordInfo

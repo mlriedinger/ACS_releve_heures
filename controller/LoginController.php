@@ -1,33 +1,15 @@
 <?php
 
+require_once 'AbstractController.php';
 require 'autoloader.php';
 
 /**
- * Classe qui permet de gérer l'authentification d'un utilisateur.
+ * Classe qui permet de gérer l'authentification d'un utilisateur. Classe-fille d'AbstractController pour hériter des méthodes permettant de rendre une vue.
  */
-class LoginController {
+class LoginController extends AbstractController {
     
     /**
-     * Rend la vue de la page de connexion.
-     *
-     * @param  string $errorCode (optionnel) : message d'erreur récupéré suite à une levée d'exception
-     * @param  string $errorMessage (optionnel) : code d'erreur récupéré suite à une levée d'exception
-     */
-    public function displayLoginPage(string $errorCode="", string $errorMessage=""){
-        $errorCode;
-        $errorMessage;
-        require 'view/login.php';
-    }
-
-    /**
-     * Rend la vue "Accueil" de l'application.
-     */
-    public function displayHomePage(){
-        require 'view/home.php';
-    }
-    
-    /**
-     * Permet d'appeler le modèle pour vérifier la combinaison login/mot de passe.
+     * Permet de vérifier la combinaison login/mot de passe.
      * Renvoie vers la page de connexion avec une levée d'exception en cas d'échec d'authentification.
      * Renvoie vers la page d'accueil et remplit les variables de session en cas de succès.
      *
@@ -43,7 +25,7 @@ class LoginController {
             
         } else if (!empty($userData)){
             $this->fillSessionData($userData);
-            $this->displayHomePage();
+            $this->displayView('home');
         }
     }
     
