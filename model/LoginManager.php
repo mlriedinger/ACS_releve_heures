@@ -24,12 +24,12 @@ class LoginManager extends DatabaseConnection {
         $pdo = $this->dbConnect($login, $password);
      
         $query = $pdo->prepare('SELECT ID,
-        id_groupe,
-        Administrateur,
-        CompteActif,
-        Nom,
-        Prenom,
-        Supprimer 
+			id_groupe,
+			Administrateur,
+			CompteActif,
+			Nom,
+			Prenom,
+			Supprimer 
         FROM t_login 
         WHERE Utilisateur = :login');
         $query->execute(array('login' => $login));
@@ -38,7 +38,3 @@ class LoginManager extends DatabaseConnection {
         return $userData;
     }
 }
-
-
-
-

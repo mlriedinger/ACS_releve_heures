@@ -5,7 +5,7 @@
  */
 class Record {
 
-    // Attributes
+    // Attributs
     private $_breakLengthHours;
     private $_comment;
     private $_date;

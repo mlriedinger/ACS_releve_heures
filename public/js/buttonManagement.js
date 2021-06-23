@@ -4,10 +4,9 @@
         * data : correspond au tableau contenant les résultats de la requête AJAX
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-
 function insertEditRecordButton(newEdit, data, counter){
-    let newEditText = `<button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(${data[counter].ID}, ${data[counter].id_login})" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>`;
-    newEdit.innerHTML += newEditText;   
+    let newEditText = `<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(${data[counter].ID}, ${data[counter].id_login})" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>`;
+    newEdit.innerHTML += newEditText;
 }
 
 
@@ -17,9 +16,8 @@ function insertEditRecordButton(newEdit, data, counter){
         * data : correspond au tableau contenant les résultats de la requête AJAX
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-
 function insertDeleteRecordButton(newDelete, data, counter){
-    let newDeleteText = `<button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(${data[counter].ID})"><i class="far fa-trash-alt"></i></button>`;
+    let newDeleteText = `<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(${data[counter].ID})"><i class="far fa-trash-alt"></i></button>`;
     newDelete.innerHTML += newDeleteText;
 }
 
@@ -30,7 +28,6 @@ function insertDeleteRecordButton(newDelete, data, counter){
         * data : correspond au tableau contenant les résultats de la requête AJAX
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-
 function insertSwitchButton(newIsValid, data, counter){
     var html = [
         '<div class="form-check form-switch">',
@@ -43,7 +40,6 @@ function insertSwitchButton(newIsValid, data, counter){
 
 
 /* Fonction qui permet d'insérer des boutons de contrôle de formulaire */
-
 function insertFormControlButtons() {
     var formControlButtons = [
         '<div class="row mb-3 justify-content-md-center">',      

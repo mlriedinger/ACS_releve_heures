@@ -1,4 +1,8 @@
+/* ///////////////////////////////////////////// */
 /* Mise en forme de l'application hors Bootstrap */
+/* ///////////////////////////////////////////// */
+
+/* Boutons de contrôle de formulaire */
 
 input[type="submit"] {
   background-color: #C63527;
@@ -9,6 +13,8 @@ input[type="reset"] {
   background-color: #CDCCCC;
   border-color: #CDCCCC;
 }
+
+/* Page d'accueil */
 
 #homeBackGround {
   background-image: url('../img/working_blur.jpg');
@@ -60,11 +66,17 @@ input[type="reset"] {
   }
 }
 
+/* //////////////////////////////// */
 /* Ré-écriture de classes Bootstrap */
+/* //////////////////////////////// */
+
+/* Inputs de formulaire en mode readonly */
 
 input[readonly], .form-control[readonly] {
   background-color: #fff;
 }
+
+/* Items de navbar */
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
@@ -73,17 +85,27 @@ input[readonly], .form-control[readonly] {
   border-color: #dee2e6 #dee2e6 #fff;
 }
 
-#navbarContent > * > * > div > a.active {
-  color: #C63527;
-}
-
-.bg-dark {
-  background-color:#000000!important;
+#navbarContent > * > * > div > a.active,
+#navbarContent > * > * > div > i.active {
+  color: #C63527!important;
 }
 
 .nav-item {
   font-size: 1.05em;
 }
+
+.dropdown-item:active {
+  background-color: #C63527;
+}
+
+/* Couleur de fond "dark" */
+
+.bg-dark {
+  background-color:#000000!important;
+}
+
+
+/* Items de formulaires */
 
 *[class="input-group-text"] {
   background-color: #323233;
@@ -103,9 +125,6 @@ input[readonly], .form-control[readonly] {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #c63527;
 }
 
-.dropdown-item:active {
-  background-color: #C63527;
-}
 /* Masque des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
 
 @media (min-width: 320px)
@@ -123,5 +142,4 @@ input[readonly], .form-control[readonly] {
   .navbar-div i {
     margin-right: 2em;
   }
-
 }

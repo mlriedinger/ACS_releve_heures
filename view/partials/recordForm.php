@@ -7,9 +7,9 @@
     <div id="divWorksiteInput" class="row mt-5 mb-3 d-flex justify-content-md-center">
 
         <div class="col mb-3" style="flex-grow: 2;">
-            <span class="input-group-text" id="worksite_selector">Chantier</span>
-            <select class="form-select" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez un chantier" aria-describedby="worksite_selector" required>
-                <option value="" disabled selected>Sélectionnez un chantier</option>
+            <span class="input-group-text" id="worksite_selector">Affaire</span>
+            <select class="form-select" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez une affaire" aria-describedby="worksite_selector" required>
+                <option value="" disabled selected>Sélectionnez une affaire</option>
             </select>
         </div>
 

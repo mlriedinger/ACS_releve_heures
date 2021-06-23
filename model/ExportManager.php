@@ -54,7 +54,7 @@ class ExportManager extends RecordManager {
     }
     
     /**
-     * Permet de construire la base de la requête SQL pour récupérer les relevés correspondants au formulaire.
+     * Permet de construire la base de la requête SQL pour récupérer les relevés.
      *
      * @return string $sql
      */
@@ -103,13 +103,13 @@ class ExportManager extends RecordManager {
             $sql .= "Releve.date_releve,";
         }
             
-        $sql .= "Releve.tps_travail,";
+        $sql .= "Releve.tps_travail AS 'tps_travail_minutes',";
 
         if($_SESSION['breakMgmt'] == 1){
-            $sql .= " Releve.tps_pause,";
+            $sql .= " Releve.tps_pause AS 'tps_pause_minutes,";
         }
         if($_SESSION['tripMgmt'] == 1){
-            $sql .= "Releve.tps_trajet,";
+            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes,";
         }
 
         return $sql;
@@ -117,7 +117,7 @@ class ExportManager extends RecordManager {
 
     /**
      * Permet d'ajouter des options à la requêtes SQL.
-     * Par exemple, récupérer uniquement des relevés entre 2 dates, et/ou d'un salarié (ou manager) en particulier.
+     * Par exemple, récupérer uniquement des relevés entre 2 dates, et/ou d'un salarié (ou d'un manager) en particulier.
      *
      * @param  Export $exportInfo
      * @param  string $sql
@@ -133,7 +133,7 @@ class ExportManager extends RecordManager {
 			if($_SESSION['dateTimeMgmt'] == 1) {
 				$sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
 			} else if ($_SESSION['lengthMgmt'] == 1){
-				$sql .= " AND Releve.date_releve >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
+				$sql .= " AND Releve.date_releve >= :periodStart AND Releve.date_releve <= :periodEnd";
 			}
 		}
         if($managerId != "") $sql .= " AND Manager.ID = :managerId";

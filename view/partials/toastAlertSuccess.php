@@ -15,4 +15,3 @@ if($_SESSION['success'] === true) {
   <?php 
   unset($_SESSION['success']);
 }
-

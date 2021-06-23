@@ -3,8 +3,6 @@
     * data : correspond au tableau contenant les résultats de la requête AJAX
 */
 function parseMultipleLinesRequest(data) {
-    console.log("parseMultipleLinesRequest : ");
-    console.log(data);
     var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
 
@@ -30,7 +28,6 @@ function parseMultipleLinesRequest(data) {
     * data : contenu de la réponse à la requête AJAX
 */
 function parseUniqueLineRequest(data) {
-    console.log(data);
     var recordData = [];
 
     $.each(data, function(key, value) {

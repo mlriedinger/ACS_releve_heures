@@ -6,7 +6,7 @@ $id="homeBackGround";
 
 <?php ob_start(); ?>
 
-    <h2 id="homeHeading">Bienvenue !</div>
+    <h2 id="homeHeading">Bienvenue <?= $_SESSION['firstname'] . ' ' ?>!</div>
 
     <div class="divider mt-5 mb-5"></div>
 
@@ -25,6 +25,8 @@ $id="homeBackGround";
             getCurrentDate();
             var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(1) > div > a";
             updateNavBarActiveAttribute(menuItemSelector);
+			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(1) > div > i";
+			updateNavBarActiveAttribute(iconSelector);
     }
 
         function getCurrentDate() {

@@ -14,7 +14,7 @@ $heading = "Validations en attente";
             <table class="table table-striped table-hover mt-4" id="records_log">
                 <thead>
                     <tr id="table-head">
-                        <th scope="col" id="worksite">Chantier</th>
+                        <th scope="col" id="worksite">Affaire</th>
                         <th scope="col" id="employee">Salarié</th>
                         <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
                         <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="end">Fin</th>' : ""; ?>
@@ -54,6 +54,8 @@ $heading = "Validations en attente";
             updateTeamRecordsLog('Check', 'unchecked');
             var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > a";
             updateNavBarActiveAttribute(menuItemSelector);
+			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > i";
+			updateNavBarActiveAttribute(iconSelector);
         };
     </script>
 
@@ -70,4 +72,3 @@ $heading = "Validations en attente";
 <?php $script = ob_get_clean(); ?>
 
 <?php require 'template.php'; ?>     
-

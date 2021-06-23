@@ -111,10 +111,13 @@ $heading = "Exporter des relevés";
 <?php ob_start() ; ?>
     <script>
         window.onload = function(){
+			getNumberOfRecordsToCheck('Check', 'unchecked');
             getOptionsData('export', 'managers');
             getOptionsData('export', 'users');
             var menuItemSelector = "#navbarDropdown2";
             updateNavBarActiveAttribute(menuItemSelector);
+			var iconSelector = "#navbarContent > ul:nth-child(2) > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
+			updateNavBarActiveAttribute(iconSelector);
     }
     </script>
 <?php $script = ob_get_clean(); ?>

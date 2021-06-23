@@ -7,6 +7,7 @@
 function checkRecordValidationStatus(newLines, data, counter) {
     let validationStatus = data[counter].statut_validation;
     let deleteStatus = data[counter].supprimer;
+	let userGroup = data[counter].id_groupe;
 
     let newValidationText = "";
     
@@ -19,6 +20,10 @@ function checkRecordValidationStatus(newLines, data, counter) {
         newValidationText = document.createTextNode("Supprimé");
     }
     else {
+		if (validationStatus === "1" && userGroup === "1") {
+			insertEditRecordButton(newLines.newEdit, data, counter);
+			insertDeleteRecordButton(newLines.newDelete, data, counter);
+		}
         newValidationText = document.createTextNode("Validé");
     }
     
@@ -34,7 +39,7 @@ function checkRecordValidationStatus(newLines, data, counter) {
 */
 function fillRecordsTable(newLines, data, counter) {
     if(newLines.newWorkSite !== undefined) {
-        let newText = document.createTextNode(data[counter].chantier);
+        let newText = document.createTextNode(data[counter].affaire);
         newLines.newWorkSite.appendChild(newText);
     }
 
@@ -95,7 +100,7 @@ function fillRecordsTable(newLines, data, counter) {
 }
 
 
-/* 
+/* Fonction qui permet d'ajouter des cellules dans la ligne en cours d'ajout.
 */
 function createNewLines(newRow) {
     // On crée un objet newLines qui contiendra les cellules de chaque nouvelle ligne

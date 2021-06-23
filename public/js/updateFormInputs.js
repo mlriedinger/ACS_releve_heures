@@ -1,21 +1,21 @@
+/* Fonction qui permet d'ajout un attribut "selected" à une option de liste déroulante.
+*/
 function addSelectedAttribute(data) {
     var worksitesCollection = document.getElementById("selectWorksite").children;
 
     for (let item of worksitesCollection) {
-        if(item.value === data['id_chantier']){
+        if(item.value === data['id_affaire']){
             item.setAttribute("selected", "");
         }
     }
 }
 
+
 /* Fonction qui permet de mettre à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé
     Param : 
     * data : correspond au tableau contenant les résultats de la requête AJAX
 */
-function updateFormInputs(data) {
-    console.log("updateFormInputs :");
-    console.log(data);
-    
+function updateFormInputs(data) {    
     // On récupère les chantiers associés à l'utilisateur et on ajoute un attribut "selected" sur le chantier correspondant au relevé en cours d'édition
     addSelectedAttribute(data);
     
@@ -66,7 +66,6 @@ function updateFormInputs(data) {
     }
 
     inputComment.innerHTML += data['commentaire'];
-    console.log(inputComment);
 }
 
 
@@ -75,7 +74,6 @@ function updateFormInputs(data) {
     * data : contenu de la réponse à la requête AJAX
 */
 function displayOptionsList(data) {
-    console.log(data);
     var typeOfData = data.typeOfData;
     var tabData = data.records;
 
@@ -100,106 +98,4 @@ function displayOptionsList(data) {
             $(selector).append(new Option(tabData[i].Nom, tabData[i].ID));
         }
     }
-}
-
-/*
-*/
-function displayWorkCategories(data) {
-    console.log(data);
-    var divWorkLengthByCategoryInputs = document.getElementById("divWorkLengthByCategoryInputs");
-
-    for(let i = 0; i < data.length ; i++) {
-        // On transforme la casse du nom du poste : 1ère lettre en majuscule, les suivantes en minuscules
-        var categoryName = data[i].code_poste[0].toUpperCase() + data[i].code_poste.substr(1).toLowerCase();
-
-        var newDivCategory = document.createElement("div");
-        newDivCategory.setAttribute("id", "div"+ categoryName);
-        newDivCategory.setAttribute("class", "col-4 flex-grow-1");
-
-        var categoryCode = data[i].code_poste.toLowerCase();
-        var categoryId = data[i].ID;
-        var categoryLib = data[i].libelle_poste.toLowerCase();
-
-        var html = [
-            `<div class="card mb-3">
-                <div class="card-body">
-                    <p class="card-text text-center mb-3">${ data[i].libelle_poste }</p>
-                    <div class="row">
-                        <div class="col mb-3">
-                            <span class="input-group-text text-center" id="${ categoryCode }_hours_indicator_${ categoryId }">Heures</span>
-                            <input type="number" name="workstationLengthHours[${ categoryId }]" id="${ categoryCode }LengthHours" value="0" class="form-control timeInput" aria-label="Indiquez le nombre d'heures pour le poste ${ categoryLib }" aria-describedby="${ categoryCode }_hours_indicator" required/>
-                        </div>
-
-                        <div class="col mb-3">
-                            <span class="input-group-text text-center" id="${ categoryCode }_minutes_indicator_${ categoryId }">Minutes</span>
-                            <input type="number" min="-15" step="15" max="60" name="workstationLengthMinutes[${ categoryId }]" value="0" id="${ categoryCode }LengthMinutes" onclick="incrementHour(${ categoryCode }LengthHours, ${ categoryCode }LengthMinutes)" class="form-control timeInput" aria-label="Indiquez le nombre de minutes pour le poste ${ categoryLib }" aria-describedby="${ categoryCode }_minutes_indicator" required/>
-                        </div>
-                    </div>
-                </div>
-            </div>`
-        ]
-        newDivCategory.innerHTML = html;
-        divWorkLengthByCategoryInputs.appendChild(newDivCategory);
-    }
-
-    var newDivCategory = document.createElement("div");
-    newDivCategory.setAttribute("id", "div"+ categoryName);
-    newDivCategory.setAttribute("class", "col flex-shrink-1");
-
-    var html = [
-        `<div class="card">
-            <div class="card-body">
-                <p class="card-text text-center mb-3">Total</p>
-                <div class="row">
-                    <div class="col mb-3">
-                        <span class="input-group-text text-center" id="total_hours_indicator">Heures</span>
-                        <input type="number" readonly name="workLengthHours" id="totalLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="total_hours_indicator" required/>
-                    </div>
-
-                    <div class="col mb-3">
-                        <span class="input-group-text text-center" id="total_minutes_indicator">Minutes</span>
-                        <input type="number" readonly step="15" max="60" name="workLengthMinutes" value="0" id="totalLengthMinutes" class="form-control" aria-label="Total des heures de la journée" aria-describedby="total_minutes_indicator" required/>
-                    </div>
-                </div>
-            </div>
-        </div>`
-    ];
-    newDivCategory.innerHTML = html;
-    divWorkLengthByCategoryInputs.appendChild(newDivCategory);
-
-    addEventCalculateTotal();
-}
-
-/*
-*/
-function addEventCalculateTotal() {
-    $('.col').on('change', '.timeInput', getTotal);
-}
-
-function getTotal() {
-    let sumTime = 0;
-    $('.col .timeInput').each(function() {
-        if($(this).attr('name').includes('Hours')) {
-            var inputValue = $(this).val();
-            if($.isNumeric(inputValue)) {
-                
-                sumTime += parseFloat(inputValue) * 60;
-            }
-        }
-        else if($(this).attr('name').includes('Minutes')) {
-            var inputValue = $(this).val();
-            if($.isNumeric(inputValue)) {
-                
-                sumTime += parseFloat(inputValue);
-            }
-        }
-        /*var inputValue = $(this).val();
-        if($.isNumeric(inputValue)) {
-            
-            sumTime += parseFloat(inputValue);
-        }*/
-    });
-    sumTime = convertTimeToHoursAndMinutes(sumTime)
-    $('#totalLengthHours').val(sumTime.hours);
-    $('#totalLengthMinutes').val(sumTime.minutes);
 }

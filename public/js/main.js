@@ -20,6 +20,10 @@ include("public/js/buttonManagement.js");
 include("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js", "sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0", "anonymous");
 
 
+/* Fonction qui permet de convertir un temps en minutes au format heures + minutes.
+	Param :
+	* timeToConvert : temps en minutes à convertir
+*/
 function convertTimeToHoursAndMinutes(timeToConvert) {
     let convertedTime = [];
     convertedTime['hours'] = Math.floor(timeToConvert / 60);
@@ -28,6 +32,7 @@ function convertTimeToHoursAndMinutes(timeToConvert) {
 
     return convertedTime;
 }
+
 
 /* Fonction qui permet d'afficher le nombre de relevés en attente de validation dans un badge rouge à côté du menu "Validation"
     Param :
@@ -43,7 +48,10 @@ function displayNumberOfRecordsTocheck(data) {
     }
 }
 
+
+/* Fonction qui permet d'ajouter une classe "active" sur un élément de la navbar passé en paramètre.
+*/
 function updateNavBarActiveAttribute(selector) {
-    var menuItem = document.querySelector(selector);
-    menuItem.classList.add("active");
+    var navBarItem = document.querySelector(selector);
+    navBarItem.classList.add("active");
 }
