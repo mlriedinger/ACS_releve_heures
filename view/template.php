@@ -18,6 +18,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
+		
+		<!-- Chargement des feuilles de style du tour guide -->
+        <link href="node_modules/intro.js/introjs.css" rel="stylesheet" />
         
         <!-- Toujours mettre la feuille de style en dernière position ! -->
         <link rel="stylesheet" href="public/css/style.css" />
@@ -46,6 +49,9 @@
         <?php include('partials/footer.php'); ?>
 
         <script id="mainScript" src="public/js/main.js"></script>
+		
+		<!-- Script de fonctionnment du tour guide -->
+		<script src="node_modules/intro.js/intro.js"></script>
         <?= $script ?>
 
         <?php include('partials/toastInitializationScript.php'); ?>
