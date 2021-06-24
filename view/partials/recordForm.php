@@ -79,7 +79,7 @@
 
                 <div class="col mb-3">
                     <span class="input-group-text" id="break_minutes_indicator">Minutes</span>
-                    <input type="number" min="-15" step="15" max="60" name="breakLengthMinutes" id="breakLengthMinutes" value="0" onclick="incrementHour(breakLengthHours, breakLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
+                    <input type="number" min="-15" step="15" max="60" name="breakLengthMinutes" id="breakLengthMinutes" value="0" onchange="incrementHour(breakLengthHours, breakLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
                 </div>
 
         </div>
@@ -99,7 +99,7 @@
 
             <div class="col mb-3">
                 <span class="input-group-text" id="trip_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="tripLengthMinutes" id="tripLengthMinutes" value="0" onclick="incrementHour(tripLengthHours, tripLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" />
+                <input type="number" min="-15" step="15" max="60" name="tripLengthMinutes" id="tripLengthMinutes" value="0" onchange="incrementHour(tripLengthHours, tripLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" />
             </div>
 
         </div>
