@@ -106,10 +106,10 @@ class ExportManager extends RecordManager {
         $sql .= "Releve.tps_travail AS 'tps_travail_minutes',";
 
         if($_SESSION['breakMgmt'] == 1){
-            $sql .= " Releve.tps_pause AS 'tps_pause_minutes,";
+            $sql .= " Releve.tps_pause AS 'tps_pause_minutes',";
         }
         if($_SESSION['tripMgmt'] == 1){
-            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes,";
+            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes',";
         }
 
         return $sql;
