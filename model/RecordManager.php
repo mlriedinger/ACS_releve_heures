@@ -312,6 +312,7 @@ class RecordManager extends DatabaseConnection {
         $query->execute(array(
             'userId' => $userId));
 
+        $userRecords["currentUserId"] = $userId ;
         $userRecords["typeOfRecords"] = $typeOfRecords;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
