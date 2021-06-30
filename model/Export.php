@@ -12,6 +12,7 @@ class Export {
     private $_periodEnd;
     private $_status;
     private $_typeOfRecords;
+    private $_userGroup;
 
     // Mutateurs (setters)
     public function setUserId(int $userId){
@@ -44,6 +45,18 @@ class Export {
         return $this;
     }
 
+    /**
+     * Set the value of _userGroup
+     *
+     * @return  self
+     */ 
+    public function setUserGroup( int $userGroup)
+    {
+        $this->_userGroup = $userGroup;
+
+        return $this;
+    }
+
     // Accesseurs (getters)
     public function getUserId(){
         return $this->_userId;
@@ -67,5 +80,13 @@ class Export {
     
     public function getTypeOfRecords(){
         return $this->_typeOfRecords;
+    }
+
+    /**
+     * Get the value of _userGroup
+     */ 
+    public function getUserGroup()
+    {
+        return $this->_userGroup;
     }
 }

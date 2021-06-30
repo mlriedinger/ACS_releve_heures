@@ -62,6 +62,18 @@
                     </li>
                 <?php 
                 } ?>
+
+                <?php 
+                if($_SESSION['userGroup'] == 2){ 
+                    ?>
+                    <li class="nav-item ps-5 mb-3 mb-lg-0">
+                        <div class="d-flex flex-column align-items-center navbar-div">
+                            <i class="bi bi-download text-light"></i>
+                            <a class="nav-link text-center text-center" aria-current="page" href="index.php?action=showExportForm">Export</a>
+                        </div>
+                    </li>
+                <?php 
+                } ?>
             </ul> 
             
             <ul class="navbar-nav mb-2 mb-lg-0">

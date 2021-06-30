@@ -33,11 +33,16 @@ class ExportManager extends RecordManager {
     public function getRecordsToExport(Export $exportInfo){
         $typeOfRecords = $exportInfo->getTypeOfRecords();
         $status = $exportInfo->getStatus();
+        $userGroup = $exportInfo->getUserGroup();
 
         $pdo = $this->dbConnect();
 
         // Construction de la requête SQL
-        $sql = $this->sqlRequestBasis();
+        if ($userGroup > 1) {
+            $sql = $this->sqlRequestBasisForManager();
+        } else {
+            $sql = $this->sqlRequestBasis();
+        }
         $sql = $this->sqlAddExportOptions($exportInfo, $sql);
         $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
@@ -50,6 +55,7 @@ class ExportManager extends RecordManager {
         else $query->execute();
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
+        //$query->debugDumpParams();
         return $rows;
     }
     
@@ -71,7 +77,7 @@ class ExportManager extends RecordManager {
             Releve.date_hrs_creation AS 'date_heure_creation',
             Releve.date_hrs_modif AS 'date_heure_modification',
             Releve.supprimer AS 'releve_supprime',
-            Affaire.Nom AS 'affaire',
+            Affaire.Nom AS 'projet',
             Manager.Nom AS 'nom_manager',
             Manager.Prenom AS 'prenom_manager'
         FROM t_saisie_heure AS Releve
@@ -84,6 +90,43 @@ class ExportManager extends RecordManager {
 		   
 		INNER JOIN t_login AS Manager
 			ON Releve.id_manager = Manager.ID";
+
+        return $sql;
+    }
+
+    /**
+     * Permet de construire la base de la requête SQL pour récupérer les relevés.
+     *
+     * @return string $sql
+     */
+    public function sqlRequestBasisForManager(){
+        $sql = "SELECT 
+            Releve.ID AS 'num_releve',
+            Membre.Nom AS 'nom_salarie',
+            Membre.Prenom AS 'prenom_salarie',";
+        
+        $sql = $this->sqlAddSettingsOptions($sql);
+            
+        $sql .= "Releve.commentaire,
+            Releve.statut_validation AS 'statut_validation',
+            Releve.date_hrs_creation AS 'date_heure_creation',
+            Releve.date_hrs_modif AS 'date_heure_modification',
+            Releve.supprimer AS 'releve_supprime',
+            Affaire.Nom AS 'projet',
+            Manager.Nom AS 'nom_manager',
+            Manager.Prenom AS 'prenom_manager'
+        FROM t_saisie_heure AS Releve
+		   
+		INNER JOIN t_affaires AS Affaire
+			ON Releve.id_affaire = Affaire.ID
+		   
+		INNER JOIN t_login AS Membre
+		   ON Releve.id_login = Membre.ID
+		   
+		INNER JOIN t_login AS Manager
+			ON Releve.id_manager = Manager.ID
+        
+        WHERE Releve.id_manager = :managerId";
 
         return $sql;
     }
@@ -128,6 +171,7 @@ class ExportManager extends RecordManager {
         $periodEnd = $exportInfo->getPeriodEnd();
         $managerId = $exportInfo->getManagerId();
         $userId = $exportInfo->getUserId();
+        $userGroup = $exportInfo->getUserGroup();
 		
         if($periodStart != "" && $periodEnd != "") {
 			if($_SESSION['dateTimeMgmt'] == 1) {
@@ -136,7 +180,9 @@ class ExportManager extends RecordManager {
 				$sql .= " AND Releve.date_releve >= :periodStart AND Releve.date_releve <= :periodEnd";
 			}
 		}
-        if($managerId != "") $sql .= " AND Manager.ID = :managerId";
+        if($userGroup == '1') {
+            if($managerId != "") $sql .= " AND Manager.ID = :managerId";
+        }
         if($userId != "") $sql .= " AND Membre.ID = :userId";
 
         return $sql;

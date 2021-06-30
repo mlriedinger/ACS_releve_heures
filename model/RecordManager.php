@@ -317,7 +317,7 @@ class RecordManager extends DatabaseConnection {
         $status = $recordInfo->getStatus();
 
         $sql = 'SELECT 
-            t_affaires.Nom AS "affaire", 
+            CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "affaire", 
             Releve.date_hrs_debut, 
             Releve.date_hrs_fin, 
             Releve.commentaire, 
@@ -347,7 +347,8 @@ class RecordManager extends DatabaseConnection {
         $query = $pdo->prepare($sql);
         $query->execute(array(
             'userId' => $userId));
-
+        
+        $userRecords["currentUserId"] = $userId ;
         $userRecords["typeOfRecords"] = $typeOfRecords;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -365,6 +366,7 @@ class RecordManager extends DatabaseConnection {
     public function getRecordsFromTeam(Record $recordInfo){
         $managerId = $recordInfo->getUserId();
         $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $teamRecords["currentUserId"] = $managerId;
         $teamRecords["typeOfRecords"] = $typeOfRecords;
         $teamRecords["records"] = [];
         $status = $recordInfo->getStatus();
@@ -384,7 +386,7 @@ class RecordManager extends DatabaseConnection {
         foreach($teamMembers as $teamMember){
 
             $sql = 'SELECT
-                t_affaires.Nom AS "affaire", 
+                CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "affaire", 
                 t_login.ID AS "id_login",
                 t_login.Nom AS "nom_salarie",
                 t_login.Prenom AS "prenom_salarie",
@@ -429,6 +431,7 @@ class RecordManager extends DatabaseConnection {
      * @return string $records
      */
     public function getAllRecords(Record $recordInfo){
+        $userId = $recordInfo->getUserId();
         $pdo = $this->dbConnect();
 
         $typeOfRecords = $recordInfo->getTypeOfRecords();
@@ -436,7 +439,7 @@ class RecordManager extends DatabaseConnection {
 
         $sql = 'SELECT 
 			Releve.id_affaire AS "id_affaire",
-			Affaire.Nom AS "affaire",
+			CONCAT(Affaire.REF, " - ", Affaire.Nom) AS "affaire",
 			Manager.Nom AS "nom_manager",
 			Manager.Prenom AS "prenom_manager",
 			Membre.Nom AS "nom_salarie",
@@ -470,6 +473,7 @@ class RecordManager extends DatabaseConnection {
 
         $query = $pdo->prepare($sql);
         $query->execute();
+        $records["currentUserId"] = $userId;
         $records["typeOfRecords"] = $typeOfRecords;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 		
@@ -481,26 +485,52 @@ class RecordManager extends DatabaseConnection {
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour alimenter un input <select> (formulaire de saisie ou d'export).
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
-     * @param  string $type
-     * @param  int $userId
+     * @param  Record $recordInfo
      * @return string $data
      */
-    public function getDataForOptionSelect(string $type, string $userId){
+    public function getDataForOptionSelect(Record $recordInfo){
+        $type = $recordInfo->getTypeOfRecords();
+        $userGroup = $recordInfo->getUserGroup();
+        $userId = $recordInfo->getUserId();
+
         $pdo = $this->dbConnect();
 
         $sql ="";
 
         switch($type){
             case "managers":
-                $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom FROM t_equipe INNER JOIN t_login ON t_equipe.id_login = t_login.ID WHERE t_equipe.chef_equipe = 1';
-                break;
+                if ($userGroup == '1') {
+                    $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom 
+                        FROM t_equipe 
+                        INNER JOIN t_login 
+                        ON t_equipe.id_login = t_login.ID 
+                        WHERE t_equipe.chef_equipe = 1';
+                    break;
+                } else {
+                    $sql .= 'SELECT t_login.ID, t_login.Nom, t_login.Prenom 
+                        FROM t_login  
+                        WHERE ID = :userId';
+                    break;
+                }
+                
             case "users":
-                $sql .= 'SELECT ID, Nom, Prenom FROM t_login';
-                break;
+                if ($userGroup == '1') {
+                    $sql .= 'SELECT ID, Nom, Prenom FROM t_login';
+                    break;
+                } else {
+                    $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom
+                        FROM t_equipe
+                        INNER JOIN t_login
+                        ON t_equipe.id_login = t_login.ID
+                        WHERE id_chantier = (SELECT t_equipe.id_chantier
+                        FROM t_equipe
+                        WHERE t_equipe.id_login = :userId AND t_equipe.chef_equipe = 1) AND chef_equipe <> 1 ';
+                    break;
+                }
             case "worksites":
                 $sql .= 'SELECT  
                     t_affaires.ID,
-                    t_affaires.Nom
+                    CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "Nom"
                     FROM t_affaires';
                 break;
         }
@@ -514,13 +544,10 @@ class RecordManager extends DatabaseConnection {
         
         $query = $pdo->prepare($sql);
 
-        $queryParams = array();
-        if($userId != "")  $queryParams['userId'] = $userId;
-
-        if (sizeof($queryParams) != 0){    
-            $query->execute($queryParams);
-        }
-        else $query->execute();
+        $queryParams = array(
+            'userId' => $userId
+        );
+        $query->execute($queryParams);
         
         $data["typeOfData"] = $type;
         $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
