@@ -9,9 +9,9 @@
     <div id="divWorksiteInput" class="row mt-5 mb-3 d-flex justify-content-md-center">
 
         <div class="col mb-3" style="flex-grow: 2;" data-step="1" data-intro="Sélectionnez un projet pour lequel vous souhaitez relever des heures.">
-            <span class="input-group-text" id="worksite_selector">Affaire</span>
-            <select class="form-select" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez une affaire" aria-describedby="worksite_selector" required>
-                <option value="" disabled selected>Sélectionnez une affaire</option>
+            <span class="input-group-text" id="worksite_selector">Projet</span>
+            <select class="form-select" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez un projet" aria-describedby="worksite_selector" required>
+                <option value="" disabled selected>Sélectionnez un projet</option>
             </select>
         </div>
 
@@ -61,7 +61,7 @@
 
             <div class="col mb-3" data-step="4" data-intro="Au besoin, indiquez le nombre de minutes (palier de 15 minutes).">
                 <span class="input-group-text" id="work_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="workLengthMinutes" onclick="incrementHour(workLengthHours, workLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="work_minutes_indicator" required/>
+                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="workLengthMinutes" onchange="incrementHour(workLengthHours, workLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="work_minutes_indicator" required/>
             </div>
 
         </div>
