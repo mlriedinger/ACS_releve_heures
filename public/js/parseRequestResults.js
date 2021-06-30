@@ -7,6 +7,7 @@ function parseMultipleLinesRequest(data) {
     console.log(data);
     var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
+    var currentUserId = data.currentUserId;
 
     // On vide le tableau
     clearTable(tabData);
@@ -19,7 +20,7 @@ function parseMultipleLinesRequest(data) {
     // Si la requête a retourné des résultats, on boucle sur tabData pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
     if(tabData.length) {
         for (var i = 0; i < tabData.length; i++) {
-            appendLine("records_log", tabData, typeOfRecords, i);
+            appendLine("records_log", tabData, typeOfRecords, currentUserId, i);
         }
     }
 }

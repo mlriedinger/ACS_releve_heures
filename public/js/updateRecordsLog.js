@@ -4,16 +4,18 @@
         * data : correspond au tableau contenant les résultats de la requête AJAX
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-function checkRecordValidationStatus(newLines, data, counter) {
+function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
     let validationStatus = data[counter].statut_validation;
     let deleteStatus = data[counter].supprimer;
 
     let newValidationText = "";
     
-    if(validationStatus === "0" && deleteStatus === "0") {
+    if (validationStatus === "0" && deleteStatus === "0") {
         newValidationText = document.createTextNode("En attente");
-        insertEditRecordButton(newLines.newEdit, data, counter);
-        insertDeleteRecordButton(newLines.newDelete, data, counter);  
+        if (currentUserId === parseInt(data[counter].id_login)) {
+            insertEditRecordButton(newLines.newEdit, data, counter);
+            insertDeleteRecordButton(newLines.newDelete, data, counter);
+        }
     } 
     else if (validationStatus === "0" && deleteStatus === "1") {
         newValidationText = document.createTextNode("Supprimé");
@@ -185,7 +187,8 @@ function createNewLines(newRow) {
         * typeOfRecord : type de relevés demandés (personnels, en attente, équipe ou globaux)
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-function appendLine(tableID, data, typeOfRecord, counter) {
+function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
+    // console.log(data);
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -197,11 +200,10 @@ function appendLine(tableID, data, typeOfRecord, counter) {
     fillRecordsTable(newLines, data, counter);
 
     if(typeOfRecord === "Personal" || typeOfRecord === "Team" || typeOfRecord === "All") {
-        checkRecordValidationStatus(newLines, data, counter);
+        checkRecordValidationStatus(newLines, data, currentUserId, counter);
     } 
     else {
         insertSwitchButton(newLines.newIsValid, data, counter);
-        insertDeleteRecordButton(newLines.newDelete, data, counter);
     } 
 }
 
