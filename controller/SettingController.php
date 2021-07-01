@@ -52,6 +52,7 @@ class SettingController extends AbstractController {
         $_SESSION['logo'] = $settings['image_logo'];
         $_SESSION['dateTimeMgmt'] = $settings['releve_heures_date_debut_fin'];
         $_SESSION['lengthMgmt'] = $settings['releve_heures_duree'];
+        $_SESSION['lengthByCategoryMgmt'] = $settings['releve_heures_duree_categorie'];
         $_SESSION['tripMgmt'] = $settings['releve_heures_trajet'];
         $_SESSION['breakMgmt'] = $settings['releve_heures_pause'];
     }

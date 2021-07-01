@@ -10,10 +10,16 @@ class Setting {
     private $_lengthMgmt;
     private $_tripMgmt;
     private $_breakMgmt;
+    private $_lengthByCategoryMgmt;
 
     // Setters
     public function setDateTimeMgmt(int $dateTimeMgmtSwitch) {
         $this->_dateTimeMgmt = $dateTimeMgmtSwitch;
+        return $this;
+    }
+
+    public function setLengthByCategoryMgmt(int $lengthByCategoryMgmtSwitch) {
+        $this->_lengthByCategoryMgmt = $lengthByCategoryMgmtSwitch;
         return $this;
     }
 
@@ -47,5 +53,9 @@ class Setting {
 
     public function getBreakMgmt() {
         return $this->_breakMgmt;
+    }
+
+    public function getLengthByCategoryMgmt() {
+        return $this->_lengthByCategoryMgmt;
     }
 }

@@ -136,6 +136,7 @@ function fillSettingInfos(Setting $settingInfo) {
     $settingInfo->setLengthMgmt(intval(inputValidation($_POST['lengthMgmtSwitch'])));
     $settingInfo->setTripMgmt(intval(inputValidation($_POST['tripMgmtSwitch'])));
     $settingInfo->setBreakMgmt(intval(inputValidation($_POST['breakMgmtSwitch'])));
+    $settingInfo->setLengthByCategoryMgmt(intval(inputValidation($_POST['lengthByCategoryMgmtSwitch'])));
 
     return $settingInfo;
 }

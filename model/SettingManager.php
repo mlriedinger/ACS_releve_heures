@@ -30,7 +30,8 @@ class SettingManager extends DatabaseConnection {
             chemin_dossier_images,
             image_logo, 
             releve_heures_date_debut_fin, 
-            releve_heures_duree, 
+            releve_heures_duree,
+            releve_heures_duree_categorie,
             releve_heures_trajet, 
             releve_heures_pause 
         FROM t_parametres 
@@ -51,6 +52,7 @@ class SettingManager extends DatabaseConnection {
     public function updateSettings(Setting $settingInfo) {
         $dateTimeMgmt = $settingInfo->getDateTimeMgmt();
         $timeLengthMgmt = $settingInfo->getLengthMgmt();
+        $timeLengthByCategoryMgmt = $settingInfo->getLengthByCategoryMgmt();
         $tripLengthMgmt = $settingInfo->getTripMgmt();
         $breakLengthMgmt = $settingInfo->getBreakMgmt();
 
@@ -59,13 +61,15 @@ class SettingManager extends DatabaseConnection {
         $query = $pdo->prepare('UPDATE t_parametres
         SET 
             releve_heures_date_debut_fin = :dateTimeMgmt,
-            releve_heures_duree = :timeLengthMgmt, 
+            releve_heures_duree = :timeLengthMgmt,
+            releve_heures_duree_categorie = :timeLengthByCategoryMgmt,
             releve_heures_trajet = :tripLengthMgmt, 
             releve_heures_pause = :breakLengthMgmt
         WHERE ID = :id');
         $updateAttempt = $query->execute(array(
             'dateTimeMgmt' => $dateTimeMgmt,
             'timeLengthMgmt' => $timeLengthMgmt,
+            'timeLengthByCategoryMgmt' => $timeLengthByCategoryMgmt,
             'tripLengthMgmt' => $tripLengthMgmt,
             'breakLengthMgmt' => $breakLengthMgmt,
             'id' => 2));
