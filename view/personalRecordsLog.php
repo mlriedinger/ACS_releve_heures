@@ -29,7 +29,7 @@ $heading = "Historique personnel";
                 <table class="table table-striped table-hover mt-4" id="records_log">
                     <thead>
                         <tr id="table-head">
-                            <th scope="col" id="worksite">Projet</th>
+                            <th scope="col" id="worksite">Affaire</th>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="end">Fin</th>' : ""; ?>
                             <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="date">Date</th>' : ""; ?>

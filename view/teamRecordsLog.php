@@ -26,7 +26,7 @@ $heading = "Historique de l'équipe";
                 <table class="table table-striped table-hover mt-4" id="records_log">
                     <thead>
                         <tr id="table-head">
-                            <th scope="col" id="worksite">Projet</th>
+                            <th scope="col" id="worksite">Affaire</th>
                             <th scope="col" id="employee">Salarié</th>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="end">Fin</th>' : ""; ?>
