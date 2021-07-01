@@ -8,6 +8,12 @@ require 'autoloader.php';
  * Classe qui permet de gérer l'enregistrement, la modification/suppression et l'affichage des relevés d'heures. Classe-fille d'AbstractController pour hériter des méthodes permettant de rendre une vue.
  */
 class RecordController extends AbstractController {
+
+    private $_recordManager;
+
+    public function __construct() {
+        $this->_recordManager = new RecordManager();
+    }
      
     /**
      * Rend le formulaire de saisie de relevé (uniquement le formulaire).
@@ -28,8 +34,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function addNewRecord(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $isSendingSuccessfull = $recordManager->addNewRecord($recordInfo);
+        $isSendingSuccessfull = $this->_recordManager->addNewRecord($recordInfo);
 
         if($isSendingSuccessfull) {
             $_SESSION['success'] = true;
@@ -49,8 +54,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function updateRecord(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $isUpdateSuccessfull = $recordManager->updateRecord($recordInfo);
+        $isUpdateSuccessfull = $this->_recordManager->updateRecord($recordInfo);
         
         $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
@@ -64,11 +68,10 @@ class RecordController extends AbstractController {
      * @param  array $recordsCheckList
      */
     public function updateRecordStatus(array $recordsCheckList){   
-        $recordManager = new RecordManager();
         $updateResults = [];
 
         foreach($recordsCheckList as $recordChecked){
-            $updateAttempt = $recordManager->updateRecordStatus($recordChecked); 
+            $updateAttempt = $this->_recordManager->updateRecordStatus($recordChecked); 
             if($updateAttempt) array_push($updateResults, $updateAttempt);
         }
 
@@ -86,8 +89,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function deleteRecord(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $isDeleteSuccessfull = $recordManager->deleteRecord($recordInfo);
+        $isDeleteSuccessfull = $this->_recordManager->deleteRecord($recordInfo);
 
         $isDeleteSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
@@ -99,8 +101,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function getRecordData(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $recordManager->getRecord($recordInfo);
+        $this->_recordManager->getRecord($recordInfo);
     }
     
     /**
@@ -111,17 +112,16 @@ class RecordController extends AbstractController {
      * @param  string $scope : "user", "team" ou "all", correspond au périmètre de la recherche
      */
     public function getRecords(Record $recordInfo, string $scope) {
-        $recordManager = new RecordManager();
 
         switch($scope) {
             case "user":
-                $recordManager->getRecordsFromUser($recordInfo);
+                $this->_recordManager->getRecordsFromUser($recordInfo);
                 break;
             case "team":
-                $recordManager->getRecordsFromTeam($recordInfo);
+                $this->_recordManager->getRecordsFromTeam($recordInfo);
                 break;
             case "all":
-                $recordManager->getAllRecords($recordInfo);
+                $this->_recordManager->getAllRecords($recordInfo);
                 break;
             default:
                 throw new InvalidParameterException();
@@ -134,7 +134,10 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo : "managers", "users" ou "worksites"
      */
     public function getOptionsData(Record $recordInfo) {
-        $recordManager = new RecordManager();
-        $recordManager->getDataForOptionSelect($recordInfo);
+        $this->_recordManager->getDataForOptionSelect($recordInfo);
+    }
+
+    public function getWorkCategories() {
+        $this->_recordManager->getWorkCategories();
     }
 }

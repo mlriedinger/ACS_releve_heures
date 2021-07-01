@@ -8,6 +8,12 @@ require 'autoloader.php';
  */
 class LoginController extends AbstractController {
     
+    private $_loginManager;
+
+    public function __construct() {
+        $this->_loginManager = new LoginManager();
+    }
+
     /**
      * Permet de vérifier la combinaison login/mot de passe.
      * Renvoie vers la page de connexion avec une levée d'exception en cas d'échec d'authentification.
@@ -17,8 +23,7 @@ class LoginController extends AbstractController {
      * @param  string $password
      */
     public function verifyLogin(string $login, string $password) {
-        $loginManager = new LoginManager();
-        $userData = $loginManager->getUserData($login, $password);
+        $userData = $this->_loginManager->getUserData($login, $password);
 
         if (!isset($password) || !$userData) {
             throw new AuthenticationException();

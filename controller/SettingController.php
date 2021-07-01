@@ -7,13 +7,18 @@ require 'autoloader.php';
  * Classe qui permet de gérer les paramètres de l'application.
  */
 class SettingController extends AbstractController {
+
+    private $_settingManager;
+
+    public function __construct() {
+        $this->_settingManager = new SettingManager();
+    }
     
     /**
      * Permet de récupérer les paramètres enregistrés en base de données.
      */
     public function getSettings() {
-        $settingManager = new SettingManager();
-        $settings = $settingManager->getSettings();
+        $settings = $this->_settingManager->getSettings();
 
         if (!empty($settings)) {
             $this->fillSessionData($settings);
@@ -27,8 +32,7 @@ class SettingController extends AbstractController {
      * @param  Setting $settingInfo
      */
     public function updateSettings(Setting $settingInfo) {
-        $settingManager = new SettingManager();
-        $isUpdateSuccessfull = $settingManager->updateSettings($settingInfo);
+        $isUpdateSuccessfull = $this->_settingManager->updateSettings($settingInfo);
 
         if($isUpdateSuccessfull) {
             $this->getSettings();

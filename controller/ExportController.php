@@ -8,13 +8,18 @@ require 'autoloader.php';
  */
 class ExportController extends AbstractController {
 
+    private $_loginManager;
+
+    public function __construct() {
+        $this->_loginManager = new LoginManager();
+    }
+
     /**
      * Permet d'exporter les relevés souhaités au format CSV.
      *
      * @param  Export $exportInfo
      */
     public function exportRecords(Export $exportInfo){
-        $exportManager = new ExportManager();
-        $exportManager->exportRecords($exportInfo);
+        $this->_loginManager->exportRecords($exportInfo);
     }
 }
