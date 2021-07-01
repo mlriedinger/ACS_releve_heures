@@ -12,7 +12,7 @@ $heading = "Paramètres";
         <div class="row mt-5 mb-3 justify-content-md-center">
         
             <div class="col-sm-4 border rounded p-4">
-                <p>Mode de saisie des relevés</p>
+                <p class="mt-2 mb-4 text-center fs-5">Mode de saisie des relevés</p>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" value="1" id="dateTimeMgmtSwitch" name="dateTimeMgmtSwitch" <?= $_SESSION['dateTimeMgmt'] == 1 ? "checked" : "" ?>/>
                     <label class="form-check-label" for="dateTimeMgmtSwitch">Date et heure de début/fin</label>
@@ -20,14 +20,19 @@ $heading = "Paramètres";
 
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" value="1" id="lengthMgmtSwitch" name="lengthMgmtSwitch" <?= $_SESSION['lengthMgmt'] == 1 ? "checked" : "" ?>/>
-                    <label class="form-check-label" for="lengthMgmtSwitch">Durée</label>
+                    <label class="form-check-label" for="lengthMgmtSwitch">Durée simple</label>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" value="1" id="lengthByCategoryMgmtSwitch" name="lengthByCategoryMgmtSwitch" <?= $_SESSION['lengthByCategoryMgmt'] == 1 ? "checked" : "" ?>/>
+                    <label class="form-check-label" for="lengthByCategoryMgmtSwitch">Durée répartie par postes de travail</label>
                 </div>
             </div>
         </div>   
 
         <div class="row mt-3 mb-3 justify-content-md-center">
             <div class="col-sm-4 border rounded p-4">
-                <p>Autres options</p>
+                <p class="mt-2 mb-4 text-center fs-5">Autres options</p>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" value="1" id="tripMgmtSwitch" name="tripMgmtSwitch" <?= $_SESSION['tripMgmt'] == 1 ? "checked" : "" ?>/>
                     <label class="form-check-label" for="tripMgmtSwitch">Gestion du temps de trajet</label>
