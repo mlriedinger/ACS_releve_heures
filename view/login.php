@@ -19,13 +19,13 @@
         <link rel="stylesheet" href="public/css/style.css" />
     </head>
 
-    <body class="d-flex flex-column h-100" style="background-image: url('https://www.c2j-standexpo.com/wp-content/uploads/2017/12/menu.jpg')">
+    <body class="d-flex flex-column h-100">
         <div class="container justify-content-center">
 
-            <div class="row justify-content-md-center">
+            <div class="row justify-content-md-center mt-5">
 
                 <div class="col-lg-3 text-center mt-5 mb-5">
-                    <img src="public/img/logo.png" alt="Logo" height="200">
+                    <img src="public/img/logo.png" alt="Logo" height="50">
                 </div>
 
             </div>

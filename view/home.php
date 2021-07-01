@@ -8,11 +8,17 @@ $id="homeBackGround";
 
     <h2 id="homeHeading">Bienvenue <?= $_SESSION['firstname'] . ' ' ?>!</div>
 
-    <div class="divider mt-5 mb-5"></div>
+    <div class="divider mt-5 mb-3"></div>
+
+    <div class="row mb-5">
+        <div class="col mt-3">
+            <p class="fs-4 text-center" id="currentDate" style="position: relative">JJ/MM/AAAA</p>
+        </div>
+    </div>
 
     <div class="row mb-2">
-        <div class="col mt-3">
-            <p class="fs-4 text-center" id="currentDate" style="position: relative; color: #fff">JJ/MM/AAAA</p>
+        <div class="col text-center">
+            <img src="public/img/header-accueil.png" alt="Exemples de réalisations par Lugaz Métallerie">
         </div>
     </div>
 
