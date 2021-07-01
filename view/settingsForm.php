@@ -55,6 +55,15 @@ $heading = "Paramètres";
 
 <?php ob_start(); ?>  
     <script>
+        window.onload = function(){
+			getNumberOfRecordsToCheck('Check', 'unchecked');
+            var menuItemSelector = "#navbarDropdown2";
+            updateNavBarActiveAttribute(menuItemSelector);
+			var iconSelector = "#navbarContent > ul:nth-child(2) > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
+			updateNavBarActiveAttribute(iconSelector);
+        }
+    </script>
+    <script>
         let dateTimeSwitch = document.getElementById("dateTimeMgmtSwitch");
         let timeLengthSwitch = document.getElementById("lengthMgmtSwitch");
 
@@ -69,4 +78,3 @@ $heading = "Paramètres";
 <?php $script = ob_get_clean(); ?>
 
 <?php require 'template.php'; ?> 
-        

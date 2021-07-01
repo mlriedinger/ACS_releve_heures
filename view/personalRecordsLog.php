@@ -29,7 +29,7 @@ $heading = "Historique personnel";
                 <table class="table table-striped table-hover mt-4" id="records_log">
                     <thead>
                         <tr id="table-head">
-                            <th scope="col" id="worksite">Chantier</th>
+                            <th scope="col" id="worksite">Projet</th>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="end">Fin</th>' : ""; ?>
                             <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="date">Date</th>' : ""; ?>
@@ -63,6 +63,10 @@ $heading = "Historique personnel";
         window.onload = function(){
             getNumberOfRecordsToCheck('Check', 'unchecked');
             updatePersonalRecordsLog('Personal', 'all');
+            var menuItemSelector = "#navbarDropdown";
+            updateNavBarActiveAttribute(menuItemSelector);
+			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
+			updateNavBarActiveAttribute(iconSelector);
         }
     </script>
     <?php include('partials/recordFormScripts.php'); ?>

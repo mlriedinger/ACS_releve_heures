@@ -1,18 +1,12 @@
 <?php
 
+require_once 'AbstractController.php';
 require 'autoloader.php';
 
 /**
  * Classe qui permet de gérer les paramètres de l'application.
  */
-class SettingController {
-    
-    /**
-     * Rend la vue paramètres.
-     */
-    public function displaySettingsForm() {
-        require 'view/settingsForm.php';
-    }
+class SettingController extends AbstractController {
     
     /**
      * Permet de récupérer les paramètres enregistrés en base de données.
@@ -39,16 +33,16 @@ class SettingController {
         if($isUpdateSuccessfull) {
             $this->getSettings();
             $_SESSION['success'] = true;
-            $this->displaySettingsForm();
+            $this->displayView('settingsForm');
         }
     }
     
     /**
      * Permet de remplir les variables de session avec les paramètres lors de la connexion à l'application.
      *
-     * @param  Array $settings
+     * @param  array $settings
      */
-    public function fillSessionData(Array $settings) {
+    public function fillSessionData(array $settings) {
         session_start();
         $_SESSION['imgFilePath'] = $settings['chemin_dossier_images'];
         $_SESSION['logo'] = $settings['image_logo'];

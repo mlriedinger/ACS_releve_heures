@@ -1,31 +1,128 @@
+/* ///////////////////////////////////////////// */
 /* Mise en forme de l'application hors Bootstrap */
+/* ///////////////////////////////////////////// */
 
-h1 {
-  color: #808080;
+/* Boutons de contrôle de formulaire */
+
+input[type="submit"] {
+  background-color: #C63527;
+  border-color: #C63527;
 }
 
-a,
-a:hover {
-  color: #ffffff;
-  text-decoration: none;
+input[type="reset"] {
+  background-color: #CDCCCC;
+  border-color: #CDCCCC;
 }
 
+/* Page d'accueil */
+
+#homeBackGround {
+  background-image: url('../img/working_blur.jpg');
+  background-size:cover;
+  height: 100vh;
+  width: 100%;
+}
+
+#homeBackGround::before {
+  content: "";
+  position: absolute;
+  top: 138px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(255,255,255,0.15);
+}
+
+#homeHeading {
+  font-family: "Verdana", sans-serif;
+  position: relative;
+  color: #fff;
+  text-align: center;
+  margin-top: 2em;
+  font-size: 3em;
+}
+
+.divider {
+  height:1px;
+  width:40%;
+  animation-name: stretch;
+  animation-duration: 2.5s; 
+  animation-timing-function: ease-out; 
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-play-state: running;
+  margin: 0 auto;
+}
+
+@keyframes stretch {
+  0% {
+    transform: scale(.8);
+    background-color: #C63527;
+    }
+
+  100% {
+  background-color: #C63527;
+  }
+}
+
+/* //////////////////////////////// */
 /* Ré-écriture de classes Bootstrap */
+/* //////////////////////////////// */
+
+/* Inputs de formulaire en mode readonly */
 
 input[readonly], .form-control[readonly] {
   background-color: #fff;
 }
 
+/* Items de navbar */
+
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
   color: #fff;
-  background-color: #212529;
+  background-color: #C63527;
   border-color: #dee2e6 #dee2e6 #fff;
+}
+
+#navbarContent > * > * > div > a.active,
+#navbarContent > * > * > div > i.active {
+  color: #C63527!important;
 }
 
 .nav-item {
   font-size: 1.05em;
-  font-family: 'Open Sans', sans-serif;
+}
+
+.dropdown-item:active {
+  background-color: #C63527;
+}
+
+/* Couleur de fond "dark" */
+
+.bg-dark {
+  background-color:#000000!important;
+}
+
+
+/* Items de formulaires */
+
+*[class="input-group-text"] {
+  background-color: #323233;
+  color: #fff;
+}
+
+.form-check-input:checked {
+  background-color: #c63527;
+  border-color: #c63527;
+}
+
+.form-control:focus,
+.form-select:focus,
+.dropdown-item:focus,
+.form-check-input:focus {
+  border-color: #c63527;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #c63527;
 }
 
 /* Masque des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
@@ -45,5 +142,4 @@ input[readonly], .form-control[readonly] {
   .navbar-div i {
     margin-right: 2em;
   }
-
 }

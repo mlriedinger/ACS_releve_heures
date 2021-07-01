@@ -1,18 +1,15 @@
 <?php
 
+require_once 'AbstractController.php';
 require 'autoloader.php';
 
-class ExportController {
+/**
+ * Classe qui permet de gérer l'export de données. Classe-fille d'AbstractController pour hériter des méthodes permettant de rendre une vue.
+ */
+class ExportController extends AbstractController {
 
     /**
-     * Rend la vue d'export de données
-     */
-    public function displayExportForm(){
-        require 'view/exportRecordsForm.php';
-    }
-
-    /**
-     * Permet d'exporter les relevés souhaités au format CSV
+     * Permet d'exporter les relevés souhaités au format CSV.
      *
      * @param  Export $exportInfo
      */

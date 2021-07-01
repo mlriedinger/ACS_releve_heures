@@ -74,10 +74,14 @@ $heading = "Exporter des relevés";
                                     <input type="date" name="periodEnd" id="periodEnd" class="form-control" aria-label="Sélectionnez une date de fin" aria-describedby="periodEnd_selector"/>
                                 </div>
 
-                                <label for="selectManager" class="mt-4 mb-2">Exporter les relevés de tous les salariés liés à un manager </label>
-                                <select name="manager" id="selectManager" class="form-select mb-3" aria-label="Default select example">
-                                    <option value ="" selected>Sélectionnez un manager</option>
-                                </select>
+                                <?php if ($_SESSION['userGroup'] == '1') {?>
+
+                                    <label for="selectManager" class="mt-4 mb-2">Exporter les relevés de tous les salariés liés à un manager </label>
+                                    <select name="manager" id="selectManager" class="form-select mb-3" aria-label="Default select example">
+                                        <option value ="" selected>Sélectionnez un manager</option>
+                                    </select>
+                                <?php }
+                                ?>
 
                                 <label for="selectUser" class="mt-4 mb-2">Exporter les relevés d'un salarié en particulier </label>
                                 <select name="user" id="selectUser" class="form-select mb-3" aria-label="Default select example">
@@ -111,9 +115,24 @@ $heading = "Exporter des relevés";
 <?php ob_start() ; ?>
     <script>
         window.onload = function(){
-            getOptionsData('export', 'managers');
-            getOptionsData('export', 'users');
-    }
+            let userGroup = <?= $_SESSION['userGroup'] ?>;
+
+			getNumberOfRecordsToCheck('Check', 'unchecked');
+            getOptionsData('export', 'users', <?= $_SESSION['userId']?>);
+
+            if(userGroup == '1'){
+                getOptionsData('export', 'managers', <?= $_SESSION['userId']?>);
+                var menuItemSelector = "#navbarDropdown2";
+                updateNavBarActiveAttribute(menuItemSelector);
+                var iconSelector = "#navbarContent > ul:nth-child(2) > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
+                updateNavBarActiveAttribute(iconSelector);
+            } else {
+                var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(5) > div > a";
+                updateNavBarActiveAttribute(menuItemSelector);
+                var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(5) > div > i";
+                updateNavBarActiveAttribute(iconSelector);
+            }
+        } 
     </script>
 <?php $script = ob_get_clean(); ?>
 

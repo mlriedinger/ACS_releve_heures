@@ -28,11 +28,11 @@ class DatabaseConnection {
      * Permet de se connecter à la base de données.
      * Retourne un objet de type PDO en cas de succès, sinon une exception PDO est levée.
      *
-     * @param  String $dbUser (optionnel)
-     * @param  String $dbPassword (optionnel)
-     * @param  String $dbHost (optionnel)
-     * @param  String $dbPort (optionnel)
-     * @param  String $dbName (optionnel)
+     * @param  string $dbUser (optionnel)
+     * @param  string $dbPassword (optionnel)
+     * @param  string $dbHost (optionnel)
+     * @param  string $dbPort (optionnel)
+     * @param  string $dbName (optionnel)
      * @return PDO $pdo
      */
     protected function dbConnect($dbUser = "", $dbPassword = "", $dbHost = "", $dbPort = "", $dbName = ""){
@@ -47,6 +47,3 @@ class DatabaseConnection {
         return $pdo;
     }    
 }
-
-
-

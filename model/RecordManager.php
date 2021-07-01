@@ -27,11 +27,12 @@ class RecordManager extends DatabaseConnection {
         
     /**
      * Permet d'enregistrer un nouveau relevé.
+     * Renvoie l'id du dernier enregistrement en cas de succès.
      *
      * @param  Record $recordInfo
-     * @return boolean $isSendingSuccessfull
+     * @return bool $pdo->lastInsertId()
      */
-    public function sendNewRecord(Record $recordInfo){
+    public function addNewRecord(Record $recordInfo){
         $userId = $recordInfo->getUserId();
         $userGroup = $recordInfo->getUserGroup();
         $breakLength = $recordInfo->getBreakLength();
@@ -42,17 +43,38 @@ class RecordManager extends DatabaseConnection {
         $tripLength = $recordInfo->getTripLength();
         $workLength = $recordInfo->getWorkLength();
         $worksite = $recordInfo->getWorksite();
+		$managerId = [];
         
         // Validation automatique des relevés saisis par un utilisateur de type "admin"
         $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
         
-        $isSendingSuccessfull = false;
         $pdo = $this->dbConnect();
-      
-        $query = $pdo->prepare('INSERT INTO t_saisie_heure(
+		
+		if($userGroup == 1) {
+			$managerId['ID'] = $userId;
+		} else {
+			$sql = 'SELECT ID
+				FROM t_login
+				WHERE ID = (
+					SELECT id_login 
+					FROM t_equipe 
+					WHERE chef_equipe = 1 AND id_chantier = (
+						SELECT id_chantier 
+						FROM t_equipe 
+						WHERE id_login = :userId AND chef_equipe = 0
+						)
+					)';
+
+			$query = $pdo->prepare($sql);
+			$query->execute(array('userId' => $userId));
+			$managerId = $query->fetch(PDO::FETCH_ASSOC);
+		}
+		
+		$sql = 'INSERT INTO t_saisie_heure(
             ID, 
-            id_chantier,
+            id_affaire,
             id_login,
+			id_manager,
             date_hrs_debut, 
             date_hrs_fin, 
             date_releve,
@@ -63,8 +85,9 @@ class RecordManager extends DatabaseConnection {
             commentaire)
             VALUES (
             :id,
-            :id_chantier, 
+            :id_affaire, 
             :id_login,
+			:id_manager,
             :dateTimeStart, 
             :dateTimeEnd,
             CASE 
@@ -78,11 +101,14 @@ class RecordManager extends DatabaseConnection {
             :pauseLength,
             :tripLength, 
             :validation_status,
-            :comment)');
+            :comment)';
+		
+        $query = $pdo->prepare($sql);
         $attempt = $query->execute(array(
             'id' => 0,
-            'id_chantier' => $worksite,
+            'id_affaire' => $worksite,
             'id_login' => $userId,
+			'id_manager' => $managerId['ID'],
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'recordDate' => $recordDate,
@@ -93,16 +119,14 @@ class RecordManager extends DatabaseConnection {
             'comment' => $comment
         ));
 
-        if($attempt) $isSendingSuccessfull = true;
-
-        return $isSendingSuccessfull;
+        return $pdo->lastInsertId();
     }
     
     /**
      * Permet de mettre à jour un relevé tant qu'il n'a pas été validé par un N+1.
      *
      * @param  Record $recordInfo
-     * @return boolean $isUpdateSuccessfull
+     * @return bool $isUpdateSuccessfull
      */
     public function updateRecord(Record $recordInfo){
         $breakLength = $recordInfo->getBreakLength();
@@ -117,22 +141,24 @@ class RecordManager extends DatabaseConnection {
 
         $isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
+		
+		$sql = 'UPDATE t_saisie_heure
+			SET 
+				id_affaire = :worksiteId,
+				date_hrs_debut = :dateTimeStart, 
+				date_hrs_fin = :dateTimeEnd,
+				date_releve = :recordDate,
+				tps_travail = 
+					CASE 
+						WHEN date_hrs_debut <> "0000-00-00 00:00:00" AND date_hrs_fin <> "0000-00-00 00:00:00" THEN TIMESTAMPDIFF(MINUTE, :dateTimeStart, :dateTimeEnd)
+						ELSE :workLength
+					END,
+				tps_pause = :pauseLength,
+				tps_trajet = :tripLength, 
+				commentaire = :comment
+			WHERE ID = :recordId';
 
-        $query = $pdo->prepare('UPDATE t_saisie_heure
-        SET 
-        id_chantier = :worksiteId,
-        date_hrs_debut = :dateTimeStart, 
-        date_hrs_fin = :dateTimeEnd,
-        date_releve = :recordDate,
-        tps_travail = 
-            CASE 
-                WHEN date_hrs_debut <> "0000-00-00 00:00:00" AND date_hrs_fin <> "0000-00-00 00:00:00" THEN TIMESTAMPDIFF(MINUTE, :dateTimeStart, :dateTimeEnd)
-                ELSE :workLength
-            END,
-        tps_pause = :pauseLength,
-        tps_trajet = :tripLength, 
-        commentaire = :comment
-        WHERE ID = :recordId');
+        $query = $pdo->prepare($sql);
         $attempt = $query->execute(array(
             'worksiteId' => $worksiteId,
             'recordId' => $recordId,
@@ -154,15 +180,15 @@ class RecordManager extends DatabaseConnection {
      * Prmet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1.
      *
      * @param  int $recordId
-     * @return boolean $isUpdateSuccessfull
+     * @return bool $isUpdateSuccessfull
      */
     public function updateRecordStatus(int $recordId){
         $isUpdateSuccessfull = false;      
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
-        SET statut_validation = 1
-        WHERE ID = :recordId');
+			SET statut_validation = 1
+			WHERE ID = :recordId');
         $attempt = $query->execute(array('recordId' => $recordId));
 
         if($attempt) $isUpdateSuccessfull = true;
@@ -174,7 +200,7 @@ class RecordManager extends DatabaseConnection {
      * Permet de "supprimer" un relevé (le rendre inactif).
      *
      * @param  Record $recordInfo
-     * @return boolean $isDeleteSuccessfull
+     * @return bool $isDeleteSuccessfull
      */
     public function deleteRecord(Record $recordInfo){
         $recordId = $recordInfo->getRecordId();
@@ -182,12 +208,14 @@ class RecordManager extends DatabaseConnection {
 
         $isDeleteSuccessfull = false;
         $pdo = $this->dbConnect();
-
-        $query = $pdo->prepare('UPDATE t_saisie_heure
-        SET 
-        supprimer = 1, 
-        commentaire = :comment
-        WHERE ID = :recordId');
+	
+		$sql = 'UPDATE t_saisie_heure
+			SET 
+				supprimer = 1, 
+				commentaire = :comment
+			WHERE ID = :recordId';
+			
+        $query = $pdo->prepare($sql);
         $attempt = $query->execute(array(
             'recordId' => $recordId,
             'comment' => $comment
@@ -203,15 +231,15 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $recordData
+     * @return string $recordData
      */
     public function getRecord(Record $recordInfo){
         $recordId = $recordInfo->getRecordId();
         
         $pdo = $this->dbConnect();
-
-        $query = $pdo->prepare('SELECT
-            Releve.id_chantier, 
+		
+		$sql = 'SELECT
+            Releve.id_affaire, 
             Releve.id_login,
             Releve.date_hrs_debut,
             Releve.date_hrs_fin,
@@ -223,7 +251,9 @@ class RecordManager extends DatabaseConnection {
             Releve.tps_pause,
             Releve.tps_trajet 
         FROM t_saisie_heure AS Releve
-        WHERE Releve.ID = :recordId');
+        WHERE Releve.ID = :recordId';
+
+        $query = $pdo->prepare($sql);
         $query->execute(array('recordId' => $recordId));
         $recordData = $query->fetch(PDO::FETCH_ASSOC);
 
@@ -235,24 +265,24 @@ class RecordManager extends DatabaseConnection {
      * Permet d'ajouter des lignes dans la clause WHERE et d'ajouter une clause ORDER BY.
      * Retourne la chaîne $sql complétée.
      *
-     * @param  String $sql : une chaîne de caractères contenant le début de la requête SQL
-     * @param  String $status : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
-     * @param  String $typeOfRecords: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
-     * @return String $sql
+     * @param  string $sql : une chaîne de caractères contenant le début de la requête SQL
+     * @param  string $status : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
+     * @param  string $typeOfRecords: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
+     * @return string $sql
      */
-    public function addQueryScopeAndOrderByClause(String $sql, String $status, String $typeOfRecords){
+    public function addQueryScopeAndOrderByClause(string $sql, string $status, string $typeOfRecords){
         switch($status) {
             case "all":
-                if($typeOfRecords != "export") $sql .= " AND Releve.supprimer = 0";
+                if($typeOfRecords != "export") $sql .= ' AND Releve.supprimer = 0';
                 break;
             case "valid":
-                $sql .= " AND Releve.statut_validation = 1 AND Releve.supprimer = 0";
+                $sql .= ' AND Releve.statut_validation = 1 AND Releve.supprimer = 0';
                 break;
             case "unchecked":
-                $sql .= " AND Releve.statut_validation = 0 AND Releve.supprimer = 0";
+                $sql .= ' AND Releve.statut_validation = 0 AND Releve.supprimer = 0';
                 break;
             case "deleted":
-                $sql .= " AND Releve.supprimer = 1";
+                $sql .= ' AND Releve.supprimer = 1';
                 break;
             default:
                 break;
@@ -267,7 +297,7 @@ class RecordManager extends DatabaseConnection {
             }
         }
         
-        $sql .= " ORDER BY Releve.date_hrs_creation DESC";
+        $sql .= ' ORDER BY Releve.date_hrs_creation DESC';
 
         return $sql;
     }
@@ -277,7 +307,7 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $userRecords
+     * @return string $userRecords
      */
     public function getRecordsFromUser(Record $recordInfo){
         $pdo = $this->dbConnect();
@@ -286,8 +316,8 @@ class RecordManager extends DatabaseConnection {
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $status = $recordInfo->getStatus();
 
-        $sql = "SELECT 
-            t_chantier.Nom AS 'chantier', 
+        $sql = 'SELECT 
+            CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "affaire", 
             Releve.date_hrs_debut, 
             Releve.date_hrs_fin, 
             Releve.commentaire, 
@@ -300,18 +330,25 @@ class RecordManager extends DatabaseConnection {
             Releve.id_login,
             Releve.tps_travail, 
             Releve.tps_pause,
-            Releve.tps_trajet 
+            Releve.tps_trajet,
+			t_login.id_groupe
         FROM t_saisie_heure AS Releve
-        INNER JOIN t_chantier
-            ON Releve.id_chantier = t_chantier.ID
-        WHERE Releve.id_login = :userId";
+		
+        INNER JOIN t_affaires
+            ON Releve.id_affaire = t_affaires.ID
+			
+		INNER JOIN t_login
+			ON Releve.id_login = t_login.ID
+			
+        WHERE Releve.id_login = :userId';
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
             'userId' => $userId));
-
+        
+        $userRecords["currentUserId"] = $userId ;
         $userRecords["typeOfRecords"] = $typeOfRecords;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -324,30 +361,35 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $teamRecords
+     * @return string $teamRecords
      */
     public function getRecordsFromTeam(Record $recordInfo){
         $managerId = $recordInfo->getUserId();
         $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $teamRecords["currentUserId"] = $managerId;
+        $teamRecords["typeOfRecords"] = $typeOfRecords;
+        $teamRecords["records"] = [];
         $status = $recordInfo->getStatus();
 
         $pdo = $this->dbConnect();
 
-        $sql = "SELECT t_equipe.id_chantier
-        FROM t_equipe
-        WHERE t_equipe.id_login = :managerId AND t_equipe.chef_equipe = 1";
+        $sql = 'SELECT id_login
+			FROM t_equipe
+			WHERE id_chantier = (SELECT t_equipe.id_chantier
+			FROM t_equipe
+			WHERE t_equipe.id_login = :managerId AND t_equipe.chef_equipe = 1) AND chef_equipe <> 1';
 
         $query = $pdo->prepare($sql);
         $query->execute(array('managerId' => $managerId));
-        $worksites = $query->fetchAll(PDO::FETCH_ASSOC);
+        $teamMembers = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach($worksites as $worksite){
+        foreach($teamMembers as $teamMember){
 
-            $sql = "(SELECT
-                t_chantier.Nom AS chantier, 
-                t_login.ID AS 'id_login',
-                t_login.Nom AS 'nom_salarie', 
-                t_login.Prenom AS 'prenom_salarie', 
+            $sql = 'SELECT
+                CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "affaire", 
+                t_login.ID AS "id_login",
+                t_login.Nom AS "nom_salarie",
+                t_login.Prenom AS "prenom_salarie",
                 Releve.date_hrs_debut, 
                 Releve.date_hrs_fin, 
                 Releve.commentaire, 
@@ -361,55 +403,24 @@ class RecordManager extends DatabaseConnection {
                 Releve.date_releve,
                 Releve.tps_travail
                 FROM t_saisie_heure AS Releve
-                INNER JOIN t_chantier 
-                    ON Releve.id_chantier = t_chantier.ID
+                INNER JOIN t_affaires 
+                    ON Releve.id_affaire = t_affaires.ID
                 INNER JOIN t_login 
                     ON Releve.id_login = t_login.ID
-                WHERE Releve.id_chantier = :worksite";
+                WHERE Releve.id_login = :teamMember';
 
                 $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
-
-                $sql .= ")
-                EXCEPT
-                    (SELECT 
-                        t_chantier.Nom AS chantier, 
-                        t_login.ID,
-                        t_login.Nom, 
-                        t_login.Prenom, 
-                        Releve.date_hrs_debut, 
-                        Releve.date_hrs_fin, 
-                        Releve.commentaire, 
-                        Releve.statut_validation, 
-                        Releve.date_hrs_creation, 
-                        Releve.date_hrs_modif,
-                        Releve.ID,
-                        Releve.supprimer,
-                        Releve.tps_pause,
-                        Releve.tps_trajet,
-                        Releve.date_releve,
-                        Releve.tps_travail
-                    FROM t_saisie_heure AS Releve
-                    INNER JOIN t_chantier 
-                        ON Releve.id_chantier = t_chantier.ID
-                    INNER JOIN t_login 
-                        ON Releve.id_login = t_login.ID
-                    WHERE Releve.id_chantier = :worksite 
-                    AND Releve.id_login = :managerId";
-
-                $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
-                $sql .= ")";
     
             $query = $pdo->prepare($sql);
             $query->execute(array(
-                'worksite' => $worksite['id_chantier'],
-                'managerId' => $managerId
+                'teamMember' => $teamMember['id_login']
             ));
-            $teamRecords["typeOfRecords"] = $typeOfRecords;
-            $teamRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-    
-            header("Content-Type: text/json");
-            echo json_encode($teamRecords);
+            $records = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            $teamRecords["records"] = array_merge($teamRecords["records"], $records);
         }
+		header("Content-Type: text/json");
+        echo json_encode($teamRecords);
     }  
     
     /**
@@ -417,113 +428,126 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return json $records
+     * @return string $records
      */
     public function getAllRecords(Record $recordInfo){
+        $userId = $recordInfo->getUserId();
         $pdo = $this->dbConnect();
 
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $status = $recordInfo->getStatus();
 
-        $sql = "SELECT
-            Equipe.id_chantier AS 'id_chantier',
-            Chantier.Nom AS 'chantier',
-            Membre.Nom AS 'nom_salarie',
-            Membre.Prenom AS 'prenom_salarie',
-            Manager.Nom AS 'nom_manager',
-            Manager.Prenom AS 'prenom_manager',
-            Releve.date_hrs_debut,
-            Releve.date_hrs_fin, 
-            Releve.commentaire, 
-            Releve.statut_validation, 
-            Releve.date_hrs_creation, 
-            Releve.date_hrs_modif,
-            Releve.ID,
-            Releve.supprimer,
-            Membre.ID AS 'id_login',
-            Releve.tps_pause,
-            Releve.tps_trajet,
-            Releve.date_releve,
-            Releve.tps_travail
-        FROM t_equipe AS Equipe
-
-        INNER JOIN t_chantier AS Chantier
-            ON Equipe.id_chantier = Chantier.ID
-
-        INNER JOIN t_saisie_heure AS Releve
-            ON Chantier.ID = Releve.id_chantier
-
-        INNER JOIN t_login AS Manager
-            ON Equipe.id_login = Manager.ID
-            
-        INNER JOIN t_login AS Membre
-            ON Releve.id_login = Membre.ID
-
-        WHERE Equipe.chef_equipe = 1    
-        ";
+        $sql = 'SELECT 
+			Releve.id_affaire AS "id_affaire",
+			CONCAT(Affaire.REF, " - ", Affaire.Nom) AS "affaire",
+			Manager.Nom AS "nom_manager",
+			Manager.Prenom AS "prenom_manager",
+			Membre.Nom AS "nom_salarie",
+			Membre.Prenom AS "prenom_salarie",
+			Releve.date_hrs_debut,
+			Releve.date_hrs_fin, 
+			Releve.commentaire, 
+			Releve.statut_validation, 
+			Releve.date_hrs_creation, 
+			Releve.date_hrs_modif,
+			Releve.ID,
+			Releve.supprimer,
+			Membre.ID AS "id_login",
+			Releve.tps_pause,
+			Releve.tps_trajet,
+			Releve.date_releve,
+			Releve.tps_travail
+		   
+		FROM t_saisie_heure AS Releve
+		   
+		INNER JOIN t_affaires AS Affaire
+			ON Releve.id_affaire = Affaire.ID
+		   
+		INNER JOIN t_login AS Membre
+		   ON Releve.id_login = Membre.ID
+		   
+		INNER JOIN t_login AS Manager
+			ON Releve.id_manager = Manager.ID';
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
         $query->execute();
+        $records["currentUserId"] = $userId;
         $records["typeOfRecords"] = $typeOfRecords;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-
+		
         header("Content-Type: text/json");
         echo json_encode($records);
     }
-
-    /* Fonction permettant de récupérer la liste des managers et des salariés pour alimenter la rubrique select du formulaire d'export
-        * $type : chaîne de caractères correspondant au type d'utilisateurs à récupérer ("managers" ou "users")
-    */
     
     /**
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour alimenter un input <select> (formulaire de saisie ou d'export).
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
-     * @param  String $type
-     * @param  int $userId
-     * @return json $data
+     * @param  Record $recordInfo
+     * @return string $data
      */
-    public function getDataForOptionSelect(String $type, int $userId){
+    public function getDataForOptionSelect(Record $recordInfo){
+        $type = $recordInfo->getTypeOfRecords();
+        $userGroup = $recordInfo->getUserGroup();
+        $userId = $recordInfo->getUserId();
+
         $pdo = $this->dbConnect();
 
         $sql ="";
 
         switch($type){
             case "managers":
-                $sql .= "SELECT t_equipe.id_login AS 'ID', t_login.Nom, t_login.Prenom FROM t_equipe INNER JOIN t_login ON t_equipe.id_login = t_login.ID WHERE t_equipe.chef_equipe = 1";
-                break;
+                if ($userGroup == '1') {
+                    $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom 
+                        FROM t_equipe 
+                        INNER JOIN t_login 
+                        ON t_equipe.id_login = t_login.ID 
+                        WHERE t_equipe.chef_equipe = 1';
+                    break;
+                } else {
+                    $sql .= 'SELECT t_login.ID, t_login.Nom, t_login.Prenom 
+                        FROM t_login  
+                        WHERE ID = :userId';
+                    break;
+                }
+                
             case "users":
-                $sql .= "SELECT ID, Nom, Prenom FROM t_login";
-                break;
+                if ($userGroup == '1') {
+                    $sql .= 'SELECT ID, Nom, Prenom FROM t_login';
+                    break;
+                } else {
+                    $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom
+                        FROM t_equipe
+                        INNER JOIN t_login
+                        ON t_equipe.id_login = t_login.ID
+                        WHERE id_chantier = (SELECT t_equipe.id_chantier
+                        FROM t_equipe
+                        WHERE t_equipe.id_login = :userId AND t_equipe.chef_equipe = 1) AND chef_equipe <> 1 ';
+                    break;
+                }
             case "worksites":
-                $sql .= "SELECT  
-                    t_chantier.ID,
-                    t_chantier.Nom
-                    FROM t_equipe
-                    INNER JOIN t_chantier
-                    ON t_equipe.id_chantier = t_chantier.ID
-                    WHERE t_equipe.id_login = :userId";
+                $sql .= 'SELECT  
+                    t_affaires.ID,
+                    CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "Nom"
+                    FROM t_affaires';
                 break;
         }
 
         if($type === "managers" || $type === "users"){
-            $sql .= " ORDER BY t_login.Nom ASC";
+            $sql .= ' ORDER BY t_login.Nom ASC';
         }
         else {
-            $sql .= " ORDER BY t_chantier.Nom ASC";
+            $sql .= ' ORDER BY t_affaires.Nom ASC';
         }
         
         $query = $pdo->prepare($sql);
 
-        $queryParams = array();
-        if($userId != "")  $queryParams['userId'] = $userId;
-
-        if (sizeof($queryParams) != 0){    
-            $query->execute($queryParams);
-        }
-        else $query->execute();
+        $queryParams = array(
+            'userId' => $userId
+        );
+        $query->execute($queryParams);
         
         $data["typeOfData"] = $type;
         $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -532,6 +556,3 @@ class RecordManager extends DatabaseConnection {
         echo json_encode($data);
     }
 }
-
-
-    

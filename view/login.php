@@ -19,13 +19,13 @@
         <link rel="stylesheet" href="public/css/style.css" />
     </head>
 
-    <body class="d-flex flex-column h-100">
+    <body class="d-flex flex-column h-100" style="background-image: url('https://www.c2j-standexpo.com/wp-content/uploads/2017/12/menu.jpg')">
         <div class="container justify-content-center">
 
             <div class="row justify-content-md-center">
 
                 <div class="col-lg-3 text-center mt-5 mb-5">
-                    <img src="public/img/logo.png" class="img-fluid" alt="Logo">
+                    <img src="public/img/logo.png" alt="Logo" height="200">
                 </div>
 
             </div>
@@ -68,8 +68,8 @@
                             }
                         ?>
 
-                        <div class="form-group mt-4">
-                        <input type="submit" value="Valider" class="btn btn-dark" />
+                        <div class="form-group mt-4 mb-3">
+                        <input type="submit" value="Valider" class="btn btn-dark"/>
                         </div>
 
                     </form>

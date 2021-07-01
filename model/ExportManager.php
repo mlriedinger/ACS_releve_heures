@@ -8,17 +8,6 @@ require_once 'RecordManager.php';
  */
 class ExportManager extends RecordManager {
 
-    /* Fonction permettant d'exporter des données
-        Params: 
-        * $recordInfo : objet Record contenant 
-            - le type de relevés demandés (personnels, équipe, à valider ou tous)
-            - la portée de la requête, c'est-à-dire tout ou une partie des relevés
-            - la date de début de période (facultatif)
-            - la date de fin de période (facultatif)
-            - l'id du manager (facultatif)
-            - l'id du salarié (facultatif)
-    */    
-
     /**
      * Permet d'exporter des données selon les options sélectionnées dans le formulaire d'export.
      * 3 étapes : 
@@ -39,35 +28,41 @@ class ExportManager extends RecordManager {
      * Retourne un tableau de relevés.
      *
      * @param  Export $exportInfo
-     * @return Array $rows
+     * @return array $rows
      */
     public function getRecordsToExport(Export $exportInfo){
         $typeOfRecords = $exportInfo->getTypeOfRecords();
         $status = $exportInfo->getStatus();
+        $userGroup = $exportInfo->getUserGroup();
 
         $pdo = $this->dbConnect();
 
         // Construction de la requête SQL
-        $sql = $this->sqlRequestBasis();
+        if ($userGroup > 1) {
+            $sql = $this->sqlRequestBasisForManager();
+        } else {
+            $sql = $this->sqlRequestBasis();
+        }
         $sql = $this->sqlAddExportOptions($exportInfo, $sql);
         $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
         $query = $pdo->prepare($sql);
         $queryParams = $this->fillQueryParamsArray($exportInfo);
-        
+		
         if(sizeof($queryParams) != 0){    
             $query->execute($queryParams);
         }
         else $query->execute();
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
+        //$query->debugDumpParams();
         return $rows;
     }
     
     /**
-     * Permet de construire la base de la requête SQL pour récupérer les relevés correspondants au formulaire.
+     * Permet de construire la base de la requête SQL pour récupérer les relevés.
      *
-     * @return String $sql
+     * @return string $sql
      */
     public function sqlRequestBasis(){
         $sql = "SELECT 
@@ -82,19 +77,56 @@ class ExportManager extends RecordManager {
             Releve.date_hrs_creation AS 'date_heure_creation',
             Releve.date_hrs_modif AS 'date_heure_modification',
             Releve.supprimer AS 'releve_supprime',
-            Chantier.Nom AS 'chantier',
+            Affaire.Nom AS 'projet',
             Manager.Nom AS 'nom_manager',
             Manager.Prenom AS 'prenom_manager'
-        FROM t_equipe AS Equipe
-        INNER JOIN t_chantier AS Chantier
-            ON Equipe.id_chantier = Chantier.ID
-        INNER JOIN t_saisie_heure AS Releve
-            ON Chantier.ID = Releve.id_chantier
-        INNER JOIN t_login AS Manager
-            ON Equipe.id_login = Manager.ID
-        INNER JOIN t_login AS Membre
-            ON Releve.id_login = Membre.ID
-        WHERE Equipe.chef_equipe = 1";
+        FROM t_saisie_heure AS Releve
+		   
+		INNER JOIN t_affaires AS Affaire
+			ON Releve.id_affaire = Affaire.ID
+		   
+		INNER JOIN t_login AS Membre
+		   ON Releve.id_login = Membre.ID
+		   
+		INNER JOIN t_login AS Manager
+			ON Releve.id_manager = Manager.ID";
+
+        return $sql;
+    }
+
+    /**
+     * Permet de construire la base de la requête SQL pour récupérer les relevés.
+     *
+     * @return string $sql
+     */
+    public function sqlRequestBasisForManager(){
+        $sql = "SELECT 
+            Releve.ID AS 'num_releve',
+            Membre.Nom AS 'nom_salarie',
+            Membre.Prenom AS 'prenom_salarie',";
+        
+        $sql = $this->sqlAddSettingsOptions($sql);
+            
+        $sql .= "Releve.commentaire,
+            Releve.statut_validation AS 'statut_validation',
+            Releve.date_hrs_creation AS 'date_heure_creation',
+            Releve.date_hrs_modif AS 'date_heure_modification',
+            Releve.supprimer AS 'releve_supprime',
+            Affaire.Nom AS 'projet',
+            Manager.Nom AS 'nom_manager',
+            Manager.Prenom AS 'prenom_manager'
+        FROM t_saisie_heure AS Releve
+		   
+		INNER JOIN t_affaires AS Affaire
+			ON Releve.id_affaire = Affaire.ID
+		   
+		INNER JOIN t_login AS Membre
+		   ON Releve.id_login = Membre.ID
+		   
+		INNER JOIN t_login AS Manager
+			ON Releve.id_manager = Manager.ID
+        
+        WHERE Releve.id_manager = :managerId";
 
         return $sql;
     }
@@ -102,8 +134,8 @@ class ExportManager extends RecordManager {
     /**
      * Permet de compléter la requête SQL en fonction des paramètres de saisie de l'application.
      *
-     * @param  String $sql
-     * @return String $sql
+     * @param  string $sql
+     * @return string $sql
      */
     public function sqlAddSettingsOptions($sql) {
         if($_SESSION['dateTimeMgmt'] == 1) {
@@ -114,13 +146,13 @@ class ExportManager extends RecordManager {
             $sql .= "Releve.date_releve,";
         }
             
-        $sql .= "Releve.tps_travail,";
+        $sql .= "Releve.tps_travail AS 'tps_travail_minutes',";
 
         if($_SESSION['breakMgmt'] == 1){
-            $sql .= " Releve.tps_pause,";
+            $sql .= " Releve.tps_pause AS 'tps_pause_minutes',";
         }
         if($_SESSION['tripMgmt'] == 1){
-            $sql .= "Releve.tps_trajet,";
+            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes',";
         }
 
         return $sql;
@@ -128,20 +160,29 @@ class ExportManager extends RecordManager {
 
     /**
      * Permet d'ajouter des options à la requêtes SQL.
-     * Par exemple, récupérer uniquement des relevés entre 2 dates, et/ou d'un salarié (ou manager) en particulier.
+     * Par exemple, récupérer uniquement des relevés entre 2 dates, et/ou d'un salarié (ou d'un manager) en particulier.
      *
      * @param  Export $exportInfo
-     * @param  String $sql
-     * @return String $sql
+     * @param  string $sql
+     * @return string $sql
      */
-    public function sqlAddExportOptions(Export $exportInfo, String $sql){
+    public function sqlAddExportOptions(Export $exportInfo, string $sql){
         $periodStart = $exportInfo->getPeriodStart();
         $periodEnd = $exportInfo->getPeriodEnd();
         $managerId = $exportInfo->getManagerId();
         $userId = $exportInfo->getUserId();
-        
-        if($periodStart != "" && $periodEnd != "") $sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
-        if($managerId != "") $sql .= " AND Manager.ID = :managerId";
+        $userGroup = $exportInfo->getUserGroup();
+		
+        if($periodStart != "" && $periodEnd != "") {
+			if($_SESSION['dateTimeMgmt'] == 1) {
+				$sql .= " AND Releve.date_hrs_debut >= :periodStart AND Releve.date_hrs_fin <= :periodEnd";
+			} else if ($_SESSION['lengthMgmt'] == 1){
+				$sql .= " AND Releve.date_releve >= :periodStart AND Releve.date_releve <= :periodEnd";
+			}
+		}
+        if($userGroup == '1') {
+            if($managerId != "") $sql .= " AND Manager.ID = :managerId";
+        }
         if($userId != "") $sql .= " AND Membre.ID = :userId";
 
         return $sql;
@@ -151,7 +192,7 @@ class ExportManager extends RecordManager {
      * Permet de construire le tableau de paramètres qui seront passés lors de l'exécution de la requête SQL.
      *
      * @param  Export $exportInfo
-     * @return Array $queryParams
+     * @return array $queryParams
      */
     public function fillQueryParamsArray(Export $exportInfo){
         $periodStart = $exportInfo->getPeriodStart();
@@ -183,7 +224,7 @@ class ExportManager extends RecordManager {
      * Permet de construire le nom du fichier d'export en fonction des champs sélectionnés dans le formulaire d'export.
      *
      * @param  Export $exportInfo
-     * @return String $fileName
+     * @return string $fileName
      */
     public function getFileName(Export $exportInfo){
         $status = $exportInfo->getStatus();
@@ -208,10 +249,10 @@ class ExportManager extends RecordManager {
     /**
      * Permet d'écrire un fichier CSV.
      *
-     * @param  Array $rows
-     * @param  String $fileName
+     * @param  array $rows
+     * @param  string $fileName
      */
-    public function writeCsvFile(Array $rows, String $fileName){
+    public function writeCsvFile(array $rows, string $fileName){
         $columnNames = array();
 
         if(!empty($rows)){

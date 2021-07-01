@@ -4,36 +4,32 @@
         * data : correspond au tableau contenant les résultats de la requête AJAX
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-
-function checkRecordValidationStatus(newLines, data, counter) {
+function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
     let validationStatus = data[counter].statut_validation;
     let deleteStatus = data[counter].supprimer;
+	let userGroup = data[counter].id_groupe;
 
     let newValidationText = "";
     
-    if(validationStatus === "0" && deleteStatus === "0") {
+    if (validationStatus === "0" && deleteStatus === "0") {
         newValidationText = document.createTextNode("En attente");
-        insertEditRecordButton(newLines.newEdit, data, counter);
-        insertDeleteRecordButton(newLines.newDelete, data, counter);  
+        if (currentUserId === parseInt(data[counter].id_login)) {
+            insertEditRecordButton(newLines.newEdit, data, counter);
+            insertDeleteRecordButton(newLines.newDelete, data, counter);
+        }
     } 
     else if (validationStatus === "0" && deleteStatus === "1") {
         newValidationText = document.createTextNode("Supprimé");
     }
     else {
+		if (validationStatus === "1" && userGroup === "1") {
+			insertEditRecordButton(newLines.newEdit, data, counter);
+			insertDeleteRecordButton(newLines.newDelete, data, counter);
+		}
         newValidationText = document.createTextNode("Validé");
     }
     
     newLines.newStatus.appendChild(newValidationText);
-}
-
-
-function convertTimeToHoursAndMinutes(timeToConvert) {
-    let convertedTime = [];
-    convertedTime['hours'] = Math.floor(timeToConvert / 60);
-    convertedTime['minutes'] = timeToConvert % 60;
-    if(convertedTime['minutes'] === 0) convertedTime['minutes'] = "00";
-
-    return convertedTime;
 }
 
 
@@ -43,10 +39,9 @@ function convertTimeToHoursAndMinutes(timeToConvert) {
         * data : correspond au tableau contenant les résultats de la requête AJAX
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-
 function fillRecordsTable(newLines, data, counter) {
     if(newLines.newWorkSite !== undefined) {
-        let newText = document.createTextNode(data[counter].chantier);
+        let newText = document.createTextNode(data[counter].affaire);
         newLines.newWorkSite.appendChild(newText);
     }
 
@@ -107,9 +102,8 @@ function fillRecordsTable(newLines, data, counter) {
 }
 
 
-/* 
+/* Fonction qui permet d'ajouter des cellules dans la ligne en cours d'ajout.
 */
-
 function createNewLines(newRow) {
     // On crée un objet newLines qui contiendra les cellules de chaque nouvelle ligne
     var newLines = {};
@@ -198,8 +192,8 @@ function createNewLines(newRow) {
         * typeOfRecord : type de relevés demandés (personnels, en attente, équipe ou globaux)
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
-
-function appendLine(tableID, data, typeOfRecord, counter) {
+function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
+    // console.log(data);
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -211,11 +205,10 @@ function appendLine(tableID, data, typeOfRecord, counter) {
     fillRecordsTable(newLines, data, counter);
 
     if(typeOfRecord === "Personal" || typeOfRecord === "Team" || typeOfRecord === "All") {
-        checkRecordValidationStatus(newLines, data, counter);
+        checkRecordValidationStatus(newLines, data, currentUserId, counter);
     } 
     else {
         insertSwitchButton(newLines.newIsValid, data, counter);
-        insertDeleteRecordButton(newLines.newDelete, data, counter);
     } 
 }
 
@@ -224,7 +217,6 @@ function appendLine(tableID, data, typeOfRecord, counter) {
     Param :
     * tabData : tableau contenant les données de la requête AJAX
 */
-
 function clearTable(tabData) {
     // On récupère la ligne vide du tableau
     var trEmpty = $("#records_log tbody tr:first-child");
@@ -237,123 +229,5 @@ function clearTable(tabData) {
         document.getElementById("no_record_message").hidden = false;
     } else {
         document.getElementById("no_record_message").hidden = true;
-    }
-}
-
-
-/* Fonction qui permet de mettre à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé
-    Param : 
-    * data : correspond au tableau contenant les résultats de la requête AJAX
-*/
-
-function updateFormInputs(data) {
-    console.log("updateFormInputs :");
-    console.log(data);
-    
-    // On récupère les chantiers associés à l'utilisateur et on ajoute un attribut "selected" sur le chantier correspondant au relevé en cours d'édition
-    var worksitesCollection = document.getElementById("selectWorksite").children;
-    for (let item of worksitesCollection) {
-        if(item.value === data['id_chantier']){
-            item.setAttribute("selected", "");
-        }
-    }
-    
-    // On pointe sur les inputs de formulaire à modifier
-    var inputDate = document.getElementById("recordDate");
-    var inputDateTimeStart = document.getElementById("datetime_start");
-    var inputDateTimeEnd = document.getElementById("datetime_end");
-    var inputWorkLengthHours = document.getElementById("workLengthHours");
-    var inputWorkLengthMinutes = document.getElementById("workLengthMinutes");
-    var inputBreakLengthHours = document.getElementById("breakLengthHours");
-    var inputBreakLengthMinutes = document.getElementById("breakLengthMinutes");
-    var inputTripLengthHours = document.getElementById("tripLengthHours");
-    var inputTripLengthMinutes = document.getElementById("tripLengthMinutes");
-    var inputComment = document.getElementById("recordComment");
-
-    // On remplace le caractère d'espace par un "T" pour correspondre au format de date attendu par datetime-locale
-    var startTime = data['date_hrs_debut'].replace(" ", "T");
-    var endTime = data['date_hrs_fin'].replace(" ", "T");
-
-    // On transforme les temps de travail, trajet et pause récupérés en minutes en heures + minutes pour l'affichage
-    var workTime = convertTimeToHoursAndMinutes(data['tps_travail']);
-    var tripTime = convertTimeToHoursAndMinutes(data['tps_trajet']);
-    var breakTime = convertTimeToHoursAndMinutes(data['tps_pause']);
-
-    // On insère les données dans le formulaire
-    if(inputDate !== null) {
-        inputDate.setAttribute("value", data["date_releve"]);
-    }
-
-    if(inputDateTimeStart !== null && inputDateTimeEnd !== null ){
-        inputDateTimeStart.setAttribute("value", startTime);
-        inputDateTimeEnd.setAttribute("value", endTime);
-    }
-
-    if(inputWorkLengthHours !== null && inputWorkLengthMinutes !== null){
-        inputWorkLengthHours.setAttribute("value", workTime['hours']);
-        inputWorkLengthMinutes.setAttribute("value", workTime['minutes']);
-    }
-
-    if(inputBreakLengthHours !== null && inputBreakLengthMinutes !== null){
-        inputBreakLengthHours.setAttribute("value", breakTime['hours']);
-        inputBreakLengthMinutes.setAttribute("value", breakTime['minutes']);
-    }
-
-    if(inputTripLengthHours !== null && inputTripLengthMinutes !== null){
-        inputTripLengthHours.setAttribute("value", tripTime['hours']);
-        inputTripLengthMinutes.setAttribute("value", tripTime['minutes']);
-    }
-
-    inputComment.innerHTML += data['commentaire'];
-    console.log(inputComment);
-}
-
-
-/* Fonction qui permet d'afficher le nombre de relevés en attente de validation dans un badge rouge à côté du menu "Validation"
-    Param :
-    * data : contenu de la réponse à la requête AJAX
-*/
-
-function displayNumberOfRecordsTocheck(data) {
-    var tabData = data.records;
-
-    if(tabData.length) {
-        document.getElementById("notificationIcon").innerHTML = tabData.length;
-    } else {
-        document.getElementById("notificationIcon").hidden = true;
-    }
-}
-
-
-/* Fonction qui permet d'afficher une liste déroulante dans le formulaire d'export 1/ avec les noms et prénoms des managers , 2/ avec les noms et prénoms des utilisateurs
-    Param :
-    * data : contenu de la réponse à la requête AJAX
-*/
-
-function displayOptionsList(data) {
-    // console.log(data);
-    var typeOfData = data.typeOfData;
-    var tabData = data.records;
-
-    var selector = "";
-    if(typeOfData === "users") {
-        selector = "#selectUser";
-    }
-    if(typeOfData === "managers") {
-        selector = "#selectManager";
-    }
-    if(typeOfData === "worksites") {
-        selector = "#selectWorksite";
-    }
-
-    if(typeOfData === "users" || typeOfData === "managers"){
-        for(let i = 0 ; i < tabData.length ; i ++) {
-            $(selector).append(new Option(tabData[i].Nom + ' ' + tabData[i]. Prenom, tabData[i].ID));
-        }
-    }
-    else {
-        for(let i = 0 ; i < tabData.length ; i ++) {
-            $(selector).append(new Option(tabData[i].Nom, tabData[i].ID));
-        }
     }
 }

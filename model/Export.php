@@ -12,6 +12,7 @@ class Export {
     private $_periodEnd;
     private $_status;
     private $_typeOfRecords;
+    private $_userGroup;
 
     // Mutateurs (setters)
     public function setUserId(int $userId){
@@ -24,23 +25,35 @@ class Export {
         return $this;
     }
 
-    public function setPeriodStart(String $periodStart){
+    public function setPeriodStart(string $periodStart){
         $this->_periodStart = $periodStart;
         return $this;
     }
 
-    public function setPeriodEnd(String $periodEnd){
+    public function setPeriodEnd(string $periodEnd){
         $this->_periodEnd = $periodEnd;
         return $this;
     }
 
-    public function setStatus(String $status){
+    public function setStatus(string $status){
         $this->_status = $status;
         return $this;
     }
     
-    public function setTypeOfRecords(String $typeOfRecords){
+    public function setTypeOfRecords(string $typeOfRecords){
         $this->_typeOfRecords = $typeOfRecords;
+        return $this;
+    }
+
+    /**
+     * Set the value of _userGroup
+     *
+     * @return  self
+     */ 
+    public function setUserGroup( int $userGroup)
+    {
+        $this->_userGroup = $userGroup;
+
         return $this;
     }
 
@@ -67,5 +80,13 @@ class Export {
     
     public function getTypeOfRecords(){
         return $this->_typeOfRecords;
+    }
+
+    /**
+     * Get the value of _userGroup
+     */ 
+    public function getUserGroup()
+    {
+        return $this->_userGroup;
     }
 }

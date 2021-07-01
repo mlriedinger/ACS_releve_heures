@@ -29,7 +29,7 @@ $heading = "Historique global";
                 <table class="table table-sm table-striped table-hover mt-4" id="records_log">
                     <thead>
                         <tr id="table-head">
-                            <th scope="col" id="worksite">Chantier</th>
+                            <th scope="col" id="worksite">Projet</th>
                             <th scope="col" id="manager">Manager</th>
                             <th scope="col" id="employee">Salarié</th>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
@@ -65,6 +65,10 @@ $heading = "Historique global";
         window.onload = function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
             updateAllUsersRecordsLog('All', 'all');
+            var menuItemSelector = "#navbarDropdown";
+            updateNavBarActiveAttribute(menuItemSelector);
+			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
+			updateNavBarActiveAttribute(iconSelector);
         };
     </script>
     <?php include('partials/recordFormScripts.php'); ?>

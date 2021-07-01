@@ -13,7 +13,45 @@ function include(file, integrity="", crossorigin="") {
 }
 
 include("public/js/ajaxRequests.js");
-include("public/js/updateData.js");
+include("public/js/parseRequestResults.js");
+include("public/js/updateRecordsLog.js");
+include("public/js/updateFormInputs.js");
 include("public/js/buttonManagement.js");
 include("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js", "sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0", "anonymous");
-include("https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js");
+
+
+/* Fonction qui permet de convertir un temps en minutes au format heures + minutes.
+	Param :
+	* timeToConvert : temps en minutes à convertir
+*/
+function convertTimeToHoursAndMinutes(timeToConvert) {
+    let convertedTime = [];
+    convertedTime['hours'] = Math.floor(timeToConvert / 60);
+    convertedTime['minutes'] = timeToConvert % 60;
+    if(convertedTime['minutes'] === 0) convertedTime['minutes'] = "00";
+
+    return convertedTime;
+}
+
+
+/* Fonction qui permet d'afficher le nombre de relevés en attente de validation dans un badge rouge à côté du menu "Validation"
+    Param :
+    * data : contenu de la réponse à la requête AJAX
+*/
+function displayNumberOfRecordsTocheck(data) {
+    var tabData = data.records;
+
+    if(tabData.length) {
+        document.getElementById("notificationIcon").innerHTML = tabData.length;
+    } else {
+        document.getElementById("notificationIcon").hidden = true;
+    }
+}
+
+
+/* Fonction qui permet d'ajouter une classe "active" sur un élément de la navbar passé en paramètre.
+*/
+function updateNavBarActiveAttribute(selector) {
+    var navBarItem = document.querySelector(selector);
+    navBarItem.classList.add("active");
+}
