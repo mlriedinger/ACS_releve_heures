@@ -37,31 +37,35 @@ if(isset($_GET['action'])) {
 
             // Vue "Nouveau Relevé"
             case "showNewRecordForm":
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
                     $recordController->displayView('addNewRecord');
+                } else throw new AuthenticationException();
                 break;
 
             // Vue "Validation des relevés en attente"
             case "showRecordsToCheck":
-                if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2') {
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                     $recordController->displayView('recordsToCheck');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue "Historique personnel"
             case "showPersonalRecordsLog":
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
                     $recordController->displayView('personalRecordsLog');
+                } else throw new AuthenticationException();
                 break;
 
             // Vue historique équipe
             case "showTeamRecordsLog":
-                if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2') {
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                     $recordController->displayView('teamRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue historique global
             case "showAllRecordsLog":
-                if($_SESSION['userGroup'] == '1') {
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
                     $recordController->displayView('allUsersRecordsLog');
                 } else throw new AuthenticationException();
                 break;
@@ -82,7 +86,7 @@ if(isset($_GET['action'])) {
             
             // Mise à jour des paramètres de saisie
             case "updateSettings":
-                if($_SESSION['userGroup'] == '1') {
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
                     $settingInfo = new Setting();
                     $settingInfo = fillSettingInfos($settingInfo);
 
