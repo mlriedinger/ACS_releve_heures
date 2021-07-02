@@ -603,7 +603,8 @@ class RecordManager extends DatabaseConnection {
                         FROM t_equipe
                         INNER JOIN t_document
                         ON t_equipe.id_chantier = t_document.ID
-                        WHERE t_equipe.id_login = :userId';
+                        WHERE t_equipe.id_login = :userId
+                        AND supprimer = 0';
                 break;
         }
 
