@@ -74,8 +74,10 @@ function updateFormInputs(data) {
     * data : contenu de la réponse à la requête AJAX
 */
 function displayOptionsList(data) {
+    //console.log(data);
     var typeOfData = data.typeOfData;
     var tabData = data.records;
+    //console.log(data.records);
 
     var selector = "";
     if(typeOfData === "users") {
@@ -97,5 +99,49 @@ function displayOptionsList(data) {
         for(let i = 0 ; i < tabData.length ; i ++) {
             $(selector).append(new Option(tabData[i].Nom, tabData[i].ID));
         }
+    }
+}
+
+
+/*
+*/
+function displayWorkCategories(data) {
+    //console.log(data);
+    var divWorkLengthByCategoryInputs = document.getElementById("divWorkLengthByCategoryInputs");
+
+    for(let i = 0; i < data.length ; i++) {
+        // On transforme la casse du nom du poste : 1ère lettre en majuscule, les suivantes en minuscules
+        var categoryName = data[i].code_poste[0].toUpperCase() + data[i].code_poste.substr(1).toLowerCase();
+
+        var newDivCategory = document.createElement("div");
+        newDivCategory.setAttribute("id", "div"+ categoryName);
+        newDivCategory.setAttribute("class", "col-4 flex-grow-1 mb-3");
+
+        var categoryCode = data[i].code_poste.toLowerCase().replace(/\s+/g, '');
+        categoryCode = categoryCode.replace("/", "_");
+        var categoryId = data[i].ID;
+        var categoryDescription = data[i].libelle_poste.toLowerCase().replace(/\s+/g, '');
+        
+        var html = [
+            `<div class="card">
+                <div class="card-body">
+                    <p class="card-text text-center mb-3">${ data[i].libelle_poste }</p>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <span class="input-group-text text-center" id="${ categoryCode }_hours_indicator_${ categoryId }">Heures</span>
+                            <input type="number" min="0" name="workstationLengthHours[${ categoryId }]" id="${ categoryCode }LengthHours" value="0" class="form-control timeInput" aria-label="Indiquez le nombre d'heures pour le poste ${ categoryDescription }" aria-describedby="${ categoryCode }_hours_indicator" required/>
+                        </div>
+                        <div class="col mb-3">
+                            <span class="input-group-text text-center" id="${ categoryCode }_minutes_indicator_${ categoryId }">Minutes</span>
+                            <input type="number" min="-15" step="15" max="60" name="workstationLengthMinutes[${ categoryId }]" value="0" id="${ categoryCode }LengthMinutes" onchange="incrementHour(${ categoryCode }LengthHours, ${ categoryCode }LengthMinutes)" class="form-control timeInput" aria-label="Indiquez le nombre de minutes pour le poste ${ categoryDescription }" aria-describedby="${ categoryCode }_minutes_indicator" required/>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+        ]
+        newDivCategory.innerHTML = html;
+        divWorkLengthByCategoryInputs.appendChild(newDivCategory);
+
+        addEventCalculateTotalWorkingHours();
     }
 }

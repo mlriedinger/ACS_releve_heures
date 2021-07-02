@@ -16,7 +16,7 @@
         </div>
 
         <?php 
-        if($_SESSION['lengthMgmt'] == 1){ ?>
+        if($_SESSION['lengthMgmt'] == 1 || $_SESSION['lengthByCategoryMgmt'] == 1){ ?>
             <div class="col flex-shrink-1 mb-3" data-step="2" data-intro="Indiquez la date de réalisation des heures.">
                 <span class="input-group-text" id="date_selector">Date</span>
                 <input type="date" name="recordDate" id="recordDate" class="form-control" aria-label="Sélectionnez une date" aria-describedby="date_selector" required/>
@@ -52,7 +52,7 @@
         <!-- Champs pour un relevé avec seulement une durée -->
         <div id="divWorkLengthInput" class="row mb-3 justify-content-md-center">
 
-            <p class="h6 text-center mb-3">Temps de travail</p>
+            <p class="h6 mb-3">Temps de travail</p>
 
             <div class="col mb-3" data-step="3" data-intro="Indiquez le nombre d'heures de travail réalisées.">
                 <span class="input-group-text" id="work_hours_indicator">Heures</span>
@@ -67,12 +67,35 @@
         </div>
     <?php } ?>
 
+    <?php
+    if($_SESSION['lengthByCategoryMgmt'] == 1 ) { ?>
+        <div id="divWorkLengthByCategoryInputs" class="row mb-3 justify-content-md-center" data-step="3" data-intro="Indiquez le nombre d'heures de travail réalisées pour chaque poste.">
+            <p class="h6 mb-3">Temps de travail</p>
+            <!-- Insertion des catégories de postes -->
+        </div>
+
+        <div class="row mb-3 justify-content-md-center"  data-step="5" data-intro="Le total est calculé automatiquement !">
+
+            <p class="h6 mb-3">TOTAL</p>
+        
+            <div class="col mb-3">
+                <span class="input-group-text" id="total_hours_indicator">Heures</span>
+                <input type="number" min="-15" name="workLengthHours" id="totalLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="total_hours_indicator" readonly/>
+            </div>
+            <div class="col mb-3">
+                <span class="input-group-text" id="total_minutes_indicator">Minutes</span>
+                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="totalLengthMinutes" class="form-control" aria-label="Total des heures de la journée" aria-describedby="total_minutes_indicator" readonly/>
+            </div>
+                    
+        </div>
+    <?php } ?>
+
     <?php 
     if($_SESSION['breakMgmt'] == 1){ ?>
         <!-- Champs pour un relevé avec gestion du temps de pause -->
         <div id="divBreakTime" class="row mb-3 justify-content-md-center">
 
-            <p class="h6 text-center mb-3">Temps de pause</p>
+            <p class="h6 mb-3">Temps de pause</p>
 
                 <div class="col mb-3">
                     <span class="input-group-text" id="break_hours_indicator">Heures</span>
@@ -90,9 +113,9 @@
     <?php 
     if($_SESSION['tripMgmt'] == 1) { ?>
         <!-- Champs pour un relevé avec gestion du temps de trajet -->
-        <div id="divTripTimeInput" class="row mb-3 justify-content-md-center" <?= $_SESSION['tripMgmt'] == 0 ? "hidden" : ""; ?> data-step="5" data-intro="De la même manière, indiquez le nombre d'heures de trajet.">
+        <div id="divTripTimeInput" class="row mb-3 justify-content-md-center" data-step="6" data-intro="Au besoin, indiquez le nombre d'heures de trajet.">
 
-            <p class="h6 text-center mb-3">Temps de trajet</p>
+            <p class="h6 mb-3">Temps de trajet</p>
 
             <div class="col mb-3">
                 <span class="input-group-text" id="trip_hours_indicator">Heures</span>
@@ -110,7 +133,7 @@
     <!-- Champs commentaire -->
     <div id="divCommentFieldInput" class="row mb-3 justify-content-md-center">
 
-        <div class="col mb-3"  data-step="6" data-intro="Une précision à apporter ? Laissez un commentaire !">
+        <div class="col mb-3"  data-step="7" data-intro="Une précision à apporter ? Laissez un commentaire !">
             <span class="input-group-text" id="comment_section">Commentaire (facultatif)</span>
             <textarea autocapitalize="sentences" maxlength="255" name="comment" id="recordComment" class="form-control" aria-label="Commentaire" aria-describedby="comment_section"></textarea>
             <small class="form-text text-muted">255 caractères maximum</small>
@@ -137,6 +160,7 @@
 <script>
 getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
 getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
+getWorkCategories();
 
 function incrementHour(hoursInputId, minutesInputId){
     let minutesInput = document.getElementById(minutesInputId.id);

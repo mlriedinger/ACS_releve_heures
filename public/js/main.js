@@ -55,3 +55,39 @@ function updateNavBarActiveAttribute(selector) {
     var navBarItem = document.querySelector(selector);
     navBarItem.classList.add("active");
 }
+
+
+function addEventCalculateTotalWorkingHours() {
+    // console.log("addEventCalculateTotalWokringHours");
+    $('.col').on('change', '.timeInput', getTotalWorkingHours);
+}
+
+function getTotalWorkingHours() {
+    let sum = 0;
+    // console.log("getTotalWorkingHours");
+    // console.log(sum);
+
+    $('.col .timeInput').each(function() {
+        if($(this).attr('name').includes('Hours')) {
+            var inputValue = $(this).val();
+
+            if($.isNumeric(inputValue)) {
+                sum += parseFloat(inputValue) * 60;
+            }
+        }
+        else if($(this).attr('name').includes('Minutes')) {
+            var inputValue = $(this).val();
+            if($.isNumeric(inputValue)) {
+                sum += parseFloat(inputValue);
+            }
+        }
+        /*var inputValue = $(this).val();
+        if($.isNumeric(inputValue)) {
+            
+            sum += parseFloat(inputValue);
+        }*/
+    });
+    sum = convertTimeToHoursAndMinutes(sum)
+    $('#totalLengthHours').val(sum.hours);
+    $('#totalLengthMinutes').val(sum.minutes);
+}

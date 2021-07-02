@@ -18,9 +18,9 @@ if(isset($_GET['action'])) {
             // Connexion
             case "login":
                 if(isset($_POST['login']) && isset($_POST['password']) || $_POST['login'] != "" || $_POST['password'] != "") {
-                        $settingController->getSettings();
-                        $loginController->verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
-                    } else throw new InvalidParameterException();
+                    $settingController->getSettings();
+                    $loginController->verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
+                } else throw new InvalidParameterException();
                 break;
 
             // Déconnexion
@@ -273,6 +273,7 @@ if(isset($_GET['action'])) {
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
                         $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfData']));
+                        
                         //if(inputValidation($_POST['status']) === "export"){
                             //$recordController->getOptionsData(inputValidation($_POST['typeOfData']));
                         //}
@@ -280,6 +281,13 @@ if(isset($_GET['action'])) {
                         $recordController->getOptionsData($recordInfo);
                         //}
                     }
+                } else throw new AuthenticationException();
+                break;
+
+            // Récupérer la liste des postes de travail
+            case "getWorkCategories":
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                    $recordController->getWorkCategories();
                 } else throw new AuthenticationException();
                 break;
         }

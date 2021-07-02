@@ -19,6 +19,7 @@ class Record {
     private $_worksite;
     private $_userId;
     private $_userGroup;
+    private $_workstations;
 
     // Constructeur
     public function __construct() {
@@ -28,6 +29,7 @@ class Record {
         $_dateTimeStart = $this->setDateTimeStart("0000-00-00 00:00:00");
         $_tripLength = $this->setTripLength(0);
         $_workLength = $this->setWorkLength(0);
+        $_workstations = [];
     }
     
     // Mutateurs (setters)
@@ -96,6 +98,31 @@ class Record {
         return $this;
     }
 
+    public function setWorkstations(array $workstations) {
+        $this->_workstations = $workstations;
+        return $this;
+    }
+
+    public function addWorkstation(Workstation $workstation) {
+        $this->_workstations[$workstation->getWorkstationId()] = $workstation;
+        return $this;
+    }
+
+    public function modifyWorkstation(Workstation $workstation) {
+        $this->_workstations[$workstation->getWorkstationId()] = $workstation;
+        return $this;
+    }
+
+    public function removeWorkstation($workstation) {
+        if(gettype($workstation) == 'int'){
+            unset($this->_workstations[$workstation]);
+        }
+        else if(get_class($workstation) == 'Workstation') {
+            unset($this->_workstations[$workstation->getWorkstationId()]);
+        }
+        return $this;
+    }
+
     // Accesseurs (getters)
     public function getBreakLength(){
         return $this->_breakLength;
@@ -147,5 +174,9 @@ class Record {
 
     public function getUserGroup(){
         return $this->_userGroup;
+    }
+    
+    public function getWorkstations() {
+        return $this->_workstations;
     }
 }

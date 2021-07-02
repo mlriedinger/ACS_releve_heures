@@ -34,15 +34,16 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function addNewRecord(Record $recordInfo){
-        $isSendingSuccessfull = $this->_recordManager->addNewRecord($recordInfo);
+        $lastInsertRecordId = $this->_recordManager->addNewRecord($recordInfo);
+        $addRecordDetailsAttempt = $this->_recordManager->addDetails($recordInfo, $lastInsertRecordId);
 
-        if($isSendingSuccessfull) {
+        if($addRecordDetailsAttempt) {
             $_SESSION['success'] = true;
-            header('Location: index.php?action=showPersonalRecordsLog');
+            $this->displayView('personalRecordsLog');
         }
         else {
             $_SESSION['success'] = false;
-            require('view/addNewRecord.php');
+            $this->displayView('addNewRecord');
         }
     }
 

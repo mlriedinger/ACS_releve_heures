@@ -46,7 +46,7 @@ function fillBasicRecordInfos(Record $recordInfo) {
         fillWorkByDateTimeInfos($recordInfo);
     }
     // Sinon, si le paramètre "Mode de saisie des relevés" est "durée" 
-    else if($_SESSION['lengthMgmt'] == '1' && !empty($_POST['recordDate']) && (!empty($_POST['workLengthHours']) || !empty($_POST['workLengthMinutes']))) {
+    else if(($_SESSION['lengthMgmt'] == '1' || $_SESSION['lengthByCategoryMgmt'] == 1)  && !empty($_POST['recordDate']) && (!empty($_POST['workLengthHours']) || !empty($_POST['workLengthMinutes']))) {
         fillWorkByLengthInfos($recordInfo);
     }
 
@@ -89,9 +89,30 @@ function fillWorkByLengthInfos($recordInfo) {
     $totalWorkLength = convertLengthIntoMinutes($workHours, $workMinutes);
 
     if($totalWorkLength > 0) {
+        if($_SESSION['lengthByCategoryMgmt'] == 1){
+            fillWorkstationsArray($recordInfo);
+        }
         $recordInfo->setWorkLength($totalWorkLength);
     } else {
         throw new InvalidParameterException();
+    } 
+}
+
+/**
+ * Permet d'ajouter un poste de travail.
+ *
+ * @param  Record $recordInfo : un objet de type Record
+ * @return Record $recordInfo : l'objet Record rempli
+ */
+function fillWorkstationsArray($recordInfo) {
+    foreach(array_keys($_POST['workstationLengthHours']) as $workstationId){
+        $hours = intval($_POST['workstationLengthHours'][$workstationId]);
+        $minutes = intval($_POST['workstationLengthMinutes'][$workstationId]);
+        $length = convertLengthIntoMinutes($hours, $minutes);
+
+        $workstation = new Workstation($workstationId, $length);
+        
+        $recordInfo->addWorkstation($workstation);
     }
 }
 
