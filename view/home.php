@@ -17,8 +17,8 @@ $id="homeBackGround";
     </div>
 
     <div class="row mb-2">
-        <div class="col text-center">
-            <img src="public/img/header-accueil.png" alt="Exemples de réalisations par Lugaz Métallerie">
+        <div class="col text-center" id="listOfEvents">
+            
         </div>
     </div>
 
@@ -29,6 +29,8 @@ $id="homeBackGround";
         window.onload = function() {
             getNumberOfRecordsToCheck('Check', 'unchecked');
             getCurrentDate();
+            getEventsFromPlanning(<?= $_SESSION['userId']?>);
+            
             var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(1) > div > a";
             updateNavBarActiveAttribute(menuItemSelector);
 			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(1) > div > i";

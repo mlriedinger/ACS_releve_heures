@@ -83,3 +83,7 @@ function getOptionsData(status, optionType, userId) {
 function getWorkCategories() {
     $.post('index.php?action=getWorkCategories', {}, displayWorkCategories, 'json');
 }
+
+function getEventsFromPlanning(userId) {
+    $.post('index.php?action=getEventsFromPlanning', { 'userId': userId }, displayEventsFromPlanning/*, 'json'*/);
+}

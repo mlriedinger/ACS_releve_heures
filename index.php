@@ -8,6 +8,7 @@ $loginController = new LoginController();
 $recordController = new RecordController();
 $settingController = new SettingController();
 $exportController = new ExportController();
+$eventController = new EventController();
 
 /**
  * Routeur de l'application
@@ -292,6 +293,13 @@ if(isset($_GET['action'])) {
             case "getWorkCategories":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
                     $recordController->getWorkCategories();
+                } else throw new AuthenticationException();
+                break;
+
+            // Récupérer les événements du planning
+            case "getEventsFromPlanning":
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && isset($_POST['userId'] ) && inputValidation($_POST['userId'] !== null)){
+                    $eventController->getEventsFromPlanning(intval(inputValidation($_POST['userId'])));
                 } else throw new AuthenticationException();
                 break;
         }
