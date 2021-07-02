@@ -355,7 +355,7 @@ class RecordManager extends DatabaseConnection {
         $status = $recordInfo->getStatus();
 
         $sql = 'SELECT 
-            CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "affaire", 
+            CONCAT(REF, " - ", REF_interne) AS "affaire", 
             Releve.date_hrs_debut, 
             Releve.date_hrs_fin, 
             Releve.commentaire, 
@@ -372,8 +372,8 @@ class RecordManager extends DatabaseConnection {
 			t_login.id_groupe
         FROM t_saisie_heure AS Releve
 		
-        INNER JOIN t_affaires
-            ON Releve.id_chantier = t_affaires.ID
+        INNER JOIN t_document
+            ON Releve.id_chantier = t_document.ID
 			
 		INNER JOIN t_login
 			ON Releve.id_login = t_login.ID
@@ -474,12 +474,44 @@ class RecordManager extends DatabaseConnection {
 
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $status = $recordInfo->getStatus();
+        
+        // REquête avec managers
+        // $sql = 'SELECT 
+		// 	Releve.id_chantier AS "id_affaire",
+		// 	CONCAT(REF, " - ", REF_interne) AS "affaire",
+		// 	Manager.Nom AS "nom_manager",
+		// 	Manager.Prenom AS "prenom_manager",
+		// 	Membre.Nom AS "nom_salarie",
+		// 	Membre.Prenom AS "prenom_salarie",
+		// 	Releve.date_hrs_debut,
+		// 	Releve.date_hrs_fin, 
+		// 	Releve.commentaire, 
+		// 	Releve.statut_validation, 
+		// 	Releve.date_hrs_creation, 
+		// 	Releve.date_hrs_modif,
+		// 	Releve.ID,
+		// 	Releve.supprimer,
+		// 	Membre.ID AS "id_login",
+		// 	Releve.tps_pause,
+		// 	Releve.tps_trajet,
+		// 	Releve.date_releve,
+		// 	Releve.tps_travail
+		   
+		// FROM t_saisie_heure AS Releve
 
+        // INNER JOIN t_document
+        //     ON Releve.id_chantier = t_document.ID
+		   
+		// INNER JOIN t_login AS Membre
+		//    ON Releve.id_login = Membre.ID
+		   
+		// INNER JOIN t_login AS Manager
+		// 	ON Releve.id_manager = Manager.ID';
+
+        // Requête sans managers
         $sql = 'SELECT 
 			Releve.id_chantier AS "id_affaire",
-			CONCAT(Affaire.REF, " - ", Affaire.Nom) AS "affaire",
-			Manager.Nom AS "nom_manager",
-			Manager.Prenom AS "prenom_manager",
+			CONCAT(REF, " - ", REF_interne) AS "affaire",
 			Membre.Nom AS "nom_salarie",
 			Membre.Prenom AS "prenom_salarie",
 			Releve.date_hrs_debut,
@@ -497,15 +529,12 @@ class RecordManager extends DatabaseConnection {
 			Releve.tps_travail
 		   
 		FROM t_saisie_heure AS Releve
-		   
-		INNER JOIN t_affaires AS Affaire
-			ON Releve.id_affaire = Affaire.ID
+
+        INNER JOIN t_document
+            ON Releve.id_chantier = t_document.ID
 		   
 		INNER JOIN t_login AS Membre
-		   ON Releve.id_login = Membre.ID
-		   
-		INNER JOIN t_login AS Manager
-			ON Releve.id_manager = Manager.ID';
+		   ON Releve.id_login = Membre.ID';
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
 
@@ -515,6 +544,7 @@ class RecordManager extends DatabaseConnection {
         $records["typeOfRecords"] = $typeOfRecords;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 		
+        //$query->debugDumpParams();
         header("Content-Type: text/json");
         echo json_encode($records);
     }

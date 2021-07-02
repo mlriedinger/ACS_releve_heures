@@ -32,8 +32,8 @@ $heading = "Historique personnel";
                             <th scope="col" id="worksite">Affaire</th>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="start">Début</th>' : ""; ?>
                             <?= $_SESSION['dateTimeMgmt'] == 1 ? '<th scope="col" id="end">Fin</th>' : ""; ?>
-                            <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="date">Date</th>' : ""; ?>
-                            <?= $_SESSION['lengthMgmt'] == 1 ? '<th scope="col" id="workTime">Travail</th>' : ""; ?>
+                            <?= ($_SESSION['lengthMgmt'] == 1 || $_SESSION['lengthByCategoryMgmt'] == 1) ? '<th scope="col" id="date">Date</th>' : ""; ?>
+                            <?= ($_SESSION['lengthMgmt'] == 1 || $_SESSION['lengthByCategoryMgmt'] == 1)  ? '<th scope="col" id="workTime">Travail</th>' : ""; ?>
                             <?= $_SESSION['breakMgmt'] == 1 ? '<th scope="col" id="breakTime">Pause</th>' : ""; ?>
                             <?= $_SESSION['tripMgmt'] == 1 ? '<th scope="col" id="tripTime">Trajet</th>' : ""; ?>
                             <th scope="col" class="records_log_comment" id="comment">Commentaire</th>

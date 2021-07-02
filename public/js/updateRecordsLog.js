@@ -193,7 +193,7 @@ function createNewLines(newRow) {
         * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
 */
 function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
-    // console.log(data);
+    console.log(data);
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 

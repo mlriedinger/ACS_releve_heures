@@ -3,6 +3,7 @@
     * data : correspond au tableau contenant les résultats de la requête AJAX
 */
 function parseMultipleLinesRequest(data) {
+    console.log(data);
     var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
     var currentUserId = data.currentUserId;
