@@ -604,7 +604,7 @@ class RecordManager extends DatabaseConnection {
                         INNER JOIN t_document
                         ON t_equipe.id_chantier = t_document.ID
                         WHERE t_equipe.id_login = :userId
-                        AND supprimer = 0';
+                        AND t_equipe.supprimer = 0';
                 break;
         }
 
@@ -624,7 +624,7 @@ class RecordManager extends DatabaseConnection {
         
         $data["typeOfData"] = $type;
         $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-        
+        //$query->debugDumpParams();
         header("Content-Type: text/json");
         echo json_encode($data);
     }
