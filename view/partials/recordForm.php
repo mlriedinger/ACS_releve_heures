@@ -90,76 +90,108 @@
                     <div class="row mb-2 justify-content-center">
                         <label for="test1" class="col-sm-2 col-form-label">Fabrication</label>
 
-                        <div class="col-3">
+                        <div class="col-3 me-5 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test1">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-3 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
                     </div>
 
                     <div class="row mb-2 justify-content-center">
                         <label for="test2" class="col-sm-2 col-form-label">Peinture atelier</label>
-                        <div class="col-3">
+                        <div class="col-3 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test2">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-3 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
                     </div>
 
                     <div class="row mb-2 justify-content-center">
                         <label for="test3" class="col-sm-2 col-form-label">Livraison</label>
-                        <div class="col-3">
+                        <div class="col-3 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test3">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-3 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
                     </div>
 
                     <div class="row mb-2 justify-content-center">
                         <label for="test4" class="col-sm-2 col-form-label">Modification</label>
-                        <div class="col-3">
+                        <div class="col-3 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test4">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-3 me-5">
                             <div class="d-flex flex-row align-items-center">
-                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
                                 <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -169,11 +201,11 @@
 
                     <label for="totalLengthHours" class="col-sm-2 col-form-label">Total</label>
                 
-                    <div class="col-3 mb-3">
+                    <div class="col-3 me-5 mb-3">
                         <!-- <span class="input-group-text" id="total_hours_indicator">Heures</span> -->
                         <input type="number" min="-15" name="workLengthHours" id="totalLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="total_hours_indicator" readonly/>
                     </div>
-                    <div class="col-3 mb-3">
+                    <div class="col-3 me-5 mb-3">
                         <!-- <span class="input-group-text" id="total_minutes_indicator">Minutes</span> -->
                         <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="totalLengthMinutes" class="form-control" aria-label="Total des heures de la journée" aria-describedby="total_minutes_indicator" readonly/>
                     </div>
@@ -221,19 +253,27 @@
             <fieldset class="mb-4">
 
                 <div class="row mb-4 justify-content-center mt-4">
-                    <div class="col-3">
+                    <div class="col-3 me-5">
                         <div class="d-flex flex-row align-items-center">
-                            <i class="bi bi-dash-circle-fill me-3"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                            </svg>
                             <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test3">
-                            <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                            </svg>
                         </div>
                     </div>
 
-                    <div class="col-3">
+                    <div class="col-3 me-5">
                         <div class="d-flex flex-row align-items-center">
-                            <i class="bi bi-dash-circle-fill me-3"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                            </svg>
                             <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                            <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                            </svg>
                         </div>
                     </div>
                 </div>
