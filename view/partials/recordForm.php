@@ -6,7 +6,7 @@
 	<p class="text-end"><a href="javascript:void(0);" onclick="javascript:introJs().start();" style="color:black;"><i class="bi bi-info-circle"></i> Besoin d'aide ?</a></p>
     
     <!-- Sélection du chantier et de la date du relevé -->
-    <div id="divWorksiteInput" class="row mt-5 mb-3 d-flex justify-content-md-center">
+    <div id="divWorksiteInput" class="row mt-5 mb-3 justify-content-md-center">
 
         <div class="col mb-3" style="flex-grow: 2;" data-step="1" data-intro="Sélectionnez une affaire pour laquelle vous souhaitez relever des heures.">
             <span class="input-group-text" id="worksite_selector">Affaire</span>
@@ -69,25 +69,126 @@
 
     <?php
     if($_SESSION['lengthByCategoryMgmt'] == 1 ) { ?>
-        <div id="divWorkLengthByCategoryInputs" class="row mb-3 justify-content-md-center" data-step="3" data-intro="Indiquez le nombre d'heures de travail réalisées pour chaque poste.">
-            <p class="h6 mb-3">Temps de travail</p>
-            <!-- Insertion des catégories de postes -->
+        <div >
+            <span class="input-group-text" id="work_hours_indicator">Temps de travail</span>
+            
+            <fieldset class="mb-4">
+                <ul class="nav nav-pills justify-content-center mt-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Fabrication</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pose</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Divers</a>
+                    </li>
+                </ul>
+
+                <div class="mt-5 mb-5 ">
+
+                    <div class="row mb-2 justify-content-center">
+                        <label for="test1" class="col-sm-2 col-form-label">Fabrication</label>
+
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test1">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 justify-content-center">
+                        <label for="test2" class="col-sm-2 col-form-label">Peinture atelier</label>
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test2">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 justify-content-center">
+                        <label for="test3" class="col-sm-2 col-form-label">Livraison</label>
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test3">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 justify-content-center">
+                        <label for="test4" class="col-sm-2 col-form-label">Modification</label>
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test4">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="d-flex flex-row align-items-center">
+                                <i class="bi bi-dash-circle-fill me-3"></i>
+                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
+                                <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3 justify-content-center"  data-step="5" data-intro="Le total est calculé automatiquement !">
+
+                    <label for="totalLengthHours" class="col-sm-2 col-form-label">Total</label>
+                
+                    <div class="col-3 mb-3">
+                        <!-- <span class="input-group-text" id="total_hours_indicator">Heures</span> -->
+                        <input type="number" min="-15" name="workLengthHours" id="totalLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="total_hours_indicator" readonly/>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <!-- <span class="input-group-text" id="total_minutes_indicator">Minutes</span> -->
+                        <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="totalLengthMinutes" class="form-control" aria-label="Total des heures de la journée" aria-describedby="total_minutes_indicator" readonly/>
+                    </div>
+                        
+                </div>
+
+            </fieldset>
         </div>
-
-        <div class="row mb-3 justify-content-md-center"  data-step="5" data-intro="Le total est calculé automatiquement !">
-
-            <p class="h6 mb-3">TOTAL</p>
         
-            <div class="col mb-3">
-                <span class="input-group-text" id="total_hours_indicator">Heures</span>
-                <input type="number" min="-15" name="workLengthHours" id="totalLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="total_hours_indicator" readonly/>
-            </div>
-            <div class="col mb-3">
-                <span class="input-group-text" id="total_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="totalLengthMinutes" class="form-control" aria-label="Total des heures de la journée" aria-describedby="total_minutes_indicator" readonly/>
-            </div>
-                    
-        </div>
+
+        <!-- <div id="divWorkLengthByCategoryInputs" class="row mb-3 justify-content-md-center" data-step="3" data-intro="Indiquez le nombre d'heures de travail réalisées pour chaque poste.">
+            <p class="h6 mb-3">Temps de travail</p> -->
+            <!-- Insertion des catégories de postes -->
+        <!-- </div> -->
+
     <?php } ?>
 
     <?php 
@@ -113,25 +214,35 @@
     <?php 
     if($_SESSION['tripMgmt'] == 1) { ?>
         <!-- Champs pour un relevé avec gestion du temps de trajet -->
-        <div id="divTripTimeInput" class="row mb-3 justify-content-md-center" data-step="6" data-intro="Au besoin, indiquez le nombre d'heures de trajet.">
+        <div id="divTripTimeInput"  data-step="6" data-intro="Au besoin, indiquez le nombre d'heures de trajet.">
 
-            <p class="h6 mb-3">Temps de trajet</p>
+            <span class="input-group-text">Temps de trajet</span>
+            
+            <fieldset class="mb-4">
 
-            <div class="col mb-3">
-                <span class="input-group-text" id="trip_hours_indicator">Heures</span>
-                <input type="number" min="-15" name="tripLengthHours" id="tripLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="trip_hours_indicator" />
-            </div>
+                <div class="row mb-4 justify-content-center mt-4">
+                    <div class="col-3">
+                        <div class="d-flex flex-row align-items-center">
+                            <i class="bi bi-dash-circle-fill me-3"></i>
+                            <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test3">
+                            <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                        </div>
+                    </div>
 
-            <div class="col mb-3">
-                <span class="input-group-text" id="trip_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="tripLengthMinutes" id="tripLengthMinutes" value="0" onchange="incrementHour(tripLengthHours, tripLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" />
-            </div>
-
+                    <div class="col-3">
+                        <div class="d-flex flex-row align-items-center">
+                            <i class="bi bi-dash-circle-fill me-3"></i>
+                            <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
+                            <i class="bi bi-plus-circle-fill ms-3" style="color: #C63527"></i>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
         </div>
     <?php } ?>
 
     <!-- Champs commentaire -->
-    <div id="divCommentFieldInput" class="row mb-3 justify-content-md-center">
+    <div id="divCommentFieldInput">
 
         <div class="col mb-3"  data-step="7" data-intro="Une précision à apporter ? Laissez un commentaire !">
             <span class="input-group-text" id="comment_section">Commentaire (facultatif)</span>
