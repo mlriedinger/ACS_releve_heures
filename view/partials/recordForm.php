@@ -73,8 +73,9 @@
             <span class="input-group-text" id="work_hours_indicator">Temps de travail</span>
             
             <fieldset class="mb-4">
-                <ul class="nav nav-pills justify-content-center mt-4">
-                    <li class="nav-item">
+                <ul class="nav nav-pills justify-content-center mt-4" id="workCategoriesNav" role="tablist">
+                <!-- Insertion des catégories de postes -->
+                    <!-- <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Fabrication</a>
                     </li>
                     <li class="nav-item">
@@ -82,121 +83,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Divers</a>
-                    </li>
+                    </li> -->
                 </ul>
 
-                <div id="divWorkLengthByCategoryInputs" class="mt-5 mb-5 ">
-                    
-                    <!-- Insertion des catégories de postes -->
-                    
-                    <!-- <div class="row mb-2 justify-content-center">
-                        <label for="test1" class="col-sm-2 col-form-label">Fabrication</label>
-
-                        <div class="col-3 me-5 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="col-3 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-2 justify-content-center">
-                        <label for="test2" class="col-sm-2 col-form-label">Peinture atelier</label>
-                        <div class="col-3 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="col-3 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-2 justify-content-center">
-                        <label for="test3" class="col-sm-2 col-form-label">Livraison</label>
-                        <div class="col-3 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="col-3 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-2 justify-content-center">
-                        <label for="test4" class="col-sm-2 col-form-label">Modification</label>
-                        <div class="col-3 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test4">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-
-                        <div class="col-3 me-5">
-                            <div class="d-flex flex-row align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
-                                </svg>
-                                <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div> -->
+                <div id="divWorkLengthBySubCategoryInputs" class="mt-5 mb-5 ">
+                <!-- Insertion des sous-catégories de postes -->
                 </div>
 
                 <div class="row mb-3 justify-content-center"  data-step="5" data-intro="Le total est calculé automatiquement !">
@@ -308,6 +199,7 @@
 getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
 getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
 getWorkCategories();
+getWorkSubCategories(1);
 
 function incrementHour(hoursInputId, minutesInputId){
     let minutesInput = document.getElementById(minutesInputId.id);

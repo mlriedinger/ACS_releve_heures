@@ -16,6 +16,7 @@ $heading = "Nouveau relevé";
         window.onload = function() {
             getOptionsData('add', 'worksites', <?= $_SESSION['userId']?>);
             getWorkCategories();
+            getWorkSubCategories(1);
             var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(2) > div > a";
             updateNavBarActiveAttribute(menuItemSelector);
         }

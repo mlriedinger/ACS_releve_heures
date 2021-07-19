@@ -628,8 +628,7 @@ class RecordManager extends DatabaseConnection {
         header("Content-Type: text/json");
         echo json_encode($data);
     }
-
-
+    
     public function getWorkCategories() {
         $pdo = $this->dbConnect();
 
@@ -637,13 +636,32 @@ class RecordManager extends DatabaseConnection {
             Code AS 'code_poste', 
             Libelle AS 'libelle_poste', 
             Supprimer 
-        FROM t_saisie_heure_sous_categorie";
+        FROM t_saisie_heure_categorie";
         
         $query = $pdo->prepare($sql);
-        $query->execute();
+        $query->execute(array('workCategoryId' => $workCategoryId));
         $workCategories = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        // $query->debugDumpParams();
+        //$query->debugDumpParams();
+        header("Content-Type: text/json");
+        echo json_encode($workCategories);
+    }
+
+    public function getWorkSubCategories(int $workCategoryId) {
+        $pdo = $this->dbConnect();
+
+        $sql = "SELECT ID, 
+            Code AS 'code_poste', 
+            Libelle AS 'libelle_poste', 
+            Supprimer 
+        FROM t_saisie_heure_sous_categorie
+        WHERE ID_categorie = :workCategoryId";
+        
+        $query = $pdo->prepare($sql);
+        $query->execute(array('workCategoryId' => $workCategoryId));
+        $workCategories = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        //$query->debugDumpParams();
         header("Content-Type: text/json");
         echo json_encode($workCategories);
     }

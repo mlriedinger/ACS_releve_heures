@@ -107,7 +107,33 @@ function displayOptionsList(data) {
 */
 function displayWorkCategories(data) {
     console.log(data);
-    var divWorkLengthByCategoryInputs = document.getElementById("divWorkLengthByCategoryInputs");
+    var workCategoriesNav = document.getElementById("workCategoriesNav");
+
+    for(let i = 0 ; i < data.length ; i ++) {
+        var newListItem = document.createElement("li");
+        newListItem.setAttribute("class", "nav-item");
+        newListItem.setAttribute("role", "presentation");
+
+        var categoryId = data[i].ID;
+        var categoryDescription = data[i].libelle_poste;
+
+        var html = [
+            `<button type="button" class="nav-link" id="${ categoryDescription }_tab" role="tab" data-bs-toggle="pill" aria-current="page" onclick="getWorkSubCategories(${ categoryId })">${ categoryDescription }</button>`
+        ];
+        
+        newListItem.innerHTML = html;
+        workCategoriesNav.appendChild(newListItem);
+    }
+    workCategoriesNav.firstElementChild.firstElementChild.classList.add("active");
+}
+
+
+/*
+*/
+function displayWorkSubCategories(data) {
+    console.log(data);
+    var divWorkLengthBySubCategoryInputs = document.getElementById("divWorkLengthBySubCategoryInputs");
+    divWorkLengthBySubCategoryInputs.innerHTML ="";
 
     for(let i = 0; i < data.length ; i++) {
         // On transforme la casse du nom du poste : 1ère lettre en majuscule, les suivantes en minuscules
@@ -172,9 +198,9 @@ function displayWorkCategories(data) {
                 </div>
             </div>`
         ]
-        
+
         newDivCategory.innerHTML = html;
-        divWorkLengthByCategoryInputs.appendChild(newDivCategory);
+        divWorkLengthBySubCategoryInputs.appendChild(newDivCategory);
 
         addEventCalculateTotalWorkingHours();
     }

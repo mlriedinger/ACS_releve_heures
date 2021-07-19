@@ -141,4 +141,8 @@ class RecordController extends AbstractController {
     public function getWorkCategories() {
         $this->_recordManager->getWorkCategories();
     }
+
+    public function getWorkSubCategories(int $workCategoryId) {
+        $this->_recordManager->getWorkSubCategories($workCategoryId);
+    }
 }

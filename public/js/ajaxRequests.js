@@ -84,6 +84,10 @@ function getWorkCategories() {
     $.post('index.php?action=getWorkCategories', {}, displayWorkCategories, 'json');
 }
 
+function getWorkSubCategories(workCategoryId) {
+    $.post('index.php?action=getWorkSubCategories', { 'workCategoryId': workCategoryId }, displayWorkSubCategories/*, 'json'*/);
+}
+
 function getEventsFromPlanning(userId) {
     $.post('index.php?action=getEventsFromPlanning', { 'userId': userId }, displayEventsFromPlanning/*, 'json'*/);
 }
