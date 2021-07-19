@@ -634,10 +634,10 @@ class RecordManager extends DatabaseConnection {
         $pdo = $this->dbConnect();
 
         $sql = "SELECT ID, 
-            Libelle AS 'code_poste', 
+            Code AS 'code_poste', 
             Libelle AS 'libelle_poste', 
             Supprimer 
-        FROM t_rentabilite_cat";
+        FROM t_saisie_heure_sous_categorie";
         
         $query = $pdo->prepare($sql);
         $query->execute();

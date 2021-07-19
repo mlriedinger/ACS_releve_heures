@@ -85,9 +85,11 @@
                     </li>
                 </ul>
 
-                <div class="mt-5 mb-5 ">
-
-                    <div class="row mb-2 justify-content-center">
+                <div id="divWorkLengthByCategoryInputs" class="mt-5 mb-5 ">
+                    
+                    <!-- Insertion des catégories de postes -->
+                    
+                    <!-- <div class="row mb-2 justify-content-center">
                         <label for="test1" class="col-sm-2 col-form-label">Fabrication</label>
 
                         <div class="col-3 me-5 me-5">
@@ -194,7 +196,7 @@
                                 </svg>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row mb-3 justify-content-center"  data-step="5" data-intro="Le total est calculé automatiquement !">
@@ -214,12 +216,6 @@
 
             </fieldset>
         </div>
-        
-
-        <!-- <div id="divWorkLengthByCategoryInputs" class="row mb-3 justify-content-md-center" data-step="3" data-intro="Indiquez le nombre d'heures de travail réalisées pour chaque poste.">
-            <p class="h6 mb-3">Temps de travail</p> -->
-            <!-- Insertion des catégories de postes -->
-        <!-- </div> -->
 
     <?php } ?>
 

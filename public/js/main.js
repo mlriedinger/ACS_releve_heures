@@ -59,16 +59,13 @@ function updateNavBarActiveAttribute(selector) {
 
 
 function addEventCalculateTotalWorkingHours() {
-    // console.log("addEventCalculateTotalWokringHours");
-    $('.col').on('change', '.timeInput', getTotalWorkingHours);
+    $('.col-3').on('change', '.timeInput', getTotalWorkingHours);
 }
 
 function getTotalWorkingHours() {
     let sum = 0;
-    // console.log("getTotalWorkingHours");
-    // console.log(sum);
 
-    $('.col .timeInput').each(function() {
+    $('.col-3 .timeInput').each(function() {
         if($(this).attr('name').includes('Hours')) {
             var inputValue = $(this).val();
 
@@ -82,12 +79,8 @@ function getTotalWorkingHours() {
                 sum += parseFloat(inputValue);
             }
         }
-        /*var inputValue = $(this).val();
-        if($.isNumeric(inputValue)) {
-            
-            sum += parseFloat(inputValue);
-        }*/
     });
+    
     sum = convertTimeToHoursAndMinutes(sum)
     $('#totalLengthHours').val(sum.hours);
     $('#totalLengthMinutes').val(sum.minutes);

@@ -106,7 +106,7 @@ function displayOptionsList(data) {
 /*
 */
 function displayWorkCategories(data) {
-    //console.log(data);
+    console.log(data);
     var divWorkLengthByCategoryInputs = document.getElementById("divWorkLengthByCategoryInputs");
 
     for(let i = 0; i < data.length ; i++) {
@@ -115,7 +115,7 @@ function displayWorkCategories(data) {
 
         var newDivCategory = document.createElement("div");
         newDivCategory.setAttribute("id", "div"+ categoryName);
-        newDivCategory.setAttribute("class", "col-4 flex-grow-1 mb-3");
+        newDivCategory.setAttribute("class", "row mb-2 justify-content-center");
 
         var categoryCode = data[i].code_poste.toLowerCase().replace(/\s+/g, '');
         categoryCode = categoryCode.replace("/", "_");
@@ -123,6 +123,39 @@ function displayWorkCategories(data) {
         var categoryDescription = data[i].libelle_poste.toLowerCase().replace(/\s+/g, '');
         
         var html = [
+            `<label for="${ categoryCode }LengthHours" class="col-sm-2 col-form-label">${ data[i].libelle_poste }</label>
+            
+            <div class="col-3 me-5 me-5">
+                <div class="d-flex flex-row align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    </svg>
+
+                    <input type="number" min="0" class="form-control timeInput" placeholder="Heures" name="workstationLengthHours[${ categoryId }]" id="${ categoryCode }LengthHours">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="col-3 me-5">
+                <div class="d-flex flex-row align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                    </svg>
+
+                    <input type="number" min="-15" step="15" max="60" class="form-control timeInput" placeholder="Minutes" name="workstationLengthMinutes[${ categoryId }]" id="${ categoryCode }LengthMinutes" onchange="incrementHour(${ categoryCode }LengthHours, ${ categoryCode }LengthMinutes)">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                    </svg>
+                </div>
+            </div>`
+        ];
+
+
+        var html2 = [
             `<div class="card">
                 <div class="card-body">
                     <p class="card-text text-center mb-3">${ data[i].libelle_poste }</p>
@@ -139,6 +172,7 @@ function displayWorkCategories(data) {
                 </div>
             </div>`
         ]
+        
         newDivCategory.innerHTML = html;
         divWorkLengthByCategoryInputs.appendChild(newDivCategory);
 
