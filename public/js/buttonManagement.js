@@ -1,37 +1,41 @@
-/* Fonction qui permet d'ajouter un bouton "édition" qui déclenche l'ouverture d'une fenêtre modale
-    Params :
-        * newEdit : correspond à la cellule de la ligne du tableau dans laquelle ajouter le bouton
-        * data : correspond au tableau contenant les résultats de la requête AJAX
-        * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
-*/
-function insertEditRecordButton(newEdit, data, counter){
-    let newEditText = `<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(${data[counter].ID}, ${data[counter].id_login})" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>`;
+/**  Fonction qui permet d'ajouter un bouton "édition" qui déclenche l'ouverture d'une fenêtre modale
+ * @param  {object} newEdit correspond à la cellule de la ligne du tableau dans laquelle ajouter le bouton
+ * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
+ */
+function insertEditRecordButton(newEdit, data, counter) {
+    var recordId = parseInt(data[counter].ID);
+    var userId = parseInt(data[counter].id_login);
+
+    var newEditText = `<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(${ recordId }, ${ userId })" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>`;
     newEdit.innerHTML += newEditText;
 }
 
 
-/* Fonction qui permet d'ajouter un bouton "suppression" qui déclenche l'ouverture d'une fenêtre modale
-    Params :
-        * newDelete : correspond à la cellule de la ligne du tableau dans laquelle ajouter le bouton
-        * data : correspond au tableau contenant les résultats de la requête AJAX
-        * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
-*/
-function insertDeleteRecordButton(newDelete, data, counter){
-    let newDeleteText = `<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(${data[counter].ID})"><i class="far fa-trash-alt"></i></button>`;
+/**
+ * @param  {object} newDelete correspond à la cellule de la ligne du tableau dans laquelle ajouter le bouton
+ * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
+ */
+function insertDeleteRecordButton(newDelete, data, counter) {
+    var recordId = parseInt(data[counter].ID);
+
+    var newDeleteText = `<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(${ recordId })"><i class="far fa-trash-alt"></i></button>`;
     newDelete.innerHTML += newDeleteText;
 }
 
 
-/* Fonction qui permet d'ajouter un bouton switch pour cocher les relevés à valider 
-    Params :
-        * newIsValid : correspond à la cellule de la ligne du tableau dans laquelle ajouter le bouton
-        * data : correspond au tableau contenant les résultats de la requête AJAX
-        * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
-*/
-function insertSwitchButton(newIsValid, data, counter){
+/**
+ * @param  {object} newIsValid correspond à la cellule de la ligne du tableau dans laquelle ajouter le bouton
+ * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
+ */
+function insertSwitchButton(newIsValid, data, counter) {
+    var recordId = parseInt(data[counter].ID);
+
     var html = [
         '<div class="form-check form-switch">',
-            `<input class="form-check-input" type="checkbox" name="checkList[${counter}]" id="recordValidationCheck${counter}" value="${data[counter].ID}"/>`,
+            `<input class="form-check-input" type="checkbox" name="checkList[${counter}]" id="recordValidationCheck${counter}" value="${ recordId }"/>`,
             `<label class="form-check-label" for="recordValidationCheck${counter}">Sélectionner</label>`,
         '</div>'
     ].join('');
@@ -39,7 +43,8 @@ function insertSwitchButton(newIsValid, data, counter){
 }
 
 
-/* Fonction qui permet d'insérer des boutons de contrôle de formulaire */
+/* Fonction qui permet d'insérer des boutons de contrôle de formulaire 
+*/
 function insertFormControlButtons() {
     var formControlButtons = [
         '<div class="row mb-3 justify-content-md-center">',      

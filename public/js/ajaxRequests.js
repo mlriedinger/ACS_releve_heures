@@ -1,28 +1,34 @@
-/*  Appels AJAX pour récupèrer les résultats des requêtes PHP au format JSON et remplir dynamiquement les tableaux de relevés
-    Params :
-    * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'status' : portée de la demande (tous, validés, en attente, supprimés)
-    * parseMultipleLinesRequest : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
-    * 'json' : format de données reçues par la requête AJAX
-*/
+/** Appel AJAX pour récupèrer les relevés personnels
+ * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
+ * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
+ */
 function updatePersonalRecordsLog(typeOfRecords, status) {
     $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
 }
 
+
+/** Appel AJAX pour récupèrer les relevés des membres de l'équipe
+ * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
+ * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
+ */
 function updateTeamRecordsLog(typeOfRecords, status) {
     $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
 }
 
+
+/** Appel AJAX pour récupèrer tous les relevés
+ * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
+ * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
+ */
 function updateAllUsersRecordsLog(typeOfRecords, status) {
     $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
 }
 
 
-/* Appels AJAX pour récupérer le contenu qui va être inséré dans le corps de la fenêtre modale (édition ou suppression d'un relevé)
-    Params :
-    * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'recordId' : identifiant du relevé à modifier ou à supprimer
-*/
+/** Appel AJAX pour récupérer le contenu à insérer dans la fenêtre modale d'édition d'un relevé
+ * @param  {number} recordId identifiant du relevé à modifier
+ * @param  {number} userId identifiant de l'utilisateur
+ */
 function displayRecordForm(recordId, userId) {
     $.post('index.php?action=getRecordForm', { 'recordId': recordId, 'userId': userId }, function(content) {
         $(".modal-title").html("Editer un relevé");
@@ -30,6 +36,10 @@ function displayRecordForm(recordId, userId) {
     });
 }
 
+
+/** Appel AJAX pour récupérer le contenu à insérer dans la fenêtre modale de suppression d'un relevé
+ * @param  {number} recordId identifiant du relevé à supprimer
+ */
 function displayDeleteConfirmation(recordId) {
     $.post('index.php?action=getDeleteConfirmationForm', { 'recordId': recordId }, function(content) {
         $(".modal-title").html("Confirmation de suppression");
@@ -38,56 +48,49 @@ function displayDeleteConfirmation(recordId) {
 }
 
 
-/*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et remplir dynamiquement le contenu de la modale d'édition d'un relevé
-    Params :
-    * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'recordID' : l'ID du relevé dont on souhaite récupérer les informations
-    * parseUniqueLineRequest : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
-    * 'json' : format de données reçues par la requête AJAX
-*/
+/** Appel AJAX pour récupérer les données d'un relevé
+ * @param  {number} recordId identifiant du relevé dont on souhaite récupérer les informations
+ */
 function getRecordData(recordId) {
     $.post('index.php?action=getRecordData', { 'recordId': recordId }, updateFormInputs, 'json');
 }
 
 
-/*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et afficher dynamiquement le nombre de relevés en attente de validation
-    Params :
-    * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'typeOfRecords' : type de relevés demandés (personnels, équipe, à vérifier ou globaux) ; 'status' : portée de la demande (tous, validés, en attente, supprimés)
-    * displayNumberOfRecordsTocheck : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
-    * 'json' : format de données reçues par la requête AJAX
-*/
+/** Appel AJAX pour récupérer les relevés en attente de validation
+ * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
+ * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
+ */
 function getNumberOfRecordsToCheck(typeOfRecords, status) {
     $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, displayNumberOfRecordsTocheck, 'json');
 }
 
 
-/*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et afficher dynamiquement les listes déroulantes de managers et de salariés
-    Params :
-    * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête, ici 'typeOfData' : le type d'utilisateurs ("managers" ou "users")
-    * displayOptionsList : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
-    * 'json' : format de données reçues par la requête AJAX
-*/
-function getOptionsData(status, optionType, userId) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'status': status, 'userId': userId }, displayOptionsList, 'json');
+/** Appel AJAX pour récupérer la liste des managers ou des salariés
+ * @param  {string} scope périmère de la demande ("export" : formulaire d'export ou "add" : formulaire d'ajout)
+ * @param  {string} optionType le type d'utilisateurs ("managers" ou "users")
+ * @param  {number} userId identifiant de l'utilisateur
+ */
+function getOptionsData(scope, optionType, userId) {
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, displayOptionsList, 'json');
 }
 
-/*  Appel AJAX pour récupèrer les résultats des requêtes PHP au format JSON et afficher dynamiquement les rubriques de saisie des différents postes de travail
-    Params :
-    * 'url' : url sur laquelle faire la requête POST
-    * {} : données à envoyer dans la requête
-    * displayWorkCategories : fonction à appeler en cas de succès de la requête. Le contenu de la réponse est automatiquement passé en paramètre.
-    * 'json' : format de données reçues par la requête AJAX
-*/
+
+/** Appel AJAX pour récupérer la liste des catégories de postes de travail
+ */
 function getWorkCategories() {
     $.post('index.php?action=getWorkCategories', {}, displayWorkCategories, 'json');
 }
 
-function getWorkSubCategories(workCategoryId) {
-    $.post('index.php?action=getWorkSubCategories', { 'workCategoryId': workCategoryId }, displayWorkSubCategories/*, 'json'*/);
+
+/* Appel AJAX pour récupérer la liste des sous-catégories de postes de travail
+*/
+function getWorkSubCategories() {
+    $.post('index.php?action=getWorkSubCategories', {}, displayWorkSubCategories, 'json');
 }
 
+
+/* Appel AJAX pour récupérer la liste des événements du planning
+*/
 function getEventsFromPlanning(userId) {
     $.post('index.php?action=getEventsFromPlanning', { 'userId': userId }, displayEventsFromPlanning/*, 'json'*/);
 }

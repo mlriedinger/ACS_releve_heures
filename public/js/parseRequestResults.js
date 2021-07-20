@@ -1,9 +1,8 @@
-/* Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie plusieurs lignes et de les insérer dans le tableau 
-    @param :
-    * data : correspond au tableau contenant les résultats de la requête AJAX
-*/
+/** Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie plusieurs lignes et de les insérer dans le tableau
+ * @param  {object} data contenu de la réponse à la requête AJAX
+ */
 function parseMultipleLinesRequest(data) {
-    console.log(data);
+    //console.log(data);
     var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
     var currentUserId = data.currentUserId;
@@ -25,10 +24,9 @@ function parseMultipleLinesRequest(data) {
 }
 
 
-/* Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie une seule ligne, et de les insérer dans le tableau
-    Param :
-    * data : contenu de la réponse à la requête AJAX
-*/
+/** Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie une seule ligne, et de les insérer dans le tableau
+ * @param  {object} data
+ */
 function parseUniqueLineRequest(data) {
     var recordData = [];
 

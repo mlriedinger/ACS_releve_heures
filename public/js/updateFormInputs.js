@@ -1,5 +1,5 @@
 /** Fonction qui permet d'ajout un attribut "selected" à une option de liste déroulante.
- * @param  {Object} data
+ * @param  {object} data
  */
 function addSelectedAttribute(data) {
     var worksitesCollection = document.getElementById("selectWorksite").children;
@@ -13,7 +13,7 @@ function addSelectedAttribute(data) {
 
 
 /** Fonction qui permet de mettre à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé
- * @param  {Object} data contenu de la réponse à la requête AJAX
+ * @param  {object} data contenu de la réponse à la requête AJAX
  */
 function updateFormInputs(data) {    
     // On récupère les chantiers associés à l'utilisateur et on ajoute un attribut "selected" sur le chantier correspondant au relevé en cours d'édition
@@ -72,7 +72,7 @@ function updateFormInputs(data) {
 /** Fonction qui permet d'afficher une liste déroulante dans le formulaire d'export 
  * 1/ avec les noms et prénoms des managers
  * 2/ avec les noms et prénoms des utilisateurs
- * @param  {Object} data contenu de la réponse à la requête AJAX
+ * @param  {object} data contenu de la réponse à la requête AJAX
  */
 function displayOptionsList(data) {
     var typeOfData = data.typeOfData;
@@ -103,7 +103,7 @@ function displayOptionsList(data) {
 
 
 /** Fonction qui permet d'afficher les différentes catégories de postes de travail sous forme de boutons de navigation
- * @param  {Object} data contenu de la réponse à la requête AJAX
+ * @param  {object} data contenu de la réponse à la requête AJAX
  */
 function displayWorkCategories(data) {
     var workCategoriesNav = document.getElementById("workCategoriesNav");
@@ -132,7 +132,7 @@ function displayWorkCategories(data) {
 
 
 /** Fonction qui permet d'afficher par défaut uniquement les sous-catégories de postes liées à la premières catégorie trouvée et de masquer les autres
- * @param  {Object} data contenu de la réponse à la requête AJAX
+ * @param  {object} data contenu de la réponse à la requête AJAX
  */
 function displayWorkSubCategories(data) {
     var firstCategoryId = 0;
