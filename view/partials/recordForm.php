@@ -46,10 +46,9 @@
         </div>
     <?php } ?>
     
-
     <?php 
     if($_SESSION['lengthMgmt'] == 1) { ?>
-        <!-- Champs pour un relevé avec seulement une durée -->
+    <!-- Champs pour un relevé avec une durée simple uniquement -->
         <div id="divWorkLengthInput" class="row mb-3 justify-content-md-center">
 
             <p class="h6 mb-3">Temps de travail</p>
@@ -69,21 +68,13 @@
 
     <?php
     if($_SESSION['lengthByCategoryMgmt'] == 1 ) { ?>
+    <!-- Champs pour un relevé avec ventilation des heures quotidiennes par postes de travail -->
         <div >
             <span class="input-group-text" id="work_hours_indicator">Temps de travail</span>
             
             <fieldset class="mb-4">
                 <ul class="nav nav-pills justify-content-center mt-4" id="workCategoriesNav" role="tablist">
                 <!-- Insertion des catégories de postes -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Fabrication</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pose</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Divers</a>
-                    </li> -->
                 </ul>
 
                 <div id="divWorkLengthBySubCategoryInputs" class="mt-5 mb-5 ">
@@ -95,11 +86,9 @@
                     <label for="totalLengthHours" class="col-sm-2 col-form-label">Total</label>
                 
                     <div class="col-3 me-5 mb-3">
-                        <!-- <span class="input-group-text" id="total_hours_indicator">Heures</span> -->
                         <input type="number" min="-15" name="workLengthHours" id="totalLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="total_hours_indicator" readonly/>
                     </div>
                     <div class="col-3 me-5 mb-3">
-                        <!-- <span class="input-group-text" id="total_minutes_indicator">Minutes</span> -->
                         <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="totalLengthMinutes" class="form-control" aria-label="Total des heures de la journée" aria-describedby="total_minutes_indicator" readonly/>
                     </div>
                         
@@ -107,12 +96,11 @@
 
             </fieldset>
         </div>
-
     <?php } ?>
-
+    
     <?php 
     if($_SESSION['breakMgmt'] == 1){ ?>
-        <!-- Champs pour un relevé avec gestion du temps de pause -->
+    <!-- Champs pour un relevé avec gestion du temps de pause -->
         <div id="divBreakTime" class="row mb-3 justify-content-md-center">
 
             <p class="h6 mb-3">Temps de pause</p>
@@ -132,7 +120,7 @@
 
     <?php 
     if($_SESSION['tripMgmt'] == 1) { ?>
-        <!-- Champs pour un relevé avec gestion du temps de trajet -->
+    <!-- Champs pour un relevé avec gestion du temps de trajet -->
         <div id="divTripTimeInput"  data-step="6" data-intro="Au besoin, indiquez le nombre d'heures de trajet.">
 
             <span class="input-group-text">Temps de trajet</span>
@@ -179,6 +167,7 @@
 
     </div>
 
+    <!-- Boutons de validation du formulaire -->
     <div class="row mb-3 justify-content-md-center">
         
         <div class="col mb-5 text-center">
@@ -196,29 +185,8 @@
 <script src="public/js/ajaxRequests.js"></script>
 
 <script>
-getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
-getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
-getWorkCategories();
-getWorkSubCategories(1);
-
-function incrementHour(hoursInputId, minutesInputId){
-    let minutesInput = document.getElementById(minutesInputId.id);
-    let hourInput = document.getElementById(hoursInputId.id);
-
-    if(minutesInput.value === '60'){
-        hourInput.value ++;
-        minutesInput.value = '0';
-    }
-
-    if(hourInput.value !== '0'){
-        if(minutesInput.value === '-15'){
-            hourInput.value --;
-            minutesInput.value = '45';
-        }
-    }
-    if(hourInput.value === '0' && minutesInput.value === '-15'){
-        hourInput.value = '0';
-        minutesInput.value = '0';
-    }
-}
+    getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
+    getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
+    getWorkCategories();
+    getWorkSubCategories();
 </script>

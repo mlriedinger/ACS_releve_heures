@@ -300,7 +300,7 @@ if(isset($_GET['action'])) {
             // Récupérer la liste des sous-catégories de postes de travail
             case "getWorkSubCategories":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    $recordController->getWorkSubCategories(intval(inputValidation($_POST['workCategoryId'])));
+                    $recordController->getWorkSubCategories();
                 } else throw new AuthenticationException();
                 break;
 

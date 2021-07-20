@@ -20,6 +20,26 @@ include("public/js/buttonManagement.js");
 include("public/js/updateListOfEvents.js");
 include("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js", "sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0", "anonymous");
 
+function incrementHour(hoursInputId, minutesInputId){
+    let minutesInput = document.getElementById(minutesInputId.id);
+    let hourInput = document.getElementById(hoursInputId.id);
+
+    if(minutesInput.value === '60'){
+        hourInput.value ++;
+        minutesInput.value = '0';
+    }
+
+    if(hourInput.value !== '0'){
+        if(minutesInput.value === '-15'){
+            hourInput.value --;
+            minutesInput.value = '45';
+        }
+    }
+    if(hourInput.value === '0' && minutesInput.value === '-15'){
+        hourInput.value = '0';
+        minutesInput.value = '0';
+    }
+}
 
 /* Fonction qui permet de convertir un temps en minutes au format heures + minutes.
 	Param :
@@ -57,24 +77,25 @@ function updateNavBarActiveAttribute(selector) {
     navBarItem.classList.add("active");
 }
 
-
+/* Fonction qui permet d'ajouter un événement pour détecter les modifications dans les champs contenant la classe "timeInput", càd les champs "heures" et "minutes"
+*/
 function addEventCalculateTotalWorkingHours() {
     $('.col-3').on('change', '.timeInput', getTotalWorkingHours);
 }
 
 function getTotalWorkingHours() {
-    let sum = 0;
+    var sum = 0;
 
     $('.col-3 .timeInput').each(function() {
         if($(this).attr('name').includes('Hours')) {
-            var inputValue = $(this).val();
+            let inputValue = $(this).val();
 
             if($.isNumeric(inputValue)) {
                 sum += parseFloat(inputValue) * 60;
             }
         }
         else if($(this).attr('name').includes('Minutes')) {
-            var inputValue = $(this).val();
+            let inputValue = $(this).val();
             if($.isNumeric(inputValue)) {
                 sum += parseFloat(inputValue);
             }

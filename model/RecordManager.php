@@ -636,10 +636,11 @@ class RecordManager extends DatabaseConnection {
             Code AS 'code_poste', 
             Libelle AS 'libelle_poste', 
             Supprimer 
-        FROM t_saisie_heure_categorie";
+        FROM t_saisie_heure_categorie
+        WHERE Supprimer = 0";
         
         $query = $pdo->prepare($sql);
-        $query->execute(array('workCategoryId' => $workCategoryId));
+        $query->execute();
         $workCategories = $query->fetchAll(PDO::FETCH_ASSOC);
 
         //$query->debugDumpParams();
@@ -647,18 +648,19 @@ class RecordManager extends DatabaseConnection {
         echo json_encode($workCategories);
     }
 
-    public function getWorkSubCategories(int $workCategoryId) {
+    public function getWorkSubCategories() {
         $pdo = $this->dbConnect();
 
         $sql = "SELECT ID, 
+            ID_categorie,
             Code AS 'code_poste', 
             Libelle AS 'libelle_poste', 
             Supprimer 
         FROM t_saisie_heure_sous_categorie
-        WHERE ID_categorie = :workCategoryId";
+        WHERE Supprimer = 0";
         
         $query = $pdo->prepare($sql);
-        $query->execute(array('workCategoryId' => $workCategoryId));
+        $query->execute();
         $workCategories = $query->fetchAll(PDO::FETCH_ASSOC);
 
         //$query->debugDumpParams();
