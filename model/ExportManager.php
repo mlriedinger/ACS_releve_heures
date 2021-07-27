@@ -56,6 +56,13 @@ class ExportManager extends RecordManager {
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
         //$query->debugDumpParams();
+
+        // On force la boucle à pointer sur l'emplacement mémoire et à ne pas créer de copie temporaire avec "&"
+        foreach($rows as &$row) {
+            $row["tps_travail_heures"] = str_replace('.', ',', $row["tps_travail_heures"]);
+            $row["tps_trajet_heures"] = str_replace('.', ',', $row["tps_trajet_heures"]);
+        }    
+
         return $rows;
     }
     
@@ -67,8 +74,7 @@ class ExportManager extends RecordManager {
     public function sqlRequestBasis(){
         $sql = "SELECT 
             Releve.ID AS 'num_releve',
-            Membre.Nom AS 'nom_salarie',
-            Membre.Prenom AS 'prenom_salarie',";
+            CONCAT(Membre.Nom, ' ', Membre.Prenom) AS 'nom_prenom_salarie',";
         
         $sql = $this->sqlAddSettingsOptions($sql);
             
@@ -78,8 +84,7 @@ class ExportManager extends RecordManager {
             Releve.date_hrs_modif AS 'date_heure_modification',
             Releve.supprimer AS 'releve_supprime',
             Affaire.Nom AS 'projet',
-            Manager.Nom AS 'nom_manager',
-            Manager.Prenom AS 'prenom_manager'
+            CONCAT(Manager.Nom, ' ', Manager.Prenom) AS 'nom_prenom_manager'
         FROM t_saisie_heure AS Releve
 		   
 		INNER JOIN t_affaires AS Affaire
@@ -102,8 +107,7 @@ class ExportManager extends RecordManager {
     public function sqlRequestBasisForManager(){
         $sql = "SELECT 
             Releve.ID AS 'num_releve',
-            Membre.Nom AS 'nom_salarie',
-            Membre.Prenom AS 'prenom_salarie',";
+            CONCAT(Membre.Nom, ' ', Membre.Prenom) AS 'nom_prenom_salarie',";
         
         $sql = $this->sqlAddSettingsOptions($sql);
             
@@ -113,8 +117,7 @@ class ExportManager extends RecordManager {
             Releve.date_hrs_modif AS 'date_heure_modification',
             Releve.supprimer AS 'releve_supprime',
             Affaire.Nom AS 'projet',
-            Manager.Nom AS 'nom_manager',
-            Manager.Prenom AS 'prenom_manager'
+            CONCAT(Manager.Nom, ' ', Manager.Prenom) AS 'nom_prenom_manager'
         FROM t_saisie_heure AS Releve
 		   
 		INNER JOIN t_affaires AS Affaire
@@ -146,13 +149,15 @@ class ExportManager extends RecordManager {
             $sql .= "Releve.date_releve,";
         }
             
-        $sql .= "Releve.tps_travail AS 'tps_travail_minutes',";
+        $sql .= "Releve.tps_travail AS 'tps_travail_minutes',
+                ROUND((Releve.tps_travail / 60), 2) AS 'tps_travail_heures',";
 
         if($_SESSION['breakMgmt'] == 1){
             $sql .= " Releve.tps_pause AS 'tps_pause_minutes',";
         }
         if($_SESSION['tripMgmt'] == 1){
-            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes',";
+            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes',
+                    ROUND((Releve.tps_trajet / 60), 2) AS 'tps_trajet_heures',";
         }
 
         return $sql;
@@ -268,10 +273,11 @@ class ExportManager extends RecordManager {
 
         // On crée un pointeur de fichier dans le flux output pour envoyer le fichier directement au navigateur
         $filePointer = fopen('php://output', 'w');
-        fputcsv($filePointer, $columnNames);
+        fputcsv($filePointer, $columnNames, $delimiter = ";");
 
         foreach ($rows as $row) {
-            fputcsv($filePointer, $row);
+            
+            fputcsv($filePointer, $row, $delimiter = ";");
         }
 
         fclose($filePointer);
