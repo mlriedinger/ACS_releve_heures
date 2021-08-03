@@ -13,7 +13,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item ps-5 mb-3 mb-lg-0">
                     <div class="d-flex flex-column align-items-center navbar-div">
-                        <i class="bi bi-house"></i>
+                        <i class="bi bi-house text-light"></i>
                         <a class="nav-link text-center text-center" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
                     </div>
                 </li>
