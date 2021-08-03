@@ -31,7 +31,7 @@ if(isset($_GET['action'])) {
             // Vue "Accueil"
             case "showHomePage":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
-                    $loginController->displayHomePage();
+                    $loginController->displayView('home');
                 } else throw new AuthenticationException();
                 break;
 
@@ -72,15 +72,15 @@ if(isset($_GET['action'])) {
 
             // Vue export
             case "showExportForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
-                    $exportController->displayExportForm();
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                    $exportController->displayView('exportRecordsForm');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue paramètres de saisie
             case "showSettingsForm":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
-                    $settingController->displaySettingsForm();
+                    $settingController->displayView('settingsForm');
                 } else throw new AuthenticationException();
                 break;
             
@@ -228,6 +228,7 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
                     if(isset($_POST['typeOfRecords']) && isset($_POST['status']) && $_SESSION['userGroup'] == '1') {
                         $recordInfo = new Record();
+                        $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
 
@@ -276,11 +277,15 @@ if(isset($_GET['action'])) {
         }
     } catch (PDOException $e){
         $errorCode = $e->getCode();
-        $loginController->displayLoginPage($errorCode);
+        $loginController->displayView('login', $errorCode);
     } catch (AuthenticationException $e){
         $errorCode = $e->getCode();
         $errorMessage = $e->getMessage();
-        $loginController->displayLoginPage($errorCode, $errorMessage);
+        $loginController->displayView('login',$errorCode, $errorMessage);
+	} catch (InvalidParameterException $e){
+		$errorCode = $e->getCode();
+        $errorMessage = $e->getMessage();
+		$recordController->displayView('recordsToCheck', $errorCode, $errorMessage);
     } catch (Exception $e){
         $errorMessage = $e->getMessage();
         echo "Exception : " . $errorMessage;
@@ -288,5 +293,5 @@ if(isset($_GET['action'])) {
         echo "Erreur : " . $e->getMessage();
     }
 } else {
-    $loginController->displayLoginPage();
+    $loginController->displayView('login');
 }
