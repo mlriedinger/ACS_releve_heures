@@ -60,7 +60,7 @@
 
             <div class="col mb-3" data-step="4" data-intro="Au besoin, indiquez le nombre de minutes (palier de 15 minutes).">
                 <span class="input-group-text" id="work_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="workLengthMinutes" onchange="incrementHour(workLengthHours, workLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="work_minutes_indicator" required/>
+                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="workLengthMinutes" onchange="updateHoursInput(workLengthHours, workLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="work_minutes_indicator" required/>
             </div>
 
         </div>
@@ -112,7 +112,7 @@
 
                 <div class="col mb-3">
                     <span class="input-group-text" id="break_minutes_indicator">Minutes</span>
-                    <input type="number" min="-15" step="15" max="60" name="breakLengthMinutes" id="breakLengthMinutes" value="0" onchange="incrementHour(breakLengthHours, breakLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
+                    <input type="number" min="-15" step="15" max="60" name="breakLengthMinutes" id="breakLengthMinutes" value="0" onchange="updateHoursInput(breakLengthHours, breakLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
                 </div>
 
         </div>
@@ -148,7 +148,7 @@
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
                             </svg>
 
-                            <input type="number" min="-15" step="15" max="60" class="form-control" value="0" name="tripLengthMinutes" id="tripLengthMinutes" onchange="incrementHour(tripLengthHours, tripLengthMinutes)">
+                            <input type="number" min="-15" step="15" max="60" class="form-control" value="0" name="tripLengthMinutes" id="tripLengthMinutes" onchange="updateHoursInput(tripLengthHours, tripLengthMinutes)">
                             
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('minutes', tripLengthHours, tripLengthMinutes)">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
@@ -186,7 +186,7 @@
 
 </div>
 
-<script src="public/js/ajaxRequests.js"></script>
+<script src="public/js/ajax.js"></script>
 
 <script>
     getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
