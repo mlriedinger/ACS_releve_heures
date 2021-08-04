@@ -1,10 +1,10 @@
-/** Fonction qui permet d'incrémenter ou de décrémenter les heures lorsqu'un palier de minutes est atteint
- * @param  {string} hoursInputId
- * @param  {string} minutesInputId
+/** Incrémente ou décrémente les heures lorsqu'un palier de minutes est atteint (0 ou 60).
+ * @param  {string} hoursInputSelector
+ * @param  {string} minutesInputSelector
  */
- function incrementHour(hoursInputId, minutesInputId) {
-    var minutesInput = document.getElementById(minutesInputId.id);
-    var hourInput = document.getElementById(hoursInputId.id);
+ function updateHoursInput(hoursInputSelector, minutesInputSelector) {
+    var minutesInput = document.getElementById(minutesInputSelector.id);
+    var hourInput = document.getElementById(hoursInputSelector.id);
 
     if(minutesInput.value === '60'){
         hourInput.value ++;
@@ -23,50 +23,65 @@
     }
 }
 
-function increment(timeUnit, hoursInputId, minutesInputId) {
-    var minutesInput = document.getElementById(minutesInputId.id);
-    var hourInput = document.getElementById(hoursInputId.id);
+
+/** Incrémente les champs "heures" et "minutes" à l'aide des boutons [+].
+ * @param  {string} timeUnit unité de temps ('hour' ou 'minutes')
+ * @param  {string} hoursInputSelector
+ * @param  {string} minutesInputSelector
+ */
+function increment(timeUnit, hoursInputSelector, minutesInputSelector) {
+    var minutesInput = document.getElementById(minutesInputSelector.id);
+    var hourInput = document.getElementById(hoursInputSelector.id);
 
     if(timeUnit == 'hour') {
         hourInput.valueAsNumber ++;
     }
     else if(timeUnit == 'minutes') {
         minutesInput.valueAsNumber += 15;
-        incrementHour(hoursInputId, minutesInputId);
+        updateHoursInput(hoursInputSelector, minutesInputSelector);
     }
     triggerOnchangeEvent(hourInput, minutesInput);
 }
 
-function decrement(timeUnit, hoursInputId, minutesInputId) {
-    var minutesInput = document.getElementById(minutesInputId.id);
-    var hourInput = document.getElementById(hoursInputId.id);
+
+/** Décrémente les champs "heures" et "minutes" à l'aide des boutons [-].
+ * @param  {string} timeUnit unité de temps ('hour' ou 'minutes')
+ * @param  {string} hoursInputSelector
+ * @param  {string} minutesInputSelector
+ */
+function decrement(timeUnit, hoursInputSelector, minutesInputSelector) {
+    var minutesInput = document.getElementById(minutesInputSelector.id);
+    var hourInput = document.getElementById(hoursInputSelector.id);
 
     if(timeUnit == 'hour' && hourInput.valueAsNumber > 0) {
         hourInput.valueAsNumber --;
     }
     else if(timeUnit == 'minutes') {
         minutesInput.valueAsNumber -= 15;
-        incrementHour(hoursInputId, minutesInputId);
+        updateHoursInput(hoursInputSelector, minutesInputSelector);
     }
     triggerOnchangeEvent(hourInput, minutesInput);
 }
 
+
+/** Déclenche un événement "onchange" si le bouton utilisé pour incrémenter ou décrémenter est associé à une sous-catégorie de poste.
+ * @param  {} hourInput
+ * @param  {} minutesInput
+ */
 function triggerOnchangeEvent(hourInput, minutesInput) {
-    // Si la fonction a été appelée par un bouton associé à une sous-catégorie de poste, on déclenche un événement "change" pour recalculer le total
     if($(hourInput).attr('name').includes('workstation') || $(minutesInput).attr('name').includes('workstation')) {
-        console.log("trigger onchange event");
         $('.col-3 .timeInput').trigger('change');
     }
 }
 
-/* Fonction qui permet d'ajouter un événement pour détecter les modifications dans les champs contenant la classe "timeInput", càd les champs "heures" et "minutes"
+/** Ajoute un event handler (délégué) lorsqu'un événement "onchange" est déclenché sur l'un des champs "heures" et "minutes" de la partie temps de travail.
 */
 function addEventCalculateTotalWorkingHours() {
     $('.col-3').on('change', '.timeInput', getTotalWorkingHours);
 }
 
 
-/* Fonction qui permet de calculer le total des heures effectuées
+/** Calcule la somme totale des heures de travail déclarées.
 */
 function getTotalWorkingHours() {
     var sum = 0;
@@ -93,7 +108,7 @@ function getTotalWorkingHours() {
 }
 
 
-/** Fonction qui permet de convertir un temps en minutes au format heures + minutes.
+/** Convertit un temps en minutes au format heures + minutes.
  * @param  {number} timeToConvert
  */
 function convertTimeToHoursAndMinutes(timeToConvert) {

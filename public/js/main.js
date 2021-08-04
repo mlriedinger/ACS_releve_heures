@@ -1,4 +1,4 @@
-/** Fonction qui permet d'ajouter des fichiers de script à la suite du script principal.
+/** Ajoute des fichiers de script à la suite du script principal.
  * @param  {string} file chemin d'accès au fichier
  * @param  {string} integrity (facultatif)
  * @param  {string} crossorigin (facultatif)
@@ -17,11 +17,12 @@ function include(file, integrity="", crossorigin="") {
     document.getElementById('mainScript').after(script);
 }
 
-include("public/js/ajaxRequests.js");
-include("public/js/parseRequestResults.js");
+include("public/js/ajax.js");
+include("public/js/parseResults.js");
 include("public/js/updateRecordsLog.js");
-include("public/js/updateFormInputs.js");
-include("public/js/buttonManagement.js");
+include("public/js/prefillEditForm.js");
+include("public/js/displayRecordFormOptions.js");
+include("public/js/buttons.js");
 include("public/js/updateListOfEvents.js");
 include("public/js/timeManagement.js");
 include("public/js/updateNavbar.js");

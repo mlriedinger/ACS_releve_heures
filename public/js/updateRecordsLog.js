@@ -1,4 +1,4 @@
-/** Fonction qui permet de gérer l'affichage du statut du relevé 
+/** Gère l'affichage du statut d'un relevé ainsi que l'affichage des boutons d'édition et de suppression.
  * @param  {object} newLines correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
  * @param  {object} data contenu de la réponse à la requête AJAX
  * @param  {number} currentUserId identifiant de l'utilisateur actuellement connecté
@@ -33,7 +33,7 @@ function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
 }
 
 
-/** Fonction qui permet de remplir les cellules de la nouvelle ligne du tableau avec les données de la requête AJAX 
+/** Remplit les cellules de la nouvelle ligne du tableau avec les données de la requête AJAX.
  * @param  {object} newLines correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
  * @param  {object} data contenu de la réponse à la requête AJAX
  * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
@@ -101,7 +101,7 @@ function fillRecordsTable(newLines, data, counter) {
 }
 
 
-/** Fonction qui permet d'ajouter des cellules dans la ligne en cours d'ajout.
+/** Ajoute des cellules dans la ligne en cours d'ajout.
  * @param  {object} newRow
  */
 function createNewLines(newRow) {
@@ -185,7 +185,7 @@ function createNewLines(newRow) {
 }
 
 
-/** Fonction qui ajoute une nouvelle ligne à un tableau cible
+/** Ajoute une nouvelle ligne à un tableau cible.
  * @param  {string} tableID
  * @param  {object} data
  * @param  {string} typeOfRecord
@@ -213,7 +213,7 @@ function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
 }
 
 
-/** Fonction qui permet de vider le tableau et d'afficher un message s'il n'y a aucun résultat à afficher
+/** Vide le tableau et affiche un message s'il n'y a aucun résultat.
  * @param  {array} tabData
  */
 function clearTable(tabData) {

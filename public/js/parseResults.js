@@ -1,7 +1,7 @@
-/** Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie plusieurs lignes et de les insérer dans le tableau
+/** Traite les résultats renvoyés par un appel AJAX lorsque la requête renvoie plusieurs lignes et de les ajouter à un tableau existant.
  * @param  {object} data contenu de la réponse à la requête AJAX
  */
-function parseMultipleLinesRequest(data) {
+function parseMultipleLines(data) {
     //console.log(data);
     var tabData = data.records;
     var typeOfRecords = data.typeOfRecords;
@@ -24,15 +24,15 @@ function parseMultipleLinesRequest(data) {
 }
 
 
-/** Fonction qui permet de traiter les données reçues de PHP, lorsque la requête renvoie une seule ligne, et de les insérer dans le tableau
+/** Traite les résultats renvoyés par un appel AJAX lorsque la requête renvoie une seule ligne, et les insère dans un tableau pour pré-remplir le formulaire lors de l'édition.
  * @param  {object} data
  */
-function parseUniqueLineRequest(data) {
+function parseUniqueLine(data) {
     var recordData = [];
 
     $.each(data, function(key, value) {
         recordData.push(value);
     });
     
-    updateFormInputs(recordData);
+    displayRecordFormOptions(recordData);
 }

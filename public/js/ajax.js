@@ -1,27 +1,27 @@
-/** Appel AJAX pour récupèrer les relevés personnels
+/** Appel AJAX pour récupérer les relevés personnels
  * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
  * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
  */
 function updatePersonalRecordsLog(typeOfRecords, status) {
-    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
 }
 
 
-/** Appel AJAX pour récupèrer les relevés des membres de l'équipe
+/** Appel AJAX pour récupérer les relevés des membres de l'équipe
  * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
  * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
  */
 function updateTeamRecordsLog(typeOfRecords, status) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
 }
 
 
-/** Appel AJAX pour récupèrer tous les relevés
+/** Appel AJAX pour récupérer tous les relevés
  * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
  * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
  */
 function updateAllUsersRecordsLog(typeOfRecords, status) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLinesRequest, 'json');
+    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
 }
 
 
@@ -52,7 +52,7 @@ function displayDeleteConfirmation(recordId) {
  * @param  {number} recordId identifiant du relevé dont on souhaite récupérer les informations
  */
 function getRecordData(recordId) {
-    $.post('index.php?action=getRecordData', { 'recordId': recordId }, updateFormInputs, 'json');
+    $.post('index.php?action=getRecordData', { 'recordId': recordId }, displayRecordFormOptions, 'json');
 }
 
 
@@ -71,7 +71,7 @@ function getNumberOfRecordsToCheck(typeOfRecords, status) {
  * @param  {number} userId identifiant de l'utilisateur
  */
 function getOptionsData(scope, optionType, userId) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, displayOptionsList, 'json');
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, addOptionsToSelectTag, 'json');
 }
 
 
@@ -82,14 +82,14 @@ function getWorkCategories() {
 }
 
 
-/* Appel AJAX pour récupérer la liste des sous-catégories de postes de travail
-*/
+/** Appel AJAX pour récupérer la liste des sous-catégories de postes de travail
+ */
 function getWorkSubCategories() {
     $.post('index.php?action=getWorkSubCategories', {}, displayWorkSubCategories, 'json');
 }
 
 
-/* Appel AJAX pour récupérer la liste des événements du planning
+/** Appel AJAX pour récupérer la liste des événements du planning
 */
 function getEventsFromPlanning(userId) {
     $.post('index.php?action=getEventsFromPlanning', { 'userId': userId }, displayEventsFromPlanning/*, 'json'*/);
