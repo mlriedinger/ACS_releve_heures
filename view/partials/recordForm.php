@@ -130,11 +130,13 @@
                 <div class="row mb-4 justify-content-center mt-4">
                     <div class="col-3 me-5">
                         <div class="d-flex flex-row align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('hour', tripLengthHours, tripLengthMinutes)">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
                             </svg>
-                            <input type="text" class="form-control" placeholder="Heures" aria-label="First name" id="test3">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+
+                            <input type="number" min="0" class="form-control" value="0" name="tripLengthHours" id="tripLengthHours">
+                            
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('hour', tripLengthHours, tripLengthMinutes)">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
                             </svg>
                         </div>
@@ -142,13 +144,15 @@
 
                     <div class="col-3 me-5">
                         <div class="d-flex flex-row align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('minutes', tripLengthHours, tripLengthMinutes)">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
                             </svg>
-                            <input type="text" class="form-control" placeholder="Minutes" aria-label="Last name">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+
+                            <input type="number" min="-15" step="15" max="60" class="form-control" value="0" name="tripLengthMinutes" id="tripLengthMinutes" onchange="incrementHour(tripLengthHours, tripLengthMinutes)">
+                            
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('minutes', tripLengthHours, tripLengthMinutes)">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                            </svg>
+                            </svg>  
                         </div>
                     </div>
                 </div>

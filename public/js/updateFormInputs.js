@@ -165,13 +165,13 @@ function displayWorkSubCategories(data) {
             
             <div class="col-3 me-5 me-5">
                 <div class="d-flex flex-row align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('hour', ${ subCategoryCode }LengthHours, ${ subCategoryCode }LengthMinutes)">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
                     </svg>
 
-                    <input type="number" min="0" class="form-control timeInput" placeholder="Heures" name="workstationLengthHours[${ subCategoryId }]" id="${ subCategoryCode }LengthHours">
+                    <input type="number" min="0" class="form-control timeInput" placeholder="Heures" value="0" name="workstationLengthHours[${ subCategoryId }]" id="${ subCategoryCode }LengthHours">
                     
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('hour', ${ subCategoryCode }LengthHours, ${ subCategoryCode }LengthMinutes)">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
                     </svg>
                 </div>
@@ -179,13 +179,13 @@ function displayWorkSubCategories(data) {
 
             <div class="col-3 me-5">
                 <div class="d-flex flex-row align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('minutes', ${ subCategoryCode }LengthHours, ${ subCategoryCode }LengthMinutes)">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
                     </svg>
 
-                    <input type="number" min="-15" step="15" max="60" class="form-control timeInput" placeholder="Minutes" name="workstationLengthMinutes[${ subCategoryId }]" id="${ subCategoryCode }LengthMinutes" onchange="incrementHour(${ subCategoryCode }LengthHours, ${ subCategoryCode }LengthMinutes)">
+                    <input type="number" min="-15" step="15" max="60" class="form-control timeInput" placeholder="Minutes" value="0" name="workstationLengthMinutes[${ subCategoryId }]" id="${ subCategoryCode }LengthMinutes" onchange="incrementHour(${ subCategoryCode }LengthHours, ${ subCategoryCode }LengthMinutes)">
                     
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('minutes', ${ subCategoryCode }LengthHours, ${ subCategoryCode }LengthMinutes)">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
                     </svg>
                 </div>
