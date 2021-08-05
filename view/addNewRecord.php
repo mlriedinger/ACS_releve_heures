@@ -19,6 +19,8 @@ $heading = "Nouveau relevé";
             getWorkSubCategories();
             var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(2) > div > a";
             updateNavBarActiveAttribute(menuItemSelector);
+            var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(2) > div > i";
+            updateNavBarActiveAttribute(iconSelector);
         }
 
     </script>
