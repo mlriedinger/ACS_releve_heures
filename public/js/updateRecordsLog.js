@@ -1,12 +1,13 @@
-/* Fonction qui permet de gérer l'affichage du statut du relevé 
-    Params :
-        * newLines : correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
-        * data : correspond au tableau contenant les résultats de la requête AJAX
-        * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
-*/
+/** Gère l'affichage du statut d'un relevé ainsi que l'affichage des boutons d'édition et de suppression.
+ * @param  {object} newLines correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
+ * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {number} currentUserId identifiant de l'utilisateur actuellement connecté
+ * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
+ */
 function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
     let validationStatus = data[counter].statut_validation;
     let deleteStatus = data[counter].supprimer;
+	let userGroup = data[counter].id_groupe;
 
     let newValidationText = "";
     
@@ -21,6 +22,10 @@ function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
         newValidationText = document.createTextNode("Supprimé");
     }
     else {
+		if (validationStatus === "1" && userGroup === "1") {
+			insertEditRecordButton(newLines.newEdit, data, counter);
+			insertDeleteRecordButton(newLines.newDelete, data, counter);
+		}
         newValidationText = document.createTextNode("Validé");
     }
     
@@ -28,15 +33,14 @@ function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
 }
 
 
-/* Fonction qui permet de remplir les cellules de la nouvelle ligne du tableau avec les données de la requête AJAX 
-    Params :
-        * newLines : correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
-        * data : correspond au tableau contenant les résultats de la requête AJAX
-        * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
-*/
+/** Remplit les cellules de la nouvelle ligne du tableau avec les données de la requête AJAX.
+ * @param  {object} newLines correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
+ * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
+ */
 function fillRecordsTable(newLines, data, counter) {
     if(newLines.newWorkSite !== undefined) {
-        let newText = document.createTextNode(data[counter].chantier);
+        let newText = document.createTextNode(data[counter].affaire);
         newLines.newWorkSite.appendChild(newText);
     }
 
@@ -97,8 +101,9 @@ function fillRecordsTable(newLines, data, counter) {
 }
 
 
-/* 
-*/
+/** Ajoute des cellules dans la ligne en cours d'ajout.
+ * @param  {object} newRow
+ */
 function createNewLines(newRow) {
     // On crée un objet newLines qui contiendra les cellules de chaque nouvelle ligne
     var newLines = {};
@@ -180,15 +185,15 @@ function createNewLines(newRow) {
 }
 
 
-/* Fonction qui ajoute une nouvelle ligne à un tableau cible
-    Params :
-        * tableID : id associé à la balise <table>
-        * data : correspond au tableau contenant les résultats de la requête AJAX
-        * typeOfRecord : type de relevés demandés (personnels, en attente, équipe ou globaux)
-        * counter : index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
-*/
+/** Ajoute une nouvelle ligne à un tableau cible.
+ * @param  {string} tableID
+ * @param  {object} data
+ * @param  {string} typeOfRecord
+ * @param  {number} currentUserId
+ * @param  {number} counter
+ */
 function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
-    // console.log(data);
+    //console.log(data);
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
@@ -208,10 +213,9 @@ function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
 }
 
 
-/* Fonction qui permet de vider le tableau et d'afficher un message s'il n'y a aucun résultat à afficher
-    Param :
-    * tabData : tableau contenant les données de la requête AJAX
-*/
+/** Vide le tableau et affiche un message s'il n'y a aucun résultat.
+ * @param  {array} tabData
+ */
 function clearTable(tabData) {
     // On récupère la ligne vide du tableau
     var trEmpty = $("#records_log tbody tr:first-child");
