@@ -272,7 +272,7 @@ if(isset($_GET['action'])) {
             // Récupérer les listes des managers et des salariés pour le formulaire d'export
             case "getOptionsData":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['typeOfData']) && isset($_POST['status']) && inputValidation($_POST['userId'] !== null)) {
+                    if(isset($_POST['typeOfData']) && isset($_POST['scope']) && inputValidation($_POST['userId'] !== null)) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
