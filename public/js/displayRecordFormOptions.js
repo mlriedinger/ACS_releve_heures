@@ -2,6 +2,7 @@
  * @param  {object} data contenu de la réponse à la requête AJAX
  */
 function addOptionsToSelectTag(data) {
+    // console.log(data);
     var typeOfData = data.typeOfData;
     var tabData = data.records;
 

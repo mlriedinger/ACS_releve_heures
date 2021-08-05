@@ -131,11 +131,10 @@ class RecordController extends AbstractController {
     /**
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour les afficher dans un <select>
      *
-     * @param  string $typeOfData : "managers", "users" ou "worksites"
-     * @param  string $userId (optionnel) : ID du salarié nécessaire uniquement à la récupération des chantiers auxquels le salarié est affecté
+     * @param  Record $recordInfo : "managers", "users" ou "worksites"
      */
-    public function getOptionsData(string $typeOfData, string $userId="") {
+    public function getOptionsData(Record $recordInfo) {
         $recordManager = new RecordManager();
-        $recordManager->getDataForOptionSelect($typeOfData, $userId);
+        $recordManager->getDataForOptionSelect($recordInfo);
     }
 }

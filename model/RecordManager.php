@@ -481,11 +481,14 @@ class RecordManager extends DatabaseConnection {
      * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour alimenter un input <select> (formulaire de saisie ou d'export).
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
-     * @param  string $type
-     * @param  int $userId
+     * @param  Record $recordInfo
      * @return string $data
      */
-    public function getDataForOptionSelect(string $type, int $userId){
+    public function getDataForOptionSelect(Record $recordInfo){
+        $type = $recordInfo->getTypeOfRecords();
+        $userGroup = $recordInfo->getUserGroup();
+        $userId = $recordInfo->getUserId();
+
         $pdo = $this->dbConnect();
 
         $sql ="";
@@ -528,6 +531,7 @@ class RecordManager extends DatabaseConnection {
         $data["typeOfData"] = $type;
         $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
+        //$query->debugDumpParams();
         header("Content-Type: text/json");
         echo json_encode($data);
     }

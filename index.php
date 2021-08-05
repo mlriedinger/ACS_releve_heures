@@ -269,12 +269,8 @@ if(isset($_GET['action'])) {
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
                         $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfData']));
-                        //if(inputValidation($_POST['status']) === "export"){
-                            //$recordController->getOptionsData(inputValidation($_POST['typeOfData']));
-                        //}
-                        //if(inputValidation($_POST['status']) === "add" && inputValidation($_POST['userId'] !== null)) {
+
                         $recordController->getOptionsData($recordInfo);
-                        //}
                     }
                 } else throw new AuthenticationException();
                 break;
