@@ -63,10 +63,31 @@ $heading = "Historique personnel";
         window.onload = function(){
             getNumberOfRecordsToCheck('Check', 'unchecked');
             updatePersonalRecordsLog('Personal', 'all');
-            var menuItemSelector = "#navbarDropdown";
+
+            var menuItemSelector = getSelectors(<?= $_SESSION['userGroup'] ?>).menuItemSelector;
             updateNavBarActiveAttribute(menuItemSelector);
-			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
+
+			var iconSelector = getSelectors(<?= $_SESSION['userGroup'] ?>).iconSelector;
 			updateNavBarActiveAttribute(iconSelector);
+        }
+
+        function getSelectors(userGroup) {
+            var iconSelector = "";
+            var menuItemSelector = "";
+            var selectors = [];
+
+            if(userGroup == '3') {
+                menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > a";
+                iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > i";
+            } else {
+                menuItemSelector ="#navbarDropdown";
+                iconSelector ="#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
+            }
+            
+            selectors['menuItemSelector'] = menuItemSelector;
+            selectors['iconSelector'] = iconSelector;
+
+            return selectors;
         }
     </script>
     <?php include('partials/recordFormScripts.php'); ?>
