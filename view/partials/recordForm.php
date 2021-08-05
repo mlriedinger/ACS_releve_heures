@@ -61,7 +61,7 @@
 
             <div class="col mb-3" data-step="4" data-intro="Au besoin, indiquez le nombre de minutes (palier de 15 minutes).">
                 <span class="input-group-text" id="work_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="workLengthMinutes" onclick="incrementHour(workLengthHours, workLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="work_minutes_indicator" required/>
+                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="workLengthMinutes" onchange="updateHoursInput(workLengthHours, workLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="work_minutes_indicator" required/>
             </div>
 
         </div>
@@ -81,7 +81,7 @@
 
                 <div class="col mb-3">
                     <span class="input-group-text" id="break_minutes_indicator">Minutes</span>
-                    <input type="number" min="-15" step="15" max="60" name="breakLengthMinutes" id="breakLengthMinutes" value="0" onclick="incrementHour(breakLengthHours, breakLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
+                    <input type="number" min="-15" step="15" max="60" name="breakLengthMinutes" id="breakLengthMinutes" value="0" onchange="updateHoursInput(breakLengthHours, breakLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" required/>
                 </div>
 
         </div>
@@ -101,7 +101,7 @@
 
             <div class="col mb-3">
                 <span class="input-group-text" id="trip_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="tripLengthMinutes" id="tripLengthMinutes" value="0" onclick="incrementHour(tripLengthHours, tripLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" />
+                <input type="number" min="-15" step="15" max="60" name="tripLengthMinutes" id="tripLengthMinutes" value="0" onchange="updateHoursInput(tripLengthHours, tripLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" />
             </div>
 
         </div>
@@ -132,30 +132,10 @@
 
 </div>
 
-<script src="public/js/ajaxRequests.js"></script>
+<script src="public/js/ajax.js"></script>
 
 <script>
 getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
 getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
 
-function incrementHour(hoursInputId, minutesInputId){
-    let minutesInput = document.getElementById(minutesInputId.id);
-    let hourInput = document.getElementById(hoursInputId.id);
-
-    if(minutesInput.value === '60'){
-        hourInput.value ++;
-        minutesInput.value = '0';
-    }
-
-    if(hourInput.value !== '0'){
-        if(minutesInput.value === '-15'){
-            hourInput.value --;
-            minutesInput.value = '45';
-        }
-    }
-    if(hourInput.value === '0' && minutesInput.value === '-15'){
-        hourInput.value = '0';
-        minutesInput.value = '0';
-    }
-}
 </script>
