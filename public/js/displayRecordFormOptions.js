@@ -84,7 +84,7 @@ function displayWorkSubCategories(data) {
 
         // On crée l'élément <div> qui va contenir les champs "heures" et "minutes"
         var newDivSubCategory = document.createElement("div");
-        newDivSubCategory.setAttribute("id", "div" + subCategoryName + "_" + parentCategoryId);
+        newDivSubCategory.setAttribute("id", "div" + subCategoryName + "_" + subCategoryId + "_" + parentCategoryId);
         newDivSubCategory.setAttribute("class", "row mb-2 justify-content-center subCategory");
 
         // On ajoute l'input, le libellé et les boutons [+] et [-]

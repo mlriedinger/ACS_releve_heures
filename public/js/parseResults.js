@@ -34,5 +34,5 @@ function parseUniqueLine(data) {
         recordData.push(value);
     });
     
-    displayRecordFormOptions(recordData);
+    prefillRecordData(recordData);
 }

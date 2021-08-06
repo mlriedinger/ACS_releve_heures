@@ -52,7 +52,7 @@ function displayDeleteConfirmation(recordId) {
  * @param  {number} recordId identifiant du relevé dont on souhaite récupérer les informations
  */
 function getRecordData(recordId) {
-    $.post('index.php?action=getRecordData', { 'recordId': recordId }, displayRecordFormOptions, 'json');
+    $.post('index.php?action=getRecordData', { 'recordId': recordId }, prefillRecordData, 'json');
 }
 
 

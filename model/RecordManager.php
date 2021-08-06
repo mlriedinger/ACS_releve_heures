@@ -282,18 +282,30 @@ class RecordManager extends DatabaseConnection {
             Releve.date_hrs_debut,
             Releve.date_hrs_fin,
             Releve.date_releve,
-            Releve.statut_validation,
-            Releve.commentaire,
-            Releve.supprimer,
             Releve.tps_travail,
             Releve.tps_pause,
-            Releve.tps_trajet 
+            Releve.tps_trajet,
+            Releve.statut_validation,
+            Releve.commentaire,
+            Releve.supprimer
         FROM t_saisie_heure AS Releve
         WHERE Releve.ID = :recordId';
 
         $query = $pdo->prepare($sql);
         $query->execute(array('recordId' => $recordId));
-        $recordData = $query->fetch(PDO::FETCH_ASSOC);
+        $recordData["recordBasis"] = $query->fetch(PDO::FETCH_ASSOC);
+
+        $sql = 'SELECT
+            Details.id_releve,
+            Details.id_poste,
+            Details.duree
+            
+        FROM t_saisie_heure_detail AS Details
+        WHERE Details.id_releve = :recordId';
+
+        $query = $pdo->prepare($sql);
+        $query->execute(array('recordId' => $recordId));
+        $recordData["recordDetails"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
         header("Content-Type: text/json");
         echo json_encode($recordData);

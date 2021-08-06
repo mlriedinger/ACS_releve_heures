@@ -190,7 +190,9 @@
 
 <script>
     getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
-    getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
     getWorkCategories();
     getWorkSubCategories();
+    getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
+    
+    
 </script>
