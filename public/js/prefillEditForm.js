@@ -1,11 +1,13 @@
 /** Ajoute un attribut "selected" à une option de liste déroulante.
  * @param  {object} data
  */
-function addSelectedAttribute(data) {
+function selectWorksite(data) {
+    // console.log(data);
     var worksitesCollection = document.getElementById("selectWorksite").children;
+    // console.log(worksitesCollection.value);
 
     for (let item of worksitesCollection) {
-        if (item.value === data['id_affaire']) {
+        if (item.value === data['id_chantier']) {
             item.setAttribute("selected", "");
         }
     }
@@ -19,7 +21,7 @@ function addSelectedAttribute(data) {
     var basis = data.recordBasis;
     var details = data.recordDetails;
 
-    addSelectedAttribute(basis);
+    selectWorksite(basis);
     prefillDate(basis);
     prefillWorkLength(basis);
     prefillSubCategories(details);
@@ -55,9 +57,11 @@ function prefillDate(record) {
  * @param  {object} record contient les données de base d'un relevé
  */
 function prefillWorkLength(record) {
+    console.log(record);
     var inputWorkLengthHours = document.getElementById("workLengthHours");
     var inputWorkLengthMinutes = document.getElementById("workLengthMinutes");
     var inputTotalWorkLengthHours = document.getElementById("totalLengthHours");
+    var inputTotalLengthMinutes = document.getElementById("totalLengthMinutes");
 
     var workTime = convertTimeToHoursAndMinutes(record['tps_travail']);
 
@@ -66,7 +70,10 @@ function prefillWorkLength(record) {
         inputWorkLengthMinutes.setAttribute("value", workTime['minutes']);
     }
 
-    // Ajouter le remplissage de la zone total
+    if(inputTotalWorkLengthHours !== null && inputTotalLengthMinutes !== null){
+        inputTotalWorkLengthHours.setAttribute("value", workTime['hours']);
+        inputTotalLengthMinutes.setAttribute("value", workTime['minutes']);
+    }
 }
 
 

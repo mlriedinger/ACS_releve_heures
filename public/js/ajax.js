@@ -71,7 +71,7 @@ function getNumberOfRecordsToCheck(typeOfRecords, status) {
  * @param  {number} userId identifiant de l'utilisateur
  */
 function getOptionsData(scope, optionType, userId) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, addOptionsToSelectTag, 'json');
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, addOptionsToSelectTag/*, 'json'*/);
 }
 
 
