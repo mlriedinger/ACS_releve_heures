@@ -1,10 +1,9 @@
-/** Ajoute un attribut "selected" à une option de liste déroulante.
+/** 
+ * Ajoute un attribut "selected" à une option de liste déroulante.
  * @param  {object} data
  */
 function selectWorksite(data) {
-    // console.log(data);
     var worksitesCollection = document.getElementById("selectWorksite").children;
-    // console.log(worksitesCollection.value);
 
     for (let item of worksitesCollection) {
         if (item.value === data['id_chantier']) {
@@ -14,7 +13,8 @@ function selectWorksite(data) {
 }
 
 
-/** Met à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé.
+/** 
+ * Met à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé.
  * @param  {object} data contenu de la réponse à la requête AJAX
  */
  function prefillRecordData(data) {  
@@ -24,14 +24,16 @@ function selectWorksite(data) {
     selectWorksite(basis);
     prefillDate(basis);
     prefillWorkLength(basis);
-    prefillSubCategories(details);
+    var aggregatedDetails = concatInputsInfosAndRecordDetails(details);
+    prefillSubCategories(aggregatedDetails);
     prefillTripLength(basis);
     prefillBreakLength(basis);
     prefillComment(basis);
 }
 
 
-/** Pré-remplit les champs "Date" ou "Date de début"/"Date de fin" du formulaire
+/** 
+ * Pré-remplit les champs "Date" ou "Date de début"/"Date de fin" du formulaire
  * @param  {object} record contient les données de base d'un relevé
  */
 function prefillDate(record) {
@@ -53,13 +55,14 @@ function prefillDate(record) {
 }
 
 
-/** Pré-remplit les champs "Temps de travail" ou "Temps de travail total" du formulaire
+/** 
+ * Pré-remplit les champs "Temps de travail" ou "Temps de travail total" du formulaire
  * @param  {object} record contient les données de base d'un relevé
  */
 function prefillWorkLength(record) {
-    console.log(record);
     var inputWorkLengthHours = document.getElementById("workLengthHours");
     var inputWorkLengthMinutes = document.getElementById("workLengthMinutes");
+
     var inputTotalWorkLengthHours = document.getElementById("totalLengthHours");
     var inputTotalLengthMinutes = document.getElementById("totalLengthMinutes");
 
@@ -77,40 +80,97 @@ function prefillWorkLength(record) {
 }
 
 
-/** Pré-remplit les champs "heures" et "minutes" des sous-catégories du formulaire
- * @param  {object} recordDetails contient les détails d'un relevé
+/** 
+ * Pré-remplit les champs "heures" et "minutes" des sous-catégories du formulaire
+ * @param  {object} aggregatedDetails tableau de correspondance entre les inputs et les détails d'un relevé
  */
-function prefillSubCategories(recordDetails) {
-    // On récupère tous les inputs des sous-catégories
-    var subCategoriesInputs = document.getElementsByClassName("timeInput");
-
-    // On définit les regex pour déterminer s'il s'agit d'un champ "heures" ou "minutes"
-    var regexHours = /workstationLengthHours\[\w+\]/g;
-    var regexMinutes = /workstationLengthMinutes\[\d+\]/g;
-
-    for(let subCategory of subCategoriesInputs) {
-        // On récupère le name de l'input
-        let subCategoryName = subCategory.name;
-
-        // On récupère l'id de la sous-catégorie dans le name
-        let subCategoryId = parseInt(subCategoryName.substring(subCategoryName.indexOf('[') + 1, subCategoryName.lastIndexOf(']')));
-
-        recordDetails.forEach(detail => {
-            if(subCategoryId === parseInt(detail.id_poste)){
-                let time = convertTimeToHoursAndMinutes(detail.duree);
-                if (regexHours.test(subCategoryName)) {
-                    subCategory.value = parseInt(time["hours"]);
-                } 
-                else if (regexMinutes.test(subCategoryName)) {
-                    subCategory.value = parseInt(time["minutes"]);
-                }
-            }
-        });
-    } 
+function prefillSubCategories(aggregatedDetails) {
+    for(let i = 0 ; i < aggregatedDetails.length ; i++) {
+        let input = document.getElementsByName(aggregatedDetails[i].name);        
+        input[0].value = aggregatedDetails[i].duration;
+    }
 }
 
 
-/** Pré-remplit les champs "Temps de trajet" du formulaire
+/**
+ * Crée un tableau recensant les informations des inputs associés aux sous-catégories de postes.
+ * @returns {object} un tableau contenant le name, l'id de la sous-catégorie, la valeur de l'input et son type (champ heures ou minutes)
+ */
+function parseInputsData() {
+    var data = [];
+
+    // On récupère tous les inputs des sous-catégories
+    var subCategoriesInputs = document.getElementsByClassName("timeInput");
+    
+    // On définit les regex pour déterminer s'il s'agit d'un champ "heures" ou "minutes"
+    var regexHours = /workstationLengthHours\[\d+\]/g;
+    var regexMinutes = /workstationLengthMinutes\[\d+\]/g;
+
+    for(let input of subCategoriesInputs) {
+        let inputInfos = {};
+
+        let name = input.name;
+        let subCategoryId = parseInt(name.substring(name.indexOf('[') + 1, name.lastIndexOf(']')));
+
+        inputInfos["subCategoryId"] = subCategoryId;
+
+        if(regexHours.test(input.name)) {
+            inputInfos["type"] = "hours";
+        } else if(regexMinutes.test(input.name)) {
+            inputInfos["type"] = "minutes";
+        }
+
+        inputInfos["name"] = name;
+        inputInfos["value"] = input.value;     
+
+        data.push(inputInfos);
+    }
+
+    return data;
+
+}
+
+
+/**
+ * Fait correspondre les détails d'un relevé avec les données des inputs de sous-catégories
+ * @param {object} inputsData tableau recensant les informations des inputs associés aux sous-catégories de postes
+ * @param {object} recordDetails tableau contenant des détails d'un relevé d'heures
+ * @returns {object} un tableau associant les détails d'un relevé aux inputs dans lesquels ils devront être affichés
+ */
+function addRecordDetails(inputsData, recordDetails) {
+
+    recordDetails.forEach(detail => {
+        let time = convertTimeToHoursAndMinutes(detail.duree);
+
+        for(let i = 0 ; i < inputsData.length ; i++) {
+            if(parseInt(detail.id_poste) === inputsData[i].subCategoryId) {
+                if(inputsData[i].type === "hours") {
+                    inputsData[i]["duration"] = time["hours"];
+                } else {
+                    inputsData[i]["duration"] = time["minutes"];
+                } 
+            }
+        }
+    })
+
+    return inputsData;
+}
+
+/**
+ * Crée un tableau de correspondance entre les inputs des sous-catégories et les détails d'un relevé d'heures 
+ * @param {object} recordDetails recensant les informations des inputs associés aux sous-catégories de postes
+ * @returns {object} un tableau de correspondance
+ */
+function concatInputsInfosAndRecordDetails(recordDetails) {
+    var aggregatedData = parseInputsData();
+    aggregatedData = addRecordDetails(aggregatedData, recordDetails);
+
+    return aggregatedData;
+}
+
+
+/** 
+ * Pré-remplit les champs "Temps de trajet" du formulaire
  * @param  {object} record contient les données de base d'un relevé
  */
 function prefillTripLength(record) {
@@ -126,7 +186,8 @@ function prefillTripLength(record) {
 }
 
 
-/** Pré-remplit les champs "Temps de pause" du formulaire
+/** 
+ * Pré-remplit les champs "Temps de pause" du formulaire
  * @param  {object} record contient les données de base d'un relevé
  */
 function prefillBreakLength(record) {
@@ -142,7 +203,8 @@ function prefillBreakLength(record) {
 }
 
 
-/** Pré-remplit le champ "Commentaire" du formulaire
+/** 
+ * Pré-remplit le champ "Commentaire" du formulaire
  * @param  {object} record contient les données de base d'un relevé
  */
 function prefillComment(record){
