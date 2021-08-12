@@ -43,32 +43,11 @@ class RecordManager extends DatabaseConnection {
         $tripLength = $recordInfo->getTripLength();
         $workLength = $recordInfo->getWorkLength();
         $worksite = $recordInfo->getWorksite();
-		//$managerId = [];
         
         // Validation automatique des relevés saisis par un utilisateur de type "admin"
         $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
         
         $pdo = $this->dbConnect();
-		
-		// if($userGroup == 1) {
-		// 	$managerId['ID'] = $userId;
-		// } else {
-		// 	$sql = 'SELECT ID
-		// 		FROM t_login
-		// 		WHERE ID = (
-		// 			SELECT id_login 
-		// 			FROM t_equipe 
-		// 			WHERE chef_equipe = 1 AND id_chantier = (
-		// 				SELECT id_chantier 
-		// 				FROM t_equipe 
-		// 				WHERE id_login = :userId AND chef_equipe = 0
-		// 				)
-		// 			)';
-
-		// 	$query = $pdo->prepare($sql);
-		// 	$query->execute(array('userId' => $userId));
-		// 	$managerId = $query->fetch(PDO::FETCH_ASSOC);
-		// }
 		
 		$sql = 'INSERT INTO t_saisie_heure(
             ID, 
@@ -106,7 +85,6 @@ class RecordManager extends DatabaseConnection {
             'id' => 0,
             'id_chantier' => $worksite,
             'id_login' => $userId,
-			'id_manager' => $managerId['ID'],
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'recordDate' => $recordDate,
@@ -129,7 +107,7 @@ class RecordManager extends DatabaseConnection {
      * @param  int $lastInsertId
      * @return void
      */
-    public function addDetails(Record $recordInfo, int $lastInsertId) {
+    public function addRecordDetails(Record $recordInfo, int $lastInsertId) {
         $workstations = $recordInfo->getWorkstations();
         $updateResults = [];
 
@@ -214,8 +192,47 @@ class RecordManager extends DatabaseConnection {
         return $isUpdateSuccessfull;
     }
 
+    
     /**
-     * Prmet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1.
+     * updateRecordDetails
+     *
+     * @return void
+     */
+    public function updateRecordDetails(Record $recordInfo) {
+        $workstations = $recordInfo->getWorkstations();
+        $recordId = $recordInfo->getRecordId();
+        $updateResults = [];
+
+        $pdo = $this->dbConnect();
+
+        foreach($workstations as $workstation){
+            $workstationId = $workstation->getWorkstationId();
+            $length = $workstation->getLength();
+
+            $sql ='UPDATE t_saisie_heure_detail
+                SET duree = :duree
+                WHERE id_releve = :id_releve AND id_poste = :id_poste';
+
+            $query = $pdo->prepare($sql);
+            $updateAttempt = $query->execute(array(
+                'id_releve' => $recordId,
+                'id_poste' => $workstationId,
+                'duree' => $length
+            ));
+
+            // $query->debugDumpParams();
+            // echo '<br>';
+            // echo '<br>';
+
+            if($updateAttempt) array_push($updateResults, $updateAttempt);
+        }
+        count($workstations) == count($updateResults) ? $isUpdateSuccessfull = true : $isUpdateSuccessfull = false;
+        
+        return $isUpdateSuccessfull;
+    }
+
+    /**
+     * Permet de mettre à jour le statut d'un relevé lorsqu'il est validé par un N+1.
      *
      * @param  int $recordId
      * @return bool $isUpdateSuccessfull

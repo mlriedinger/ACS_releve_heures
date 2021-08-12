@@ -35,7 +35,7 @@ class RecordController extends AbstractController {
      */
     public function addNewRecord(Record $recordInfo){
         $lastInsertRecordId = $this->_recordManager->addNewRecord($recordInfo);
-        $addRecordDetailsAttempt = $this->_recordManager->addDetails($recordInfo, $lastInsertRecordId);
+        $addRecordDetailsAttempt = $this->_recordManager->addRecordDetails($recordInfo, $lastInsertRecordId);
 
         if($addRecordDetailsAttempt) {
             $_SESSION['success'] = true;
@@ -55,9 +55,13 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function updateRecord(Record $recordInfo){
-        $isUpdateSuccessfull = $this->_recordManager->updateRecord($recordInfo);
+        $isRecordUpdateSuccessfull = $this->_recordManager->updateRecord($recordInfo);
+        $isDetailUpdateSuccessfull = $this->_recordManager->updateRecordDetails($recordInfo);
         
-        $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
+        // echo "RecordUpdate : " . $isRecordUpdateSuccessfull;
+        // echo "<br>";
+        // echo "DetailUpdate : " .$isDetailUpdateSuccessfull;
+        $isRecordUpdateSuccessfull && $isDetailUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
     }
 
