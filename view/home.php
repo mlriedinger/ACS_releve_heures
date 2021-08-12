@@ -6,7 +6,7 @@ $id="homeBackGround";
 
 <?php ob_start(); ?>
 
-    <h2 id="homeHeading">Bienvenue <?= $_SESSION['firstname'] . ' ' ?>!</div>
+    <h2 id="homeHeading">Bienvenue <?= $_SESSION['firstname'] . ' ' ?>!</h2>
 
     <div class="divider mt-5 mb-3"></div>
 
@@ -16,10 +16,8 @@ $id="homeBackGround";
         </div>
     </div>
 
-    <div class="row mb-2">
-        <div class="col text-center" id="listOfEvents">
-            
-        </div>
+    <div class="row mb-2" id="listOfEvents">
+        
     </div>
 
 <?php $content = ob_get_clean(); ?>
