@@ -14,10 +14,14 @@ input[type="reset"] {
   border-color: #CDCCCC;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Open Sans", system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
 /* Page d'accueil */
 
 #homeHeading {
-  font-family: "Verdana", sans-serif;
+  font-family: "Open Sans", sans-serif;
   position: relative;
   /* color: #fff; */
   text-align: center;
@@ -52,16 +56,6 @@ input[type="reset"] {
 /* //////////////////////////////// */
 /* Ré-écriture de classes Bootstrap */
 /* //////////////////////////////// */
-
-.card-text {
-  font-weight: bold;
-}
-
-/* Inputs de formulaire en mode readonly */
-
-/* input[readonly], .form-control[readonly] {
-  background-color: #fff;
- } */
 
 /* Items de navbar */
 

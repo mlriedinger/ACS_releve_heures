@@ -16,7 +16,7 @@ $id="homeBackGround";
         </div>
     </div>
 
-    <div class="row mb-2" id="listOfEvents">
+    <div class="row mb-3" id="listOfEvents">
         
     </div>
 

@@ -21,9 +21,10 @@ class EventManager extends DatabaseConnection {
         $pdo = $this->dbConnect();
 
         $sql ="SELECT t_equipe.id_chantier, 
-            CONCAT(REF, ' - ', REF_interne) AS 'Nom',
-            t_planning_chantier.DatePlanningDebut,
-            t_planning_chantier.DatePlanningFin,
+            t_document.REF AS 'Ref',
+            t_document.REF_interne AS 'Ref_interne',
+            DATE_FORMAT(t_planning_chantier.DatePlanningDebut, '%d/%m/%Y') AS 'DatePlanningDebut',
+            DATE_FORMAT(t_planning_chantier.DatePlanningFin, '%d/%m/%Y') AS 'DatePlanningFin',
             t_doc_etat.nom AS 'Type'
         FROM t_equipe
         LEFT JOIN t_document

@@ -385,13 +385,13 @@ class RecordManager extends DatabaseConnection {
 
         $sql = 'SELECT 
             CONCAT(REF, " - ", REF_interne) AS "affaire", 
-            Releve.date_hrs_debut, 
-            Releve.date_hrs_fin, 
+            DATE_FORMAT(Releve.date_hrs_debut, "%d/%m/%Y") AS "date_hrs_debut",
+            DATE_FORMAT(Releve.date_hrs_fin, "%d/%m/%Y") AS "date_hrs_fin",
             Releve.commentaire, 
             Releve.statut_validation, 
             Releve.date_hrs_creation, 
             Releve.date_hrs_modif,
-            Releve.date_releve,
+            DATE_FORMAT(Releve.date_releve, "%d/%m/%Y") AS "date_releve",
             Releve.ID,
             Releve.supprimer,
             Releve.id_login,
@@ -457,8 +457,8 @@ class RecordManager extends DatabaseConnection {
                 t_login.ID AS "id_login",
                 t_login.Nom AS "nom_salarie",
                 t_login.Prenom AS "prenom_salarie",
-                Releve.date_hrs_debut, 
-                Releve.date_hrs_fin, 
+                DATE_FORMAT(Releve.date_hrs_debut, "%d/%m/%Y") AS "date_hrs_debut",
+                DATE_FORMAT(Releve.date_hrs_fin, "%d/%m/%Y") AS "date_hrs_fin",
                 Releve.commentaire, 
                 Releve.statut_validation, 
                 Releve.date_hrs_creation, 
@@ -467,7 +467,7 @@ class RecordManager extends DatabaseConnection {
                 Releve.supprimer,
                 Releve.tps_pause,
                 Releve.tps_trajet,
-                Releve.date_releve,
+                DATE_FORMAT(Releve.date_releve, "%d/%m/%Y") AS "date_releve",
                 Releve.tps_travail
                 FROM t_saisie_heure AS Releve
                 INNER JOIN t_affaires 
@@ -504,47 +504,13 @@ class RecordManager extends DatabaseConnection {
         $typeOfRecords = $recordInfo->getTypeOfRecords();
         $status = $recordInfo->getStatus();
         
-        // REquête avec managers
-        // $sql = 'SELECT 
-		// 	Releve.id_chantier AS "id_affaire",
-		// 	CONCAT(REF, " - ", REF_interne) AS "affaire",
-		// 	Manager.Nom AS "nom_manager",
-		// 	Manager.Prenom AS "prenom_manager",
-		// 	Membre.Nom AS "nom_salarie",
-		// 	Membre.Prenom AS "prenom_salarie",
-		// 	Releve.date_hrs_debut,
-		// 	Releve.date_hrs_fin, 
-		// 	Releve.commentaire, 
-		// 	Releve.statut_validation, 
-		// 	Releve.date_hrs_creation, 
-		// 	Releve.date_hrs_modif,
-		// 	Releve.ID,
-		// 	Releve.supprimer,
-		// 	Membre.ID AS "id_login",
-		// 	Releve.tps_pause,
-		// 	Releve.tps_trajet,
-		// 	Releve.date_releve,
-		// 	Releve.tps_travail
-		   
-		// FROM t_saisie_heure AS Releve
-
-        // INNER JOIN t_document
-        //     ON Releve.id_chantier = t_document.ID
-		   
-		// INNER JOIN t_login AS Membre
-		//    ON Releve.id_login = Membre.ID
-		   
-		// INNER JOIN t_login AS Manager
-		// 	ON Releve.id_manager = Manager.ID';
-
-        // Requête sans managers
         $sql = 'SELECT 
 			Releve.id_chantier AS "id_affaire",
 			CONCAT(REF, " - ", REF_interne) AS "affaire",
 			Membre.Nom AS "nom_salarie",
 			Membre.Prenom AS "prenom_salarie",
-			Releve.date_hrs_debut,
-			Releve.date_hrs_fin, 
+			DATE_FORMAT(Releve.date_hrs_debut, "%d/%m/%Y") AS "date_hrs_debut",
+            DATE_FORMAT(Releve.date_hrs_fin, "%d/%m/%Y") AS "date_hrs_fin", 
 			Releve.commentaire, 
 			Releve.statut_validation, 
 			Releve.date_hrs_creation, 
@@ -554,7 +520,7 @@ class RecordManager extends DatabaseConnection {
 			Membre.ID AS "id_login",
 			Releve.tps_pause,
 			Releve.tps_trajet,
-			Releve.date_releve,
+            DATE_FORMAT(Releve.date_releve, "%d/%m/%Y") AS "date_releve",
 			Releve.tps_travail
 		   
 		FROM t_saisie_heure AS Releve
