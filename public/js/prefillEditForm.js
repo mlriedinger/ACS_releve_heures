@@ -2,11 +2,14 @@
  * Ajoute un attribut "selected" à une option de liste déroulante.
  * @param  {object} data
  */
-function selectWorksite(data) {
+function selectWorksite(worksiteId) {
+    console.log(typeof(worksiteId));
     var worksitesCollection = document.getElementById("selectWorksite").children;
+    console.log(worksitesCollection);
 
     for (let item of worksitesCollection) {
-        if (item.value === data['id_chantier']) {
+        if (parseInt(item.value) === worksiteId) {
+            console.log("trouvé");
             item.setAttribute("selected", "");
         }
     }
@@ -21,7 +24,7 @@ function selectWorksite(data) {
     var basis = data.recordBasis;
     var details = data.recordDetails;
 
-    selectWorksite(basis);
+    selectWorksite(data['id_chantier']);
     prefillDate(basis);
     prefillWorkLength(basis);
     var aggregatedDetails = concatInputsInfosAndRecordDetails(details);

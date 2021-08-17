@@ -70,8 +70,8 @@ function getNumberOfRecordsToCheck(typeOfRecords, status) {
  * @param  {string} optionType le type d'utilisateurs ("managers" ou "users")
  * @param  {number} userId identifiant de l'utilisateur
  */
-function getOptionsData(scope, optionType, userId) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, addOptionsToSelectTag/*, 'json'*/);
+function getOptionsData(scope, optionType, userId, worksiteId) {
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId, 'worksiteId': worksiteId }, addOptionsToSelectTag/*, 'json'*/);
 }
 
 

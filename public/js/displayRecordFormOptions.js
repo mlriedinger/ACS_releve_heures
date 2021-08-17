@@ -2,8 +2,10 @@
  * @param  {object} data contenu de la réponse à la requête AJAX
  */
 function addOptionsToSelectTag(data) {
+    console.log(data);
     var typeOfData = data.typeOfData;
     var tabData = data.records;
+    var worksiteId = parseInt(data.worksiteId);
 
     var selector = "";
     if(typeOfData === "users") {
@@ -25,6 +27,7 @@ function addOptionsToSelectTag(data) {
         for(let i = 0 ; i < tabData.length ; i ++) {
             $(selector).append(new Option(tabData[i].Nom, tabData[i].ID));
         }
+        selectWorksite(worksiteId);
     }
 }
 

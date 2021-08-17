@@ -59,7 +59,7 @@ function displayEventsFromPlanning(data) {
                 </div>
 
                 <div class="card-footer text-muted">
-                    <a href="#" class="btn btn-dark mt-2 mb-2">Saisir un relevé</a>
+                    <a href="index.php?action=showNewRecordForm&worksiteId=${ worksiteId }" class="btn btn-dark mt-2 mb-2">Saisir un relevé</a>
                 </div>
             </div>`
         ];

@@ -11,7 +11,7 @@
         <div class="col mb-3" style="flex-grow: 2;" data-step="1" data-intro="Sélectionnez une affaire pour laquelle vous souhaitez relever des heures.">
             <span class="input-group-text" id="worksite_selector">Affaire</span>
             <select class="form-select" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez une affaire" aria-describedby="worksite_selector" required>
-                <option value="" disabled selected>Sélectionnez une affaire</option>
+                <option value="0" disabled selected>Sélectionnez une affaire</option>
             </select>
         </div>
 
@@ -193,6 +193,4 @@
     getWorkCategories();
     getWorkSubCategories();
     getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
-    
-    
 </script>

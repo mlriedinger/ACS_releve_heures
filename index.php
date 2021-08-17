@@ -39,6 +39,7 @@ if(isset($_GET['action'])) {
             // Vue "Nouveau Relevé"
             case "showNewRecordForm":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
+                    isset($_GET['worksiteId']) ? $_SESSION['worksiteId'] = $_GET['worksiteId'] : $_SESSION['worksiteId'] = 0 ;
                     $recordController->displayView('addNewRecord');
                 } else throw new AuthenticationException();
                 break;
@@ -278,6 +279,7 @@ if(isset($_GET['action'])) {
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
                         $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfData']));
+                        $recordInfo->setWorksite($_POST['worksiteId']);
                         
                         //if(inputValidation($_POST['status']) === "export"){
                             //$recordController->getOptionsData(inputValidation($_POST['typeOfData']));

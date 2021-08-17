@@ -556,6 +556,7 @@ class RecordManager extends DatabaseConnection {
         $type = $recordInfo->getTypeOfRecords();
         $userGroup = $recordInfo->getUserGroup();
         $userId = $recordInfo->getUserId();
+        $worksiteId = $recordInfo->getWorksite();
 
         $pdo = $this->dbConnect();
 
@@ -618,6 +619,7 @@ class RecordManager extends DatabaseConnection {
         $query->execute($queryParams);
         
         $data["typeOfData"] = $type;
+        $data["worksiteId"] = $worksiteId;
         $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
         //$query->debugDumpParams();
         header("Content-Type: text/json");
