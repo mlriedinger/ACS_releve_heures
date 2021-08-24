@@ -8,10 +8,10 @@ require 'autoloader.php';
  */
 class ExportController extends AbstractController {
 
-    private $_loginManager;
+    private $_exportManager;
 
     public function __construct() {
-        $this->_loginManager = new LoginManager();
+        $this->_exportManager = new ExportManager();
     }
 
     /**
@@ -20,6 +20,6 @@ class ExportController extends AbstractController {
      * @param  Export $exportInfo
      */
     public function exportRecords(Export $exportInfo){
-        $this->_loginManager->exportRecords($exportInfo);
+        $this->_exportManager->exportRecords($exportInfo);
     }
 }
