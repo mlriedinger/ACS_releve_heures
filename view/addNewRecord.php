@@ -11,16 +11,17 @@ $heading = "Nouveau relevé";
 
 <?php $content = ob_get_clean(); ?>
 
+<?php 
+
+$menuSelector = "#newRecordLink";
+$iconSelector = "#newRecordIcon";
+?>
+
 <?php ob_start(); ?>
-    <script>
-        window.onload = function() {
-            getOptionsData('add', 'worksites', <?= $_SESSION['userId']?>);
-            var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(2) > div > a";
-            updateNavBarActiveAttribute(menuItemSelector);
-            var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(2) > div > i";
-            updateNavBarActiveAttribute(iconSelector);
-        }
-    </script>
-<?php $script = ob_get_clean(); ?>
+getOptionsData('add', 'worksites', <?= $_SESSION['userId']?>, <?= $_SESSION['worksiteId'] ?>);
+getWorkCategories();
+getWorkSubCategories();
+
+<?php $additionalOnloadScript = ob_get_clean(); ?>
 
 <?php require 'template.php'; ?>

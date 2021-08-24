@@ -58,39 +58,17 @@ $heading = "Historique personnel";
 
 <?php $content = ob_get_clean(); ?>
 
-<?php ob_start(); ?>          
-    <script>
-        window.onload = function(){
-            getNumberOfRecordsToCheck('Check', 'unchecked');
-            updatePersonalRecordsLog('Personal', 'all');
+<?php 
 
-            var menuItemSelector = getSelectors(<?= $_SESSION['userGroup'] ?>).menuItemSelector;
-            updateNavBarActiveAttribute(menuItemSelector);
+$menuSelector = "#historyLink";
+$iconSelector = "#historyIcon";
+?>
 
-			var iconSelector = getSelectors(<?= $_SESSION['userGroup'] ?>).iconSelector;
-			updateNavBarActiveAttribute(iconSelector);
-        }
+<?php ob_start(); ?>
+updatePersonalRecordsLog('Personal', 'all');
 
-        function getSelectors(userGroup) {
-            var iconSelector = "";
-            var menuItemSelector = "";
-            var selectors = [];
+<?php $additionalOnloadScript = ob_get_clean(); ?>
 
-            if(userGroup == '3') {
-                menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > a";
-                iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > i";
-            } else {
-                menuItemSelector ="#navbarDropdown";
-                iconSelector ="#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
-            }
-            
-            selectors['menuItemSelector'] = menuItemSelector;
-            selectors['iconSelector'] = iconSelector;
-
-            return selectors;
-        }
-    </script>
-    <?php include('partials/recordFormScripts.php'); ?>
-<?php $script = ob_get_clean(); ?>
+<?php include('partials/recordFormScripts.php'); ?>
 
 <?php require 'template.php'; ?>

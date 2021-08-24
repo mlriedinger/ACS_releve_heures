@@ -55,18 +55,17 @@ $heading = "Historique de l'équipe";
 
 <?php $content = ob_get_clean(); ?>
 
-<?php ob_start(); ?>  
-    <script>
-        window.onload = function(){
-            getNumberOfRecordsToCheck('Check', 'unchecked');
-            updateTeamRecordsLog('Team', 'all');
-            var menuItemSelector = "#navbarDropdown";
-            updateNavBarActiveAttribute(menuItemSelector);
-			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
-			updateNavBarActiveAttribute(iconSelector);
-        }
-    </script>
-    <?php include('partials/recordFormScripts.php'); ?>
-<?php $script = ob_get_clean(); ?>
+<?php 
+
+$menuSelector = "#historyLink";
+$iconSelector = "#historyIcon";
+?>
+
+<?php ob_start(); ?>
+updateTeamRecordsLog('Team', 'all');
+
+<?php $additionalOnloadScript = ob_get_clean(); ?>
+
+<?php include('partials/recordFormScripts.php'); ?>
 
 <?php require 'template.php'; ?> 

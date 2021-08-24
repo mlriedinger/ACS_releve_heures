@@ -53,28 +53,24 @@ $heading = "Paramètres";
        
 <?php $content = ob_get_clean(); ?>
 
+<?php 
+
+$menuSelector = "#adminLink";
+$iconSelector = "#adminIcon";
+?>
+
 <?php ob_start(); ?>  
-    <script>
-        window.onload = function(){
-			getNumberOfRecordsToCheck('Check', 'unchecked');
-            var menuItemSelector = "#navbarDropdown2";
-            updateNavBarActiveAttribute(menuItemSelector);
-			var iconSelector = "#navbarContent > ul:nth-child(2) > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
-			updateNavBarActiveAttribute(iconSelector);
-        }
-    </script>
-    <script>
-        let dateTimeSwitch = document.getElementById("dateTimeMgmtSwitch");
-        let timeLengthSwitch = document.getElementById("lengthMgmtSwitch");
+let dateTimeSwitch = document.getElementById("dateTimeMgmtSwitch");
+let timeLengthSwitch = document.getElementById("lengthMgmtSwitch");
 
-        dateTimeSwitch.addEventListener('click', () =>{
-            dateTimeSwitch.checked && timeLengthSwitch.checked ? timeLengthSwitch.checked = !timeLengthSwitch.checked : "";
-        });
+dateTimeSwitch.addEventListener('click', () =>{
+    dateTimeSwitch.checked && timeLengthSwitch.checked ? timeLengthSwitch.checked = !timeLengthSwitch.checked : "";
+});
 
-        timeLengthSwitch.addEventListener('click', () =>{
-            timeLengthSwitch.checked && dateTimeSwitch.checked ? dateTimeSwitch.checked = !dateTimeSwitch.checked : "";
-        });
-    </script>
+timeLengthSwitch.addEventListener('click', () =>{
+    timeLengthSwitch.checked && dateTimeSwitch.checked ? dateTimeSwitch.checked = !dateTimeSwitch.checked : "";
+});
+
 <?php $script = ob_get_clean(); ?>
 
 <?php require 'template.php'; ?> 

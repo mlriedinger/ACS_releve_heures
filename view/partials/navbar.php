@@ -13,14 +13,14 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item ps-5 mb-3 mb-lg-0">
                     <div class="d-flex flex-column align-items-center navbar-div">
-                        <i class="bi bi-house text-light"></i>
-                        <a class="nav-link text-center text-center" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
+                        <i class="bi bi-house text-light" id="homeIcon"></i>
+                        <a class="nav-link text-center text-center" id="homeLink" aria-current="page" href="index.php?action=showHomePage">Accueil</a>
                     </div>
                 </li>
                 <li class="nav-item ps-5 mb-3 mb-lg-0">
                     <div class="d-flex flex-column align-items-center navbar-div">
-                        <i class="bi bi-clock-history text-light"></i>
-                        <a class="nav-link text-center text-center" aria-current="page" href="index.php?action=showNewRecordForm">Nouveau relevé</a>
+                        <i class="bi bi-clock-history text-light" id="newRecordIcon"></i>
+                        <a class="nav-link text-center text-center" id="newRecordLink" aria-current="page" href="index.php?action=showNewRecordForm">Nouveau relevé</a>
                     </div>
                 </li>
 
@@ -29,16 +29,16 @@
                     ?>
                     <li class="nav-item ps-5 mb-3 mb-lg-0">
                         <div class="d-flex flex-column align-items-center navbar-div">
-                            <i class="bi bi-journal-check text-light"></i>
-                            <a class="nav-link text-center" aria-current="page" href="index.php?action=showRecordsToCheck">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
+                            <i class="bi bi-journal-check text-light" id="validationIcon"></i>
+                            <a class="nav-link text-center" id="validationLink" aria-current="page" href="index.php?action=showRecordsToCheck">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
                         </div>
                     </li>
 
                     <li class="nav-item dropdown ps-5 mb-3 mb-lg-0">
                         <div class="d-flex flex-column align-items-center navbar-div">
-                            <i class="bi bi-journal-text text-light"></i>    
-                            <a class="nav-link text-center dropdown-toggle" aria-current="page" href="index.php?action=showPersonalRecordsLog" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Historique</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <i class="bi bi-journal-text text-light" id="historyIcon"></i>    
+                            <a class="nav-link text-center dropdown-toggle" aria-current="page" href="index.php?action=showPersonalRecordsLog" id="historyLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Historique</a>
+                            <ul class="dropdown-menu" aria-labelledby="historyLink">
                                 <li><a class="dropdown-item" href="index.php?action=showPersonalRecordsLog">Historique personnel</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="index.php?action=showTeamRecordsLog">Historique de l'équipe</a></li> 
@@ -56,8 +56,8 @@
                     ?>
                     <li class="nav-item ps-5 mb-3 mb-lg-0">
                         <div class="d-flex flex-column align-items-center navbar-div">
-                            <i class="bi bi-journal-bookmark-fill text-light"></i>
-                            <a class="nav-link text-center" href="index.php?action=showPersonalRecordsLog">Historique</a>
+                            <i class="bi bi-journal-bookmark-fill text-light" id="historyIcon"></i>
+                            <a class="nav-link text-center" id="historyLink" href="index.php?action=showPersonalRecordsLog">Historique</a>
                         </div>
                     </li>
                 <?php 
@@ -68,8 +68,8 @@
                     ?>
                     <li class="nav-item ps-5 mb-3 mb-lg-0">
                         <div class="d-flex flex-column align-items-center navbar-div">
-                            <i class="bi bi-download text-light"></i>
-                            <a class="nav-link text-center text-center" aria-current="page" href="index.php?action=showExportForm">Export</a>
+                            <i class="bi bi-download text-light" id="exportIcon"></i>
+                            <a class="nav-link text-center text-center" id="exportLink" aria-current="page" href="index.php?action=showExportForm">Export</a>
                         </div>
                     </li>
                 <?php 
@@ -82,9 +82,9 @@
                 ?>
                 <li class="nav-item dropdown ps-5 mb-3 mb-lg-0">
                     <div class="d-flex flex-column align-items-center navbar-div">
-                        <i class="bi bi-sliders text-light"></i>    
-                        <a class="nav-link text-center dropdown-toggle" aria-current="page" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                        <i class="bi bi-sliders text-light" id="adminIcon"></i>    
+                        <a class="nav-link text-center dropdown-toggle" aria-current="page" id="adminLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
+                        <ul class="dropdown-menu" aria-labelledby="adminLink">
                             <li><a class="dropdown-item" href="index.php?action=showExportForm">Export</a></li>
                             <li><a class="dropdown-item" href="index.php?action=showSettingsForm">Paramètres</a></li> 
                             </ul>
