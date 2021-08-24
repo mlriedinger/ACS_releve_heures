@@ -15,7 +15,9 @@
 /** Fonction qui permet d'ajouter une classe "active" sur un élément de la navbar passé en paramètre.
  * @param  {string} selector
  */
-function updateNavBarActiveAttribute(selector) {
-    var navBarItem = document.querySelector(selector);
-    navBarItem.classList.add("active");
+function updateNavBarActiveAttribute(selectors) {
+    selectors.forEach(selector => {
+        var navBarItem = document.querySelector(selector);
+        navBarItem.classList.add("active");
+    });
 }

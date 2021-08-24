@@ -47,28 +47,27 @@ $heading = "Validations en attente";
 
 <?php $content = ob_get_clean(); ?>
 
-<?php ob_start(); ?>
-    <script>
-        window.onload = function() {
-            getNumberOfRecordsToCheck('Check', 'unchecked');
-            updateTeamRecordsLog('Check', 'unchecked');
-            var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > a";
-            updateNavBarActiveAttribute(menuItemSelector);
-			var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(3) > div > i";
-			updateNavBarActiveAttribute(iconSelector);
-        };
-    </script>
+<?php 
 
-    <script>
-        function selectAll(){
-            for( let i = 0 ; i < document.validationForm.length ; i++) {
-                if(document.validationForm.elements[i].type == 'checkbox'){
-                    document.validationForm.elements[i].checked = !document.validationForm.elements[i].checked;
-                }
-            }
-            document.getElementById('selectAllButton').innerHTML == 'Sélectionner tout' ? document.getElementById('selectAllButton').innerHTML = 'Désélectionner' : document.getElementById('selectAllButton').innerHTML = 'Sélectionner tout';
+$menuSelector = "#validationLink";
+$iconSelector = "#validationIcon";
+?>
+
+<?php ob_start(); ?>
+function selectAll(){
+    for( let i = 0 ; i < document.validationForm.length ; i++) {
+        if(document.validationForm.elements[i].type == 'checkbox'){
+            document.validationForm.elements[i].checked = !document.validationForm.elements[i].checked;
         }
-    </script>
+    }
+    document.getElementById('selectAllButton').innerHTML == 'Sélectionner tout' ? document.getElementById('selectAllButton').innerHTML = 'Désélectionner' : document.getElementById('selectAllButton').innerHTML = 'Sélectionner tout';
+}
+
 <?php $script = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
+updateTeamRecordsLog('Check', 'unchecked');
+
+<?php $additionalOnloadScript = ob_get_clean(); ?>
 
 <?php require 'template.php'; ?>     

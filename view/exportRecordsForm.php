@@ -7,7 +7,7 @@ $heading = "Exporter des relevés";
 
 <?php ob_start(); ?>
 
-    <form action="index.php?action=exportRecords&typeOfRecords=export" method="POST">
+    <form action="index.php?action=exportRecords" method="POST">
 
         <div class="row mt-5 mb-3 justify-content-md-center">   
 
@@ -112,28 +112,15 @@ $heading = "Exporter des relevés";
 
 <?php $content = ob_get_clean(); ?>
 
-<?php ob_start() ; ?>
-    <script>
-        window.onload = function(){
-            let userGroup = <?= $_SESSION['userGroup'] ?>;
+<?php 
 
-			getNumberOfRecordsToCheck('Check', 'unchecked');
-            getOptionsData('export', 'users', <?= $_SESSION['userId']?>);
+$menuSelector = "#adminLink";
+$iconSelector = "#adminIcon";
+?>
 
-            if(userGroup == '1'){
-                getOptionsData('export', 'managers', <?= $_SESSION['userId']?>);
-                var menuItemSelector = "#navbarDropdown2";
-                updateNavBarActiveAttribute(menuItemSelector);
-                var iconSelector = "#navbarContent > ul:nth-child(2) > li.nav-item.dropdown.ps-5.mb-3.mb-lg-0 > div > i";
-                updateNavBarActiveAttribute(iconSelector);
-            } else {
-                var menuItemSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(5) > div > a";
-                updateNavBarActiveAttribute(menuItemSelector);
-                var iconSelector = "#navbarContent > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li:nth-child(5) > div > i";
-                updateNavBarActiveAttribute(iconSelector);
-            }
-        } 
-    </script>
-<?php $script = ob_get_clean(); ?>
+<?php ob_start(); ?>
+getOptionsData('export', 'users', <?= $_SESSION['userId']?>);
+
+<?php $additionalOnloadScript = ob_get_clean(); ?>
 
 <?php require 'template.php'; ?>

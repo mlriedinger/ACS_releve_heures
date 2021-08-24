@@ -49,10 +49,20 @@
         <?php include('partials/footer.php'); ?>
 
         <script id="mainScript" src="public/js/main.js"></script>
+        <script>
+            window.onload = function() {
+                let selectors = new Array("<?= $menuSelector ?>", "<?= $iconSelector ?>");
+                updateValidationBadge('Check', 'unchecked');
+                updateNavBarActiveAttribute(selectors);
+                <?= $additionalOnloadScript ?>
+            }
+            
+            <?= $script ?>
+        </script>
 		
 		<!-- Script de fonctionnment du tour guide -->
 		<script src="node_modules/intro.js/intro.js"></script>
-        <?= $script ?>
+        
 
         <?php include('partials/toastInitializationScript.php'); ?>
     </body>

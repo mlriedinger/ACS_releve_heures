@@ -189,7 +189,7 @@
 <script src="public/js/ajax.js"></script>
 
 <script>
-    getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
+    getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>, <?= $_SESSION['worksiteId']?>);
     getWorkCategories();
     getWorkSubCategories();
     getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
