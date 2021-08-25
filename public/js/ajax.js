@@ -45,7 +45,7 @@ function getRecordData(recordId) {
  * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
  */
 function updateValidationBadge(scope, status) {
-    $.post('index.php?action=getTeamRecordsLog', { 'scope': scope, 'status': status }, displayNumberOfRecordsTocheck, 'json');
+    $.post('index.php?action=getTeamRecordsLog', { 'scope': scope, 'status': status }, displayNumberOfPendingRecordsLog, 'json');
 }
 
 

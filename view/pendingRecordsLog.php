@@ -66,7 +66,7 @@ function selectAll(){
 <?php $script = ob_get_clean(); ?>
 
 <?php ob_start(); ?>
-updateTeamRecordsLog('Check', 'unchecked');
+updateRecordsLog('global', 'pending');
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 

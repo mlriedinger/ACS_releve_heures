@@ -1,7 +1,7 @@
 /** Fonction qui permet d'afficher le nombre de relevés en attente de validation dans un badge rouge à côté du menu "Validation"
  * @param  {object} data contenu de la réponse à la requête AJAX
  */
- function displayNumberOfRecordsTocheck(data) {
+ function displayNumberOfPendingRecordsLog(data) {
     var tabData = data.records;
 
     if(tabData.length) {

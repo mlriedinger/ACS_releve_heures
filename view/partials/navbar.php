@@ -30,7 +30,7 @@
                     <li class="nav-item ps-5 mb-3 mb-lg-0">
                         <div class="d-flex flex-column align-items-center navbar-div">
                             <i class="bi bi-journal-check text-dark" id="validationIcon"></i>
-                            <a class="nav-link text-center" id="validationLink" aria-current="page" href="index.php?action=showRecordsToCheck">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
+                            <a class="nav-link text-center" id="validationLink" aria-current="page" href="index.php?action=showPendingRecordsLog">Validation<span id="notificationIcon" class="badge rounded-pill bg-danger ms-2"></span></a>
                         </div>
                     </li>
 

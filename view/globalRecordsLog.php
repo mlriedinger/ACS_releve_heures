@@ -11,21 +11,21 @@ $heading = "Historique global";
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="all_records-tab" onclick="updateAllUsersRecordsLog('All', 'all')" data-bs-toggle="tab" data-bs-target="#all_records" type="button" role="tab" aria-controls="all_records-tab" aria-selected="true">Tous</button>
+                <button class="nav-link active" id="all_records_tab" onclick="updateRecordsLog('global', 'all')" data-bs-toggle="tab" data-bs-target="#all_records" type="button" role="tab" aria-controls="all_records_tab" aria-selected="true">Tous</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="valid_records-tab" onclick="updateAllUsersRecordsLog('All', 'valid')" data-bs-toggle="tab" data-bs-target="#valid_records" type="button" role="tab" aria-controls="valid_records-tab" aria-selected="false">Validés</button>
+                <button class="nav-link" id="approved_records_tab" onclick="updateRecordsLog('global', 'approved')" data-bs-toggle="tab" data-bs-target="#approved_records" type="button" role="tab" aria-controls="approved_records_tab" aria-selected="false">Validés</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="unchecked_records-tab" onclick="updateAllUsersRecordsLog('All', 'unchecked')" data-bs-toggle="tab" data-bs-target="#unchecked_records" type="button" role="tab" aria-controls="unchecked_records-tab" aria-selected="false">En attente</button>
+                <button class="nav-link" id="pending_records_tab" onclick="updateRecordsLog('global', 'pending')" data-bs-toggle="tab" data-bs-target="#pending_records" type="button" role="tab" aria-controls="pending_records_tab" aria-selected="false">En attente</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="deleted_records-tab" onclick="updateAllUsersRecordsLog('All', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records-tab" aria-selected="false">Supprimés</button>
+                <button class="nav-link" id="deleted_records_tab" onclick="updateRecordsLog('global', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records_tab" aria-selected="false">Supprimés</button>
             </li>
         </ul>
 
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="all_records" role="tabpanel" aria-labelledby="all_records-tab">
+            <div class="tab-pane fade show active" id="all_records" role="tabpanel" aria-labelledby="all_records_tab">
                 <table class="table table-sm table-striped table-hover mt-4" id="records_log">
                     <thead>
                         <tr id="table-head">
