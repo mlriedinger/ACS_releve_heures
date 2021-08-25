@@ -11,7 +11,7 @@ class Export {
     private $_periodStart;
     private $_periodEnd;
     private $_status;
-    private $_typeOfRecords;
+    private $_scope;
     private $_userGroup;
 
     // Mutateurs (setters)
@@ -40,8 +40,8 @@ class Export {
         return $this;
     }
     
-    public function setTypeOfRecords(string $typeOfRecords){
-        $this->_typeOfRecords = $typeOfRecords;
+    public function setScope(string $scope){
+        $this->_scope = $scope;
         return $this;
     }
 
@@ -78,8 +78,8 @@ class Export {
         return $this->_status;
     }
     
-    public function getTypeOfRecords(){
-        return $this->_typeOfRecords;
+    public function getScope(){
+        return $this->_scope;
     }
 
     /**

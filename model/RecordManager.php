@@ -334,7 +334,7 @@ class RecordManager extends DatabaseConnection {
      *
      * @param  string $sql : une chaîne de caractères contenant le début de la requête SQL
      * @param  string $status : une chaîne de caractères désignant la portée de la requêtes (tout ou une partie des relevés)
-     * @param  string $typeOfRecords: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
+     * @param  string $scope: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
      * @return string $sql
      */
     public function addQueryScopeAndOrderByClause(string $sql, string $status, string $scope){
@@ -434,7 +434,7 @@ class RecordManager extends DatabaseConnection {
         $userId = $recordInfo->getUserId();
         $pdo = $this->dbConnect();
 
-        $typeOfRecords = $recordInfo->getScope();
+        $scope = $recordInfo->getScope();
         $status = $recordInfo->getStatus();
         
         $sql = 'SELECT 
@@ -454,7 +454,8 @@ class RecordManager extends DatabaseConnection {
 			Releve.tps_pause,
 			Releve.tps_trajet,
             DATE_FORMAT(Releve.date_releve, "%d/%m/%Y") AS "date_releve",
-			Releve.tps_travail
+			Releve.tps_travail,
+            Membre.id_groupe
 		   
 		FROM t_saisie_heure AS Releve
 
@@ -464,83 +465,59 @@ class RecordManager extends DatabaseConnection {
 		INNER JOIN t_login AS Membre
 		   ON Releve.id_login = Membre.ID';
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute();
         $records["currentUserId"] = $userId;
-        $records["typeOfRecords"] = $typeOfRecords;
+        $records["scope"] = $scope;
+        $records["status"] = $status;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 		
         //$query->debugDumpParams();
         header("Content-Type: text/json");
         echo json_encode($records);
     }
-    
-    /**
-     * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour alimenter un input <select> (formulaire de saisie ou d'export).
-     * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
-     *
-     * @param  Record $recordInfo
-     * @return string $data
-     */
-    public function getDataForOptionSelect(Record $recordInfo){
-        $type = $recordInfo->getScope();
-        $userGroup = $recordInfo->getUserGroup();
+
+    public function getUsers() {
+        $pdo = $this->dbConnect();
+
+        $sql = 'SELECT ID, Nom, Prenom 
+            FROM t_login
+            ORDER BY t_login.Nom ASC';
+
+        $query = $pdo->prepare($sql);
+        $query->execute();
+
+        $users = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        header("Content-Type: text/json");
+        echo json_encode($users);
+    }
+
+    public function getWorksites(Record $recordInfo) {
         $userId = $recordInfo->getUserId();
-        $worksiteId = $recordInfo->getWorksite();
 
         $pdo = $this->dbConnect();
 
-        $sql ="";
+        $sql = 'SELECT 
+            id_chantier AS "ID", 
+            CONCAT(REF, " - ", REF_interne) AS "Nom" 
+            FROM t_equipe
+            INNER JOIN t_document
+            ON t_equipe.id_chantier = t_document.ID
+            WHERE t_equipe.id_login = :userId
+            AND t_equipe.supprimer = 0
+            ORDER BY t_document.REF ASC';
 
-        switch($type){  
-            case "users":
-                if ($userGroup == '1') {
-                    $sql .= 'SELECT ID, Nom, Prenom FROM t_login';
-                    break;
-                } else {
-                    $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom
-                        FROM t_equipe
-                        INNER JOIN t_login
-                        ON t_equipe.id_login = t_login.ID
-                        WHERE id_chantier = (SELECT t_equipe.id_chantier
-                        FROM t_equipe
-                        WHERE t_equipe.id_login = :userId AND t_equipe.chef_equipe = 1) AND chef_equipe <> 1 ';
-                    break;
-                }
-            case "worksites":
-                $sql .= 'SELECT 
-                    id_chantier AS "ID", 
-                    CONCAT(REF, " - ", REF_interne) AS "Nom" 
-                        FROM t_equipe
-                        INNER JOIN t_document
-                        ON t_equipe.id_chantier = t_document.ID
-                        WHERE t_equipe.id_login = :userId
-                        AND t_equipe.supprimer = 0';
-                break;
-        }
-
-        if($type === "users"){
-            $sql .= ' ORDER BY t_login.Nom ASC';
-        }
-        else {
-            $sql .= ' ORDER BY t_document.REF ASC';
-        }
-        
         $query = $pdo->prepare($sql);
+        $query->execute(array(
+            'userId' => $userId));
 
-        $queryParams = array(
-            'userId' => $userId
-        );
-        $query->execute($queryParams);
-        
-        $data["typeOfData"] = $type;
-        $data["worksiteId"] = $worksiteId;
-        $data["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-        //$query->debugDumpParams();
+        $worksites = $query->fetchAll(PDO::FETCH_ASSOC);
+
         header("Content-Type: text/json");
-        echo json_encode($data);
+        echo json_encode($worksites);
     }
     
     public function getWorkCategories() {
