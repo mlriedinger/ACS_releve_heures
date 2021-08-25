@@ -486,7 +486,9 @@ class RecordManager extends DatabaseConnection {
     public function getUsers() {
         $pdo = $this->dbConnect();
 
-        $sql = 'SELECT ID, Nom, Prenom 
+        $sql = 'SELECT ID, 
+            Nom, 
+            Prenom 
             FROM t_login
             ORDER BY t_login.Nom ASC';
 

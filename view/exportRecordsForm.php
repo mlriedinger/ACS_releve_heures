@@ -119,7 +119,7 @@ $iconSelector = "#adminIcon";
 ?>
 
 <?php ob_start(); ?>
-getOptionsData('export', 'users', <?= $_SESSION['userId']?>);
+getUsers();
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 

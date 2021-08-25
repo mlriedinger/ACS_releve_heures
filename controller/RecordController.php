@@ -8,6 +8,12 @@ require 'autoloader.php';
  * Classe qui permet de gérer l'enregistrement, la modification/suppression et l'affichage des relevés d'heures. Classe-fille d'AbstractController pour hériter des méthodes permettant de rendre une vue.
  */
 class RecordController extends AbstractController {
+
+    private $_recordManager;
+
+    public function __construct() {
+        $this->_recordManager = new RecordManager();
+    }
      
     /**
      * Rend le formulaire de saisie de relevé (uniquement le formulaire).
@@ -17,6 +23,7 @@ class RecordController extends AbstractController {
     public function getRecordForm(int $record, int $user){
         $recordId = $record;
         $userId = $user;
+        $_SESSION['worksiteId'] = 0 ;
         $this->displayPartial('recordForm');
     }
 
@@ -28,8 +35,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function addNewRecord(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $isSendingSuccessfull = $recordManager->addNewRecord($recordInfo);
+        $isSendingSuccessfull = $this->recordManager->addNewRecord($recordInfo);
 
         if($isSendingSuccessfull) {
             $_SESSION['success'] = true;
@@ -37,7 +43,7 @@ class RecordController extends AbstractController {
         }
         else {
             $_SESSION['success'] = false;
-            require('view/addNewRecord.php');
+            $this->displayView('newRecord');
         }
     }
 
@@ -49,8 +55,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function updateRecord(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $isUpdateSuccessfull = $recordManager->updateRecord($recordInfo);
+        $isUpdateSuccessfull = $this->recordManager->updateRecord($recordInfo);
         
         $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
@@ -64,11 +69,10 @@ class RecordController extends AbstractController {
      * @param  array $recordsCheckList
      */
     public function updateRecordStatus(array $recordsCheckList){   
-        $recordManager = new RecordManager();
         $updateResults = [];
 
         foreach($recordsCheckList as $recordChecked){
-            $updateAttempt = $recordManager->updateRecordStatus($recordChecked); 
+            $updateAttempt = $this->recordManager->updateRecordStatus($recordChecked); 
             if($updateAttempt) array_push($updateResults, $updateAttempt);
         }
 
@@ -86,8 +90,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function deleteRecord(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $isDeleteSuccessfull = $recordManager->deleteRecord($recordInfo);
+        $isDeleteSuccessfull = $this->recordManager->deleteRecord($recordInfo);
 
         $isDeleteSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
@@ -98,30 +101,31 @@ class RecordController extends AbstractController {
      *
      * @param  Record $recordInfo
      */
-    public function getRecordData(Record $recordInfo){
-        $recordManager = new RecordManager();
-        $recordManager->getRecord($recordInfo);
+    public function getRecord(Record $recordInfo) {
+        $this->_recordManager->getRecord($recordInfo);
     }
     
     /**
-     * Permet de récupérer une liste de relevés selon un périmètre passé en second paramètre.
-     * Par exemple, getRecords($recordInfo, 'user') permet de récupérer les relevés d'un utilisateur.
+     * Permet de récupérer une liste de relevés.
      *
      * @param  Record $recordInfo
-     * @param  string $scope : "user", "team" ou "all", correspond au périmètre de la recherche
      */
-    public function getRecords(Record $recordInfo, string $scope) {
-        $recordManager = new RecordManager();
+
+    public function getRecords(Record $recordInfo) {
+        $scope = $recordInfo->getScope();
+        $userGroup = $recordInfo->getUserGroup();
 
         switch($scope) {
             case "user":
-                $recordManager->getRecordsFromUser($recordInfo);
+                $this->_recordManager->getUserRecords($recordInfo);
                 break;
             case "team":
-                $recordManager->getRecordsFromTeam($recordInfo);
+                $this->recordManager->getTeamRecords($recordInfo);
                 break;
-            case "all":
-                $recordManager->getAllRecords($recordInfo);
+            case "global":
+                if($userGroup === 1) {
+                    $this->_recordManager->getAllRecords($recordInfo);
+                } else throw new AccessDeniedException();
                 break;
             default:
                 throw new InvalidParameterException();

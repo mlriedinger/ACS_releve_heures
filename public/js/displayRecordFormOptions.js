@@ -1,30 +1,12 @@
-/** Ajoute des options dans une liste déroulante (liste des collaborateurs, des managers ou des chantiers).
- * @param  {object} data contenu de la réponse à la requête AJAX
- */
-function addOptionsToSelectTag(data) {
-    var typeOfData = data.typeOfData;
-    var tabData = data.records;
+function addUsersToSelectTag(users) {
+    for(let i = 0 ; i < users.length ; i++) {
+        $('#selectUser').append(new Option(users[i].Nom + ' ' + users[i].Prenom, users[i].ID));
+    }
+}
 
-    var selector = "";
-    if(typeOfData === "users") {
-        selector = "#selectUser";
-    }
-    if(typeOfData === "managers") {
-        selector = "#selectManager";
-    }
-    if(typeOfData === "worksites") {
-        selector = "#selectWorksite";
-    }
-
-    if(typeOfData === "users" || typeOfData === "managers"){
-        for(let i = 0 ; i < tabData.length ; i ++) {
-            $(selector).append(new Option(tabData[i].Nom + ' ' + tabData[i]. Prenom, tabData[i].ID));
-        }
-    }
-    else {
-        for(let i = 0 ; i < tabData.length ; i ++) {
-            $(selector).append(new Option(tabData[i].Nom, tabData[i].ID));
-        }
+function addWorksitesToSelectTag(worksites) {
+    for(let i = 0 ; i < worksites.length ; i++) {
+        $('#selectWorksite').append(new Option(worksites[i].Nom, worksites[i].ID));
     }
 }
 
