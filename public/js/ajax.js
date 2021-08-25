@@ -1,18 +1,19 @@
+/**
+ * Description
+ * @param {any} scope "user", "team" ou "all" : correspond au périmètre des relevés demandés (personnels, équipe ou globaux)
+ * @param {any} status
+ * @returns {any}
+ */
+function updateRecordsLog(scope, status) {
+    $.post('index.php?action=getRecords', { 'scope': scope, 'status': status }, parseMultipleLines/*, 'json'*/);
+}
+
 /** Appel AJAX pour récupérer les relevés personnels
  * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
  * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
  */
 function updatePersonalRecordsLog(typeOfRecords, status) {
     $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
-}
-
-
-/** Appel AJAX pour récupérer les relevés des membres de l'équipe
- * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
- * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
- */
-function updateTeamRecordsLog(typeOfRecords, status) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
 }
 
 

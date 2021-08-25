@@ -58,13 +58,6 @@ if(isset($_GET['action'])) {
                 } else throw new AuthenticationException();
                 break;
 
-            // Vue historique équipe
-            case "showTeamRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
-                    $recordController->displayView('teamRecordsLog');
-                } else throw new AuthenticationException();
-                break;
-
             // Vue historique global
             case "showAllRecordsLog":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
@@ -195,31 +188,30 @@ if(isset($_GET['action'])) {
                 } else throw new AuthenticationException();
                 break;
 
+            case "getRecords":
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                    if(isset($_POST['scope']) && isset($_POST['status'])) {
+                        $recordInfo = new Record();
+                        $recordInfo->setUserId($_SESSION['userId']);
+                        $recordInfo->setUserGroup($_SESSION['userGroup']);
+                        $recordInfo->setScope(inputValidation($_POST['scope']));
+                        $recordInfo->setStatus(inputValidation($_POST['status']));
+                        
+                        $recordController->getRecords($recordInfo);
+                    } else throw new NoDataFoundException();
+                } else throw new AuthenticationException();
+                break;
+
             // Récupérer les données de l'historique personnel
             case "getPersonalRecordsLog":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
                     if(isset($_POST['typeOfRecords']) && isset($_POST['status'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['typeOfRecords']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
                         
                         $recordController->getRecords($recordInfo, 'user');
-                    }
-                    else throw new NoDataFoundException();
-                } else throw new AuthenticationException();
-                break;
-
-            // Récupérer les données de l'historique équipe
-            case "getTeamRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['status']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
-                        $recordInfo = new Record();
-                        $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
-                        $recordInfo->setStatus(inputValidation($_POST['status']));
-                        
-                        $recordController->getRecords($recordInfo, 'team');
                     }
                     else throw new NoDataFoundException();
                 } else throw new AuthenticationException();
@@ -231,7 +223,7 @@ if(isset($_GET['action'])) {
                     if(isset($_POST['typeOfRecords']) && isset($_POST['status']) && $_SESSION['userGroup'] == '1') {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['typeOfRecords']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
 
                         $recordController->getRecords($recordInfo, 'all');
@@ -245,10 +237,10 @@ if(isset($_GET['action'])) {
             case "exportRecords":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                     if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) { 
-                        if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export') {
+                        // if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export') {
                             if(isset($_POST['status']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['user'])) {
                                 $exportInfo = new Export();
-                                $exportInfo->setTypeOfRecords(inputValidation($_GET['typeOfRecords']));
+                                $exportInfo->setScope(inputValidation($_GET['typeOfRecords']));
                                 $exportInfo->setStatus(inputValidation($_POST['status']));
                                 $exportInfo->setUserId(intval(inputValidation($_POST['user'])));
                                 $exportInfo->setUserGroup(intval(inputValidation($_SESSION['userGroup'])));
@@ -265,7 +257,7 @@ if(isset($_GET['action'])) {
 
                                 $exportController->exportRecords($exportInfo);
                             }
-                        } 
+                        // } 
                     } else throw new AuthenticationException();
                 } else throw new AuthenticationException(); 
                 break;
@@ -278,7 +270,7 @@ if(isset($_GET['action'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfData']));
+                        $recordInfo->setScope(inputValidation($_POST['typeOfData']));
                         $recordInfo->setWorksite($_POST['worksiteId']);
                         
                         //if(inputValidation($_POST['status']) === "export"){
@@ -329,6 +321,7 @@ if(isset($_GET['action'])) {
         echo "Exception : " . $errorMessage;
     } catch(Error $e){
         echo "Erreur : " . $e->getMessage();
+        echo "<br/> Code erreur : " . $e->getCode() . " File : " . $e->getFile() . " Line : " . $e->getLine();
     }
 } else {
     $loginController->displayView('login');

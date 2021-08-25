@@ -41,7 +41,6 @@
                             <ul class="dropdown-menu" aria-labelledby="historyLink">
                                 <li><a class="dropdown-item" href="index.php?action=showPersonalRecordsLog">Historique personnel</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="index.php?action=showTeamRecordsLog">Historique de l'équipe</a></li> 
                                 <?php 
                                 if($_SESSION['userGroup'] == 1) {
                                     ?>

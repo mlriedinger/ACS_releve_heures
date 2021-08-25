@@ -204,7 +204,7 @@ function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
     let newLines = createNewLines(newRow);
     fillRecordsTable(newLines, data, counter);
 
-    if(typeOfRecord === "Personal" || typeOfRecord === "Team" || typeOfRecord === "All") {
+    if(typeOfRecord === "user" || typeOfRecord === "all") {
         checkRecordValidationStatus(newLines, data, currentUserId, counter);
     } 
     else {
