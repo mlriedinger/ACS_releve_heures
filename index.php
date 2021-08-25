@@ -202,36 +202,6 @@ if(isset($_GET['action'])) {
                 } else throw new AuthenticationException();
                 break;
 
-            // Récupérer les données de l'historique personnel
-            case "getPersonalRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['scope']) && isset($_POST['status'])) {
-                        $recordInfo = new Record();
-                        $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setScope(inputValidation($_POST['scope']));
-                        $recordInfo->setStatus(inputValidation($_POST['status']));
-                        
-                        $recordController->getRecords($recordInfo, 'user');
-                    }
-                    else throw new NoDataFoundException();
-                } else throw new AuthenticationException();
-                break;
-
-            // Récupérer les données de l'historique global
-            case "getAllUsersRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['scope']) && isset($_POST['status']) && $_SESSION['userGroup'] == '1') {
-                        $recordInfo = new Record();
-                        $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setScope(inputValidation($_POST['scope']));
-                        $recordInfo->setStatus(inputValidation($_POST['status']));
-
-                        $recordController->getRecords($recordInfo, 'all');
-                    }
-                    else throw new NoDataFoundException();
-                } else throw new AuthenticationException();
-                break;
-
 
             // Exporter les données en CSV
             case "exportRecords":
@@ -266,9 +236,8 @@ if(isset($_GET['action'])) {
             // Récupérer la liste des salariés
             case "getUsers":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(inputValidation($_POST['userId'] !== null)) {
+                    if($_SESSION['userGroup'] == '1') {
                         $recordController->getUsers();
-
                     }
                 } else throw new AuthenticationException();
                 break;

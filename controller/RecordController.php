@@ -23,6 +23,7 @@ class RecordController extends AbstractController {
     public function getRecordForm(int $record, int $user){
         $recordId = $record;
         $userId = $user;
+        $_SESSION['worksiteId'] = 0 ;
         $this->displayPartial('recordForm');
     }
 
@@ -43,7 +44,7 @@ class RecordController extends AbstractController {
         }
         else {
             $_SESSION['success'] = false;
-            $this->displayView('addNewRecord');
+            $this->displayView('newRecord');
         }
     }
 
@@ -105,41 +106,39 @@ class RecordController extends AbstractController {
      *
      * @param  Record $recordInfo
      */
-    public function getRecordData(Record $recordInfo){
+    public function getRecordData(Record $recordInfo) {
         $this->_recordManager->getRecord($recordInfo);
     }
     
     /**
-     * Permet de récupérer une liste de relevés selon un périmètre passé en second paramètre.
-     * Par exemple, getRecords($recordInfo, 'user') permet de récupérer les relevés d'un utilisateur.
+     * Permet de récupérer une liste de relevés.
      *
      * @param  Record $recordInfo
-     * @param  string $scope : "user", "team" ou "all", correspond au périmètre de la recherche
      */
-    public function getRecords(Record $recordInfo, string $scope) {
+    public function getRecords(Record $recordInfo) {
+        $scope = $recordInfo->getScope();
+        $userGroup = $recordInfo->getUserGroup();
 
         switch($scope) {
             case "user":
-                $this->_recordManager->getRecordsFromUser($recordInfo);
+                $this->_recordManager->getUserRecords($recordInfo);
                 break;
-            case "team":
-                $this->_recordManager->getRecordsFromTeam($recordInfo);
-                break;
-            case "all":
-                $this->_recordManager->getAllRecords($recordInfo);
+            case "global":
+                if($userGroup === 1) {
+                    $this->_recordManager->getAllRecords($recordInfo);
+                } else throw new AccessDeniedException();
                 break;
             default:
                 throw new InvalidParameterException();
         }
     }
 
-    /**
-     * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour les afficher dans un <select>
-     *
-     * @param  Record $recordInfo : "managers", "users" ou "worksites"
-     */
-    public function getOptionsData(Record $recordInfo) {
-        $this->_recordManager->getDataForOptionSelect($recordInfo);
+    public function getUsers() {
+        $this->_recordManager->getUsers();
+    }
+
+    public function getWorksites(Record $recordInfo) {
+        $this->_recordManager->getWorksites($recordInfo);
     }
 
     public function getWorkCategories() {

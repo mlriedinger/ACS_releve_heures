@@ -49,19 +49,16 @@ function updateValidationBadge(scope, status) {
 }
 
 
-/** Appel AJAX pour récupérer la liste des managers ou des salariés
- * @param  {string} scope périmère de la demande ("export" : formulaire d'export ou "add" : formulaire d'ajout)
- * @param  {string} optionType le type d'utilisateurs ("managers" ou "users")
- * @param  {number} userId identifiant de l'utilisateur
+/** Appel AJAX pour récupérer la liste des salariés
  */
-function getUsers(scope, optionType, userId, worksiteId) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId, 'worksiteId': worksiteId }, addOptionsToSelectTag/*, 'json'*/);
+function getUsers() {
+    $.post('index.php?action=getUsers', {}, addUsersToSelectTag, 'json');
 }
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */
  function getWorksites(userId) {
-    $.post('index.php?action=getWorksites', { 'userId': userId }, addOptionsToSelectTag, 'json');
+    $.post('index.php?action=getWorksites', { 'userId': userId }, addWorksitesToSelectTag, 'json');
 }
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
