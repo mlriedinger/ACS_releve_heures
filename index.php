@@ -38,14 +38,15 @@ if(isset($_GET['action'])) {
             // Vue "Nouveau Relevé"
             case "showNewRecordForm":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
-                    $recordController->displayView('addNewRecord');
+                    isset($_GET['worksiteId']) ? $_SESSION['worksiteId'] = $_GET['worksiteId'] : $_SESSION['worksiteId'] = 0 ;
+                    $recordController->displayView('newRecord');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue "Validation des relevés en attente"
-            case "showRecordsToCheck":
+            case "showPendingRecordsLog":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
-                    $recordController->displayView('recordsToCheck');
+                    $recordController->displayView('pendingRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
@@ -66,14 +67,14 @@ if(isset($_GET['action'])) {
             // Vue historique global
             case "showAllRecordsLog":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
-                    $recordController->displayView('allUsersRecordsLog');
+                    $recordController->displayView('globalRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue export
             case "showExportForm":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
-                    $exportController->displayView('exportRecordsForm');
+                    $exportController->displayView('export');
                 } else throw new AuthenticationException();
                 break;
 
@@ -173,7 +174,7 @@ if(isset($_GET['action'])) {
             // Renvoyer le formulaire de confirmation de suppression
             case "getDeleteConfirmationForm":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
-                    $recordController->displayPartial('deleteConfirmationForm');
+                    $recordController->displayPartial('deleteForm');
                 } else throw new AuthenticationException();
                 break;
 
@@ -268,7 +269,7 @@ if(isset($_GET['action'])) {
 	} catch (InvalidParameterException $e){
 		$errorCode = $e->getCode();
         $errorMessage = $e->getMessage();
-		$recordController->displayView('recordsToCheck', $errorCode, $errorMessage);
+		$recordController->displayView('pendingRecordsLog', $errorCode, $errorMessage);
     } catch (Exception $e){
         $errorMessage = $e->getMessage();
         echo "Exception : " . $errorMessage;
