@@ -67,7 +67,7 @@ $iconSelector = "#historyIcon";
 ?>
 
 <?php ob_start(); ?>
-updateAllUsersRecordsLog('All', 'all');
+updateRecordsLog('global', 'all');
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 

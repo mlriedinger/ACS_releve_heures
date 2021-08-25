@@ -2,23 +2,19 @@
  * @param  {object} data contenu de la réponse à la requête AJAX
  */
 function parseMultipleLines(data) {
-    //console.log(data);
-    var tabData = data.records;
-    var typeOfRecords = data.typeOfRecords;
+    console.log(data);
+    var records = data.records;
+    var scope = data.scope;
+    var status = data.status;
     var currentUserId = data.currentUserId;
 
     // On vide le tableau
-    clearTable(tabData);
+    clearTable("records_log", records);
 
-    // Si la requête concerne une liste de relevés à valider, on insère les boutons de contrôle du formulaire de validation après le tableau
-    if(tabData.length && typeOfRecords === "Check") {
-        insertFormControlButtons();
-    }
-
-    // Si la requête a retourné des résultats, on boucle sur tabData pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
-    if(tabData.length) {
-        for (var i = 0; i < tabData.length; i++) {
-            appendLine("records_log", tabData, typeOfRecords, currentUserId, i);
+    // Si la requête a retourné des résultats, on boucle sur records pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
+    if(records.length) {
+        for (var i = 0; i < records.length; i++) {
+            appendLine("records_log", records, scope, currentUserId, i);
         }
     }
 }

@@ -196,10 +196,10 @@ if(isset($_GET['action'])) {
             // Récupérer les données de l'historique personnel
             case "getPersonalRecordsLog":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['status'])) {
+                    if(isset($_POST['scope']) && isset($_POST['status'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['scope']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
                         
                         $recordController->getRecords($recordInfo, 'user');
@@ -211,10 +211,10 @@ if(isset($_GET['action'])) {
             // Récupérer les données de l'historique équipe
             case "getTeamRecordsLog":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['status']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                    if(isset($_POST['scope']) && isset($_POST['status']) && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['scope']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
                         
                         $recordController->getRecords($recordInfo, 'team');
@@ -226,10 +226,10 @@ if(isset($_GET['action'])) {
             // Récupérer les données de l'historique global
             case "getAllUsersRecordsLog":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['typeOfRecords']) && isset($_POST['status']) && $_SESSION['userGroup'] == '1') {
+                    if(isset($_POST['scope']) && isset($_POST['status']) && $_SESSION['userGroup'] == '1') {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfRecords']));
+                        $recordInfo->setScope(inputValidation($_POST['scope']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
 
                         $recordController->getRecords($recordInfo, 'all');
@@ -243,10 +243,10 @@ if(isset($_GET['action'])) {
             case "exportRecords":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                     if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) { 
-                        if(isset($_GET['typeOfRecords']) && $_GET['typeOfRecords'] == 'export') {
+                        // if(isset($_GET['scope']) && $_GET['scope'] == 'export') {
                             if(isset($_POST['status']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['user'])) {
                                 $exportInfo = new Export();
-                                $exportInfo->setTypeOfRecords(inputValidation($_GET['typeOfRecords']));
+                                $exportInfo->setScope(inputValidation($_GET['scope']));
                                 $exportInfo->setStatus(inputValidation($_POST['status']));
                                 $exportInfo->setUserId(intval(inputValidation($_POST['user'])));
                                 $exportInfo->setUserGroup(intval(inputValidation($_SESSION['userGroup'])));
@@ -263,26 +263,31 @@ if(isset($_GET['action'])) {
 
                                 $exportController->exportRecords($exportInfo);
                             }
-                        } 
+                        // } 
                     } else throw new AuthenticationException();
                 } else throw new AuthenticationException(); 
                 break;
 
 
-            // Récupérer les listes des managers et des salariés pour le formulaire d'export
-            case "getOptionsData":
+            // Récupérer la liste des salariés
+            case "getUsers":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(isset($_POST['typeOfData']) && isset($_POST['scope']) && inputValidation($_POST['userId'] !== null)) {
+                    if(inputValidation($_POST['userId'] !== null)) {
+                        $recordController->getUsers();
+
+                    }
+                } else throw new AuthenticationException();
+                break;
+            
+            // Récupérer la liste des chantiers
+            case "getWorksites":
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                    if(inputValidation($_POST['userId'] !== null)) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
-                        $recordInfo->setUserGroup($_SESSION['userGroup']);
-                        $recordInfo->setTypeOfRecords(inputValidation($_POST['typeOfData']));
-                        //if(inputValidation($_POST['status']) === "export"){
-                            //$recordController->getOptionsData(inputValidation($_POST['typeOfData']));
-                        //}
-                        //if(inputValidation($_POST['status']) === "add" && inputValidation($_POST['userId'] !== null)) {
-                        $recordController->getOptionsData($recordInfo);
-                        //}
+
+                        $recordController->getWorksites($recordInfo);
+
                     }
                 } else throw new AuthenticationException();
                 break;

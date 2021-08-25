@@ -31,7 +31,7 @@ class ExportManager extends RecordManager {
      * @return array $rows
      */
     public function getRecordsToExport(Export $exportInfo){
-        $typeOfRecords = $exportInfo->getTypeOfRecords();
+        $scope = $exportInfo->getScope();
         $status = $exportInfo->getStatus();
         $userGroup = $exportInfo->getUserGroup();
 
@@ -44,7 +44,7 @@ class ExportManager extends RecordManager {
             $sql = $this->sqlRequestBasis();
         }
         $sql = $this->sqlAddExportOptions($exportInfo, $sql);
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $scope);
 
         $query = $pdo->prepare($sql);
         $queryParams = $this->fillQueryParamsArray($exportInfo);

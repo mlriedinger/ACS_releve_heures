@@ -6,7 +6,7 @@
 class Record {
 
     // Attributs
-    private $_breakLengthHours;
+    private $_breakLength;
     private $_comment;
     private $_date;
     private $_dateTimeEnd;
@@ -14,7 +14,7 @@ class Record {
     private $_recordId;
     private $_status;
     private $_tripLength;
-    private $_typeOfRecords;
+    private $_scope;
     private $_workLength;
     private $_worksite;
     private $_userId;
@@ -71,8 +71,8 @@ class Record {
         return $this;
     }
 
-    public function setTypeOfRecords(String $typeOfRecords){
-        $this->_typeOfRecords = $typeOfRecords;
+    public function setScope(String $scope){
+        $this->_scope = $scope;
         return $this;
     }
 
@@ -129,8 +129,8 @@ class Record {
         return $this->_tripLength;
     }
 
-    public function getTypeOfRecords(){
-        return $this->_typeOfRecords;
+    public function getScope(){
+        return $this->_scope;
     }
 
     public function getWorkLength(){

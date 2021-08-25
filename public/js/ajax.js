@@ -1,27 +1,11 @@
-/** Appel AJAX pour récupérer les relevés personnels
- * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
- * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
+/**
+ * Description
+ * @param {any} scope "user", "team" ou "all" : correspond au périmètre des relevés demandés (personnels, équipe ou globaux)
+ * @param {any} status
+ * @returns {any}
  */
-function updatePersonalRecordsLog(typeOfRecords, status) {
-    $.post('index.php?action=getPersonalRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
-}
-
-
-/** Appel AJAX pour récupérer les relevés des membres de l'équipe
- * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
- * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
- */
-function updateTeamRecordsLog(typeOfRecords, status) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
-}
-
-
-/** Appel AJAX pour récupérer tous les relevés
- * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
- * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
- */
-function updateAllUsersRecordsLog(typeOfRecords, status) {
-    $.post('index.php?action=getAllUsersRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, parseMultipleLines, 'json');
+function updateRecordsLog(scope, status) {
+    $.post('index.php?action=getRecords', { 'scope': scope, 'status': status }, parseMultipleLines, 'json');
 }
 
 
@@ -57,11 +41,11 @@ function getRecordData(recordId) {
 
 
 /** Appel AJAX pour récupérer les relevés en attente de validation
- * @param  {string} typeOfRecords type de relevés demandés (personnels, équipe, à vérifier ou globaux)
+ * @param  {string} scope type de relevés demandés (personnels, équipe, à vérifier ou globaux)
  * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
  */
-function updateValidationBadge(typeOfRecords, status) {
-    $.post('index.php?action=getTeamRecordsLog', { 'typeOfRecords': typeOfRecords, 'status': status }, displayNumberOfRecordsTocheck, 'json');
+function updateValidationBadge(scope, status) {
+    $.post('index.php?action=getTeamRecordsLog', { 'scope': scope, 'status': status }, displayNumberOfRecordsTocheck, 'json');
 }
 
 
@@ -70,10 +54,15 @@ function updateValidationBadge(typeOfRecords, status) {
  * @param  {string} optionType le type d'utilisateurs ("managers" ou "users")
  * @param  {number} userId identifiant de l'utilisateur
  */
-function getOptionsData(scope, optionType, userId) {
-    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId }, addOptionsToSelectTag, 'json');
+function getUsers(scope, optionType, userId, worksiteId) {
+    $.post('index.php?action=getOptionsData', { 'typeOfData': optionType, 'scope': scope, 'userId': userId, 'worksiteId': worksiteId }, addOptionsToSelectTag/*, 'json'*/);
 }
 
+/** Appel AJAX pour récupérer la liste des catégories de postes de travail
+ */
+ function getWorksites(userId) {
+    $.post('index.php?action=getWorksites', { 'userId': userId }, addOptionsToSelectTag, 'json');
+}
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */

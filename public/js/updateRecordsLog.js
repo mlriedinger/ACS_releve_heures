@@ -1,31 +1,27 @@
 /** Gère l'affichage du statut d'un relevé ainsi que l'affichage des boutons d'édition et de suppression.
  * @param  {object} newLines correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
- * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {object} records contenu de la réponse à la requête AJAX
  * @param  {number} currentUserId identifiant de l'utilisateur actuellement connecté
  * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
  */
-function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
-    let validationStatus = data[counter].statut_validation;
-    let deleteStatus = data[counter].supprimer;
-	let userGroup = data[counter].id_groupe;
+function checkRecordValidationStatus(newLines, records, currentUserId, counter) {
+    let validationStatus = records[counter].statut_validation;
+    let deleteStatus = records[counter].supprimer;
+	let userGroup = records[counter].id_groupe;
 
     let newValidationText = "";
     
-    if (validationStatus === "0" && deleteStatus === "0") {
-        newValidationText = document.createTextNode("En attente");
-        if (currentUserId === parseInt(data[counter].id_login)) {
-            insertEditRecordButton(newLines.newEdit, data, counter);
-            insertDeleteRecordButton(newLines.newDelete, data, counter);
+    if ((validationStatus === "0" && deleteStatus === "0") || (userGroup === "1" && deleteStatus === "0")) {
+        userGroup === "1" ? newValidationText = document.createTextNode("Auto-validé") : newValidationText = document.createTextNode("En attente");
+        if (currentUserId === parseInt(records[counter].id_login)) {
+            insertEditRecordButton(newLines.newEdit, records, counter);
+            insertDeleteRecordButton(newLines.newDelete, records, counter);
         }
     } 
     else if (validationStatus === "0" && deleteStatus === "1") {
         newValidationText = document.createTextNode("Supprimé");
     }
     else {
-		if (validationStatus === "1" && userGroup === "1") {
-			insertEditRecordButton(newLines.newEdit, data, counter);
-			insertDeleteRecordButton(newLines.newDelete, data, counter);
-		}
         newValidationText = document.createTextNode("Validé");
     }
     
@@ -35,67 +31,62 @@ function checkRecordValidationStatus(newLines, data, currentUserId, counter) {
 
 /** Remplit les cellules de la nouvelle ligne du tableau avec les données de la requête AJAX.
  * @param  {object} newLines correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
- * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {object} records contenu de la réponse à la requête AJAX
  * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
  */
-function fillRecordsTable(newLines, data, counter) {
+function fillRecordsTable(newLines, records, counter) {
     if(newLines.newWorkSite !== undefined) {
-        let newText = document.createTextNode(data[counter].affaire);
+        let newText = document.createTextNode(records[counter].affaire);
         newLines.newWorkSite.appendChild(newText);
     }
 
-    if(newLines.newManager !== undefined) {
-        let newText = document.createTextNode(data[counter].prenom_manager + ' ' + data[counter].nom_manager);
-        newLines.newManager.appendChild(newText);
-    }
-
     if(newLines.newEmployee !== undefined) {
-        let newText = document.createTextNode(data[counter].prenom_salarie + ' ' + data[counter].nom_salarie);
+        let newText = document.createTextNode(records[counter].prenom_salarie + ' ' + records[counter].nom_salarie);
         newLines.newEmployee.appendChild(newText);
     }
 
     if(newLines.newStartTime !== undefined) {
-        let newText = document.createTextNode(data[counter].date_hrs_debut);
+        let newText = document.createTextNode(records[counter].date_hrs_debut);
         newLines.newStartTime.appendChild(newText);
     }
 
     if(newLines.newEndTime !== undefined) {
-        let newText = document.createTextNode(data[counter].date_hrs_fin);
+        let newText = document.createTextNode(records[counter].date_hrs_fin);
         newLines.newEndTime.appendChild(newText);
     }
 
     if(newLines.newDate !== undefined) {
-        let newText = document.createTextNode(data[counter].date_releve);
+        let newText = document.createTextNode(records[counter].date_releve);
         newLines.newDate.appendChild(newText);
     }
 
     if(newLines.newWorkTime !== undefined) {
-        let time = convertTimeToHoursAndMinutes(data[counter].tps_travail);
+        let time = convertTimeToHoursAndMinutes(records[counter].tps_travail);
         let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
         newLines.newWorkTime.appendChild(newText);
     }
 
     if(newLines.newBreakTime !== undefined) {
-        let time = convertTimeToHoursAndMinutes(data[counter].tps_pause);
+        let time = convertTimeToHoursAndMinutes(records[counter].tps_pause);
         let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
         newLines.newBreakTime.appendChild(newText);
     }
 
     if(newLines.newTripTime !== undefined) {
-        let time = convertTimeToHoursAndMinutes(data[counter].tps_trajet);
+        let time = convertTimeToHoursAndMinutes(records[counter].tps_trajet);
         let newText = document.createTextNode(time['hours'] + "h" + time['minutes']);
         newLines.newTripTime.appendChild(newText);
     }
 
     if(newLines.newComment !== undefined) {
         newLines.newComment.classList.add("records_log_comment");
-        let newText = data[counter].commentaire;
+        let newText = records[counter].commentaire;
         newLines.newComment.innerHTML = newText;
     }
 
     if(newLines.newUpdateDate !== undefined) {
         newLines.newUpdateDate.classList.add("records_log_last_modification");
-        let newText = document.createTextNode(data[counter].date_hrs_modif);
+        let newText = document.createTextNode(records[counter].date_hrs_modif);
         newLines.newUpdateDate.appendChild(newText);
     }
 }
@@ -121,10 +112,6 @@ function createNewLines(newRow) {
         switch(tableHead.children[i].attributes.id.value){
             case "worksite":
                 newLines['newWorkSite'] = newRow.insertCell(tableHead.children[i].cellIndex);
-                break;
-
-            case "manager":
-                newLines['newManager'] = newRow.insertCell(tableHead.children[i].cellIndex);
                 break;
 
             case "employee":
@@ -187,44 +174,46 @@ function createNewLines(newRow) {
 
 /** Ajoute une nouvelle ligne à un tableau cible.
  * @param  {string} tableID
- * @param  {object} data
- * @param  {string} typeOfRecord
+ * @param  {object} records
+ * @param  {string} scope
  * @param  {number} currentUserId
  * @param  {number} counter
  */
-function appendLine(tableID, data, typeOfRecord, currentUserId, counter) {
-    //console.log(data);
+function appendLine(tableID, records, scope, currentUserId, counter) {
+    //console.log(records);
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
     var table = document.getElementById(tableID);
 
     // On crée une nouvelle ligne à la fin du tableau existant
-    var newRow = table.insertRow(-1);
+    var newRow = table.lastElementChild.insertRow(-1);
 
     // En fonction du type de relevés, on crée et on remplit les autres colonnes du tableau
     let newLines = createNewLines(newRow);
-    fillRecordsTable(newLines, data, counter);
+    fillRecordsTable(newLines, records, counter);
 
-    if(typeOfRecord === "Personal" || typeOfRecord === "Team" || typeOfRecord === "All") {
-        checkRecordValidationStatus(newLines, data, currentUserId, counter);
+    if(scope === "user" || scope === "global") {
+        checkRecordValidationStatus(newLines, records, currentUserId, counter);
     } 
     else {
-        insertSwitchButton(newLines.newIsValid, data, counter);
+        insertSwitchButton(newLines.newIsValid, records, counter);
     } 
 }
 
 
 /** Vide le tableau et affiche un message s'il n'y a aucun résultat.
- * @param  {array} tabData
+ * @param  {array} records
  */
-function clearTable(tabData) {
-    // On récupère la ligne vide du tableau
-    var trEmpty = $("#records_log tbody tr:first-child");
+function clearTable(tableId, records) {
+    table = document.getElementById(tableId);
+    table.lastElementChild.innerHTML="";
 
-    // On ré-insère la ligne vide. Résultat : Le tableau est vidé à chaque fois que la fonction est appelée
-    $("#records_log").children("tbody").html(trEmpty);
+    // S'il n'y a pas de relevés, on affiche un message sous le tableau, sinon on le cache
+    displayNoRecordMessage(records);
+    
+}
 
-    // Si la requête n'a retourné aucun résultat, on affiche un message sous le tableau, sinon on le cache
-    if(!tabData.length) {
+function displayNoRecordMessage(records) {
+    if(!records.length) {
         document.getElementById("no_record_message").hidden = false;
     } else {
         document.getElementById("no_record_message").hidden = true;
