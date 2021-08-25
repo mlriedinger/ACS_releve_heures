@@ -337,15 +337,12 @@ class RecordManager extends DatabaseConnection {
      * @param  string $typeOfRecords: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
      * @return string $sql
      */
-    public function addQueryScopeAndOrderByClause(string $sql, string $status, string $typeOfRecords){
+    public function addQueryScopeAndOrderByClause(string $sql, string $status, string $scope){
         switch($status) {
-            case "all":
-                if($typeOfRecords != "export") $sql .= ' AND Releve.supprimer = 0';
-                break;
-            case "valid":
+            case "approved":
                 $sql .= ' AND Releve.statut_validation = 1 AND Releve.supprimer = 0';
                 break;
-            case "unchecked":
+            case "pending":
                 $sql .= ' AND Releve.statut_validation = 0 AND Releve.supprimer = 0';
                 break;
             case "deleted":
@@ -356,7 +353,7 @@ class RecordManager extends DatabaseConnection {
         }
 
         // Si on souhaite exporter des données ou récupérer tous les relevés, on remplace la première occurrence de 'AND' par 'WHERE'
-        if($typeOfRecords == "all"){
+        if($scope == "global"){
             $occurence = strpos($sql, "AND");
             if($occurence !== false) {
                 $textSubtitute = "WHERE";
@@ -376,11 +373,11 @@ class RecordManager extends DatabaseConnection {
      * @param  Record $recordInfo
      * @return string $userRecords
      */
-    public function getRecordsFromUser(Record $recordInfo){
+    public function getUserRecords(Record $recordInfo){
         $pdo = $this->dbConnect();
 
         $userId = $recordInfo->getUserId();
-        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
         $status = $recordInfo->getStatus();
 
         $sql = 'SELECT 
@@ -409,86 +406,22 @@ class RecordManager extends DatabaseConnection {
 			
         WHERE Releve.id_login = :userId';
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
             'userId' => $userId));
         
         $userRecords["currentUserId"] = $userId ;
-        $userRecords["typeOfRecords"] = $typeOfRecords;
+        $userRecords["scope"] = $scope;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
         header("Content-Type: text/json");
+        // $query->debugDumpParams();
+        // echo "<br/>";
+        // var_dump($userRecords);
         echo json_encode($userRecords);
     }
-    
-    /**
-     * Permet de récupérer TOUS les relevés d'heures d'une équipe, c'est-à-dire les salariés associés à un manager (sauf les relevés du manager lui-même).
-     * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
-     *
-     * @param  Record $recordInfo
-     * @return string $teamRecords
-     */
-    public function getRecordsFromTeam(Record $recordInfo){
-        $managerId = $recordInfo->getUserId();
-        $typeOfRecords = $recordInfo->getTypeOfRecords();
-        $teamRecords["currentUserId"] = $managerId;
-        $teamRecords["typeOfRecords"] = $typeOfRecords;
-        $teamRecords["records"] = [];
-        $status = $recordInfo->getStatus();
-
-        $pdo = $this->dbConnect();
-
-        $sql = 'SELECT id_login
-			FROM t_equipe
-			WHERE id_chantier = (SELECT t_equipe.id_chantier
-			FROM t_equipe
-			WHERE t_equipe.id_login = :managerId AND t_equipe.chef_equipe = 1) AND chef_equipe <> 1';
-
-        $query = $pdo->prepare($sql);
-        $query->execute(array('managerId' => $managerId));
-        $teamMembers = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach($teamMembers as $teamMember){
-
-            $sql = 'SELECT
-                CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "affaire", 
-                t_login.ID AS "id_login",
-                t_login.Nom AS "nom_salarie",
-                t_login.Prenom AS "prenom_salarie",
-                DATE_FORMAT(Releve.date_hrs_debut, "%d/%m/%Y") AS "date_hrs_debut",
-                DATE_FORMAT(Releve.date_hrs_fin, "%d/%m/%Y") AS "date_hrs_fin",
-                Releve.commentaire, 
-                Releve.statut_validation, 
-                Releve.date_hrs_creation, 
-                Releve.date_hrs_modif,
-                Releve.ID,
-                Releve.supprimer,
-                Releve.tps_pause,
-                Releve.tps_trajet,
-                DATE_FORMAT(Releve.date_releve, "%d/%m/%Y") AS "date_releve",
-                Releve.tps_travail
-                FROM t_saisie_heure AS Releve
-                INNER JOIN t_affaires 
-                    ON Releve.id_chantier = t_affaires.ID
-                INNER JOIN t_login 
-                    ON Releve.id_login = t_login.ID
-                WHERE Releve.id_login = :teamMember';
-
-                $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
-    
-            $query = $pdo->prepare($sql);
-            $query->execute(array(
-                'teamMember' => $teamMember['id_login']
-            ));
-            $records = $query->fetchAll(PDO::FETCH_ASSOC);
-
-            $teamRecords["records"] = array_merge($teamRecords["records"], $records);
-        }
-		header("Content-Type: text/json");
-        echo json_encode($teamRecords);
-    }  
     
     /**
      * Permet de récupérer les relevés de tous les utilisateurs.
@@ -501,7 +434,7 @@ class RecordManager extends DatabaseConnection {
         $userId = $recordInfo->getUserId();
         $pdo = $this->dbConnect();
 
-        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $typeOfRecords = $recordInfo->getScope();
         $status = $recordInfo->getStatus();
         
         $sql = 'SELECT 
@@ -552,8 +485,7 @@ class RecordManager extends DatabaseConnection {
      * @return string $data
      */
     public function getDataForOptionSelect(Record $recordInfo){
-        //print_r($recordInfo);
-        $type = $recordInfo->getTypeOfRecords();
+        $type = $recordInfo->getScope();
         $userGroup = $recordInfo->getUserGroup();
         $userId = $recordInfo->getUserId();
         $worksiteId = $recordInfo->getWorksite();
@@ -562,22 +494,7 @@ class RecordManager extends DatabaseConnection {
 
         $sql ="";
 
-        switch($type){
-            case "managers":
-                if ($userGroup == '1') {
-                    $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom 
-                        FROM t_equipe 
-                        INNER JOIN t_login 
-                        ON t_equipe.id_login = t_login.ID 
-                        WHERE t_equipe.chef_equipe = 1';
-                    break;
-                } else {
-                    $sql .= 'SELECT t_login.ID, t_login.Nom, t_login.Prenom 
-                        FROM t_login  
-                        WHERE ID = :userId';
-                    break;
-                }
-                
+        switch($type){  
             case "users":
                 if ($userGroup == '1') {
                     $sql .= 'SELECT ID, Nom, Prenom FROM t_login';
@@ -604,7 +521,7 @@ class RecordManager extends DatabaseConnection {
                 break;
         }
 
-        if($type === "managers" || $type === "users"){
+        if($type === "users"){
             $sql .= ' ORDER BY t_login.Nom ASC';
         }
         else {
