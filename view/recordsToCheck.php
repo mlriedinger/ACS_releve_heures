@@ -37,6 +37,12 @@ $heading = "Validations en attente";
             </table>
             
             <input type="hidden" value="<?= $_SESSION['csrfToken'] ;?>" name="csrfToken"/>
+            <div class="row mb-3 justify-content-md-center">      
+                <div class="col-lg mb-5 text-end">
+                    <input type="reset" value="Annuler" class="btn btn-light me-3"/>
+                    <input type="submit" value="Valider" class="btn btn-dark"/>
+                </div>
+            </div>
         </form>
 
         <p id="no_record_message" class="lead text-center mt-5" hidden>Aucun relevé à afficher.</p>
