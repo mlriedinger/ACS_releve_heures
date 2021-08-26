@@ -136,6 +136,5 @@
 
 <script>
 getWorksites(<?= $_POST['userId'] ?>);
-getRecord(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
 
 </script>
