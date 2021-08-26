@@ -159,7 +159,7 @@ if(isset($_GET['action'])) {
             // Renvoyer le formulaire de saisie
             case "getForm":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
-                    if (isset($_POST['recordId']) && isset($_POST['formFile'])){
+                    if (isset($_POST['formFile'])){
                         $recordController->displayPartial($_POST['formFile']);
                     }
                 } else throw new AuthenticationException();

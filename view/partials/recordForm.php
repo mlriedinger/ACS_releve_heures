@@ -192,5 +192,4 @@
     getWorksites(<?= $_POST['userId'] ?>);
     getWorkCategories();
     getWorkSubCategories();
-    getRecord(<?= $_POST['recordId'] ?>);
 </script>

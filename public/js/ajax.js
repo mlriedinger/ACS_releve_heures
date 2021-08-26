@@ -14,10 +14,20 @@ function updateRecordsLog(scope, status) {
         },
         dataType: "json"
     })
-    .done(function(response) {
-        parseMultipleLines(response);
+    .done((result) => {
+        clearTable("records_log")
+        .then(() => {
+            parseMultipleLines(result)
+            .then(() => {
+                let records = result.records;
+                for(let i = 0 ; i < records.length ; i++) {
+                    appendLine("records_log", result, i);
+                }
+            })
+            .catch(alert)
+        })
     })
-    .fail(function(error) {
+    .fail((error) => {
         alert("Un problème est survenu.");
     });
 }
@@ -32,14 +42,15 @@ function displayRecordForm(recordId, userId) {
         type: "POST",
         url: "index.php?action=getForm",
         data: {
-            "recordId": recordId,
+            // "recordId": recordId,
             "userId": userId,
             "formFile": "recordForm"
         }
     })
-    .done(function(content) {
+    .done((content) => {
         $(".modal-title").html("Editer un relevé");
         $(".modal-body").html(content);
+        getRecord(recordId);
     });
 }
 
@@ -56,7 +67,7 @@ function displayDeleteConfirmation(recordId) {
             "formFile": "deleteForm"
         }
     })
-    .done(function(content) {
+    .done((content) => {
         $(".modal-title").html("Confirmation de suppression");
         $(".modal-body").html(content);
     });
@@ -75,7 +86,7 @@ function getRecord(recordId) {
         },
         dataType: "json"
     })
-    .done(function(response) {
+    .done((response) => {
         prefillRecordData(response);
     })
 }
