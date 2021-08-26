@@ -52,7 +52,7 @@
         <script>
             window.onload = function() {
                 let selectors = new Array("<?= $menuSelector ?>", "<?= $iconSelector ?>");
-                updateValidationBadge('Check', 'unchecked');
+                updateValidationBadge('global', 'pending');
                 updateNavBarActiveAttribute(selectors);
                 <?= $additionalOnloadScript ?>
             }
