@@ -1,12 +1,9 @@
 /** Traite les résultats renvoyés par un appel AJAX lorsque la requête renvoie plusieurs lignes et de les ajouter à un tableau existant.
- * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {object} result contenu de la réponse à la requête AJAX
  */
-function parseMultipleLines(data) {
-    console.log(data);
-    var records = data.records;
-    var scope = data.scope;
-    var status = data.status;
-    var currentUserId = data.currentUserId;
+function parseMultipleLines(result) {
+    
+    var records = result.records;
 
     // On vide le tableau
     clearTable("records_log", records);
@@ -14,19 +11,19 @@ function parseMultipleLines(data) {
     // Si la requête a retourné des résultats, on boucle sur records pour récupérer chaque objet (relevé d'heure), puis on ajoute l'objet au tableau avec appendLine()
     if(records.length) {
         for (var i = 0; i < records.length; i++) {
-            appendLine("records_log", records, scope, currentUserId, i);
+            appendLine("records_log", result, i);
         }
     }
 }
 
 
 /** Traite les résultats renvoyés par un appel AJAX lorsque la requête renvoie une seule ligne, et les insère dans un tableau pour pré-remplir le formulaire lors de l'édition.
- * @param  {object} data
+ * @param  {object} result
  */
-function parseUniqueLine(data) {
+function parseUniqueLine(result) {
     var recordData = [];
 
-    $.each(data, function(key, value) {
+    $.each(result, function(key, value) {
         recordData.push(value);
     });
     

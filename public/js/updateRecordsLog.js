@@ -173,16 +173,18 @@ function createNewLines(newRow) {
 
 
 /** Ajoute une nouvelle ligne à un tableau cible.
- * @param  {string} tableID
- * @param  {object} records
- * @param  {string} scope
- * @param  {number} currentUserId
+ * @param  {string} tableId
+ * @param  {object} result
  * @param  {number} counter
  */
-function appendLine(tableID, records, scope, currentUserId, counter) {
-    //console.log(records);
+function appendLine(tableId, result, counter) {
+    var records = result.records;
+    var currentUserId = result.currentUserId;
+    var scope = result.scope;
+    var status = result.status;
+
     // On vise la balise HTML dont l'id correspond à celui passé en paramètre
-    var table = document.getElementById(tableID);
+    var table = document.getElementById(tableId);
 
     // On crée une nouvelle ligne à la fin du tableau existant
     var newRow = table.lastElementChild.insertRow(-1);
@@ -191,7 +193,7 @@ function appendLine(tableID, records, scope, currentUserId, counter) {
     let newLines = createNewLines(newRow);
     fillRecordsTable(newLines, records, counter);
 
-    if(scope === "user" || scope === "global") {
+    if(scope === "user" || (scope === "global" && status != "pending")) {
         checkRecordValidationStatus(newLines, records, currentUserId, counter);
     } 
     else {
