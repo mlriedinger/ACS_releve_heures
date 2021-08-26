@@ -157,13 +157,10 @@ if(isset($_GET['action'])) {
 
 
             // Renvoyer le formulaire de saisie
-            case "getRecordForm":
+            case "getForm":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
-                    if (isset($_POST['recordId'])){
-                        $recordId = intval(inputValidation($_POST['recordId']));
-                        $userId = intval(inputValidation($_POST['userId']));
-
-                        $recordController->getRecordForm($recordId, $userId);
+                    if (isset($_POST['recordId']) && isset($_POST['formFile'])){
+                        $recordController->displayPartial($_POST['formFile']);
                     }
                 } else throw new AuthenticationException();
                 break;
@@ -177,12 +174,12 @@ if(isset($_GET['action'])) {
 
 
             // Récupérer les données d'un relevé
-            case "getRecordData":
+            case "getRecord":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
                     if(isset($_POST['recordId'])){
                         $recordInfo = new Record();
                         $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
-                        $recordController->getRecordData($recordInfo);
+                        $recordController->getRecord($recordInfo);
                     } 
                     else throw new NoDataFoundException();
                 } else throw new AuthenticationException();
