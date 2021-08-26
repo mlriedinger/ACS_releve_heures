@@ -14,18 +14,6 @@ class RecordController extends AbstractController {
     public function __construct() {
         $this->_recordManager = new RecordManager();
     }
-     
-    /**
-     * Rend le formulaire de saisie de relevé (uniquement le formulaire).
-     *
-     * @param  Record $recordInfo
-     */
-    public function getRecordForm(int $record, int $user){
-        $recordId = $record;
-        $userId = $user;
-        $_SESSION['worksiteId'] = 0 ;
-        $this->displayPartial('recordForm');
-    }
 
     /**
      * Permet l'enregistrement d'un nouveau relevé d'heure.

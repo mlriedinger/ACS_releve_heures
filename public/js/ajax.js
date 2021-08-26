@@ -1,11 +1,25 @@
 /**
  * Description
- * @param {any} scope "user", "team" ou "all" : correspond au périmètre des relevés demandés (personnels, équipe ou globaux)
- * @param {any} status
+ * @param {any} scope "user" ou "global" : correspond au périmètre des relevés demandés (personnels ou globaux)
+ * @param {any} status "all", "approved, "pending" ou "deleted" : correspond au statut des relevés demandés (tous, validés, en attente ou supprimés)
  * @returns {any}
  */
 function updateRecordsLog(scope, status) {
-    $.post('index.php?action=getRecords', { 'scope': scope, 'status': status }, parseMultipleLines, 'json');
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getRecords",
+        data: {
+            "scope": scope, 
+            "status": status
+        },
+        dataType: "json"
+    })
+    .done(function(response) {
+        parseMultipleLines(response);
+    })
+    .fail(function(error) {
+        alert("Un problème est survenu.");
+    });
 }
 
 
@@ -14,7 +28,16 @@ function updateRecordsLog(scope, status) {
  * @param  {number} userId identifiant de l'utilisateur
  */
 function displayRecordForm(recordId, userId) {
-    $.post('index.php?action=getRecordForm', { 'recordId': recordId, 'userId': userId }, function(content) {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getForm",
+        data: {
+            "recordId": recordId,
+            "userId": userId,
+            "formFile": "recordForm"
+        }
+    })
+    .done(function(content) {
         $(".modal-title").html("Editer un relevé");
         $(".modal-body").html(content);
     });
@@ -25,7 +48,15 @@ function displayRecordForm(recordId, userId) {
  * @param  {number} recordId identifiant du relevé à supprimer
  */
 function displayDeleteConfirmation(recordId) {
-    $.post('index.php?action=getDeleteConfirmationForm', { 'recordId': recordId }, function(content) {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getForm",
+        data: {
+            "recordId": recordId,
+            "formFile": "deleteForm"
+        }
+    })
+    .done(function(content) {
         $(".modal-title").html("Confirmation de suppression");
         $(".modal-body").html(content);
     });
@@ -35,8 +66,18 @@ function displayDeleteConfirmation(recordId) {
 /** Appel AJAX pour récupérer les données d'un relevé
  * @param  {number} recordId identifiant du relevé dont on souhaite récupérer les informations
  */
-function getRecordData(recordId) {
-    $.post('index.php?action=getRecordData', { 'recordId': recordId }, displayRecordFormOptions, 'json');
+function getRecord(recordId) {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getRecord",
+        data: {
+            "recordId": recordId
+        },
+        dataType: "json"
+    })
+    .done(function(response) {
+        prefillRecordData(response);
+    })
 }
 
 
@@ -45,38 +86,91 @@ function getRecordData(recordId) {
  * @param  {string} status portée de la demande (tous, validés, en attente, supprimés)
  */
 function updateValidationBadge(scope, status) {
-    $.post('index.php?action=getTeamRecordsLog', { 'scope': scope, 'status': status }, displayNumberOfRecordsTocheck, 'json');
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getRecords",
+        data: {
+            "scope": scope,
+            "status": status
+        },
+        dataType: "json"
+    })
+    .done(function(response) {
+        displayNumberOfPendingRecords(response);
+    })
 }
 
 
 /** Appel AJAX pour récupérer la liste des salariés
  */
 function getUsers() {
-    $.post('index.php?action=getUsers', {}, addUsersToSelectTag, 'json');
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getUsers",
+        dataType: "json"
+    })
+    .done(function(response) {
+        addUsersToSelectTag(response);
+    })
 }
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */
- function getWorksites(userId) {
-    $.post('index.php?action=getWorksites', { 'userId': userId }, addWorksitesToSelectTag, 'json');
+function getWorksites(userId) {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getWorksites",
+        data: {
+            "userId": userId
+        },
+        dataType: "json"
+    })
+    .done(function(response) {
+        addWorksitesToSelectTag(response);
+    })
 }
+
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */
-function getWorkCategories() {
-    $.post('index.php?action=getWorkCategories', {}, displayWorkCategories, 'json');
+ function getWorkCategories() {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getWorkCategories",
+        dataType: "json"
+    })
+    .done(function(response) {
+        displayWorkCategories(response);
+    })
 }
 
 
 /** Appel AJAX pour récupérer la liste des sous-catégories de postes de travail
  */
-function getWorkSubCategories() {
-    $.post('index.php?action=getWorkSubCategories', {}, displayWorkSubCategories, 'json');
+ function getWorkSubCategories() {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getWorkSubCategories",
+        dataType: "json"
+    })
+    .done(function(response) {
+        displayWorkSubCategories(response);
+    })
 }
 
 
 /** Appel AJAX pour récupérer la liste des événements du planning
 */
 function getEventsFromPlanning(userId) {
-    $.post('index.php?action=getEventsFromPlanning', { 'userId': userId }, displayEventsFromPlanning/*, 'json'*/);
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getEventsFromPlanning",
+        data: {
+            "userId": userId
+        },
+        dataType: "json"
+    })
+    .done(function(response) {
+        displayEventsFromPlanning(response);
+    })
 }

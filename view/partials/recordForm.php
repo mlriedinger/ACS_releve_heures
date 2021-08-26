@@ -135,7 +135,7 @@
 <script src="public/js/ajax.js"></script>
 
 <script>
-getOptionsData('add', 'worksites', <?= isset($_POST['userId']) ? ($_POST['userId']) : "" ;?>);
-getRecordData(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
+getWorksites(<?= $_POST['userId'] ?>);
+getRecord(<?= isset($_POST['recordId']) ? $_POST['recordId'] : "";?>);
 
 </script>

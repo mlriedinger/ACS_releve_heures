@@ -45,15 +45,15 @@ function insertSwitchButton(newIsValid, records, counter) {
 
 /* Fonction qui permet d'insérer des boutons de contrôle de formulaire 
 */
-function insertFormControlButtons() {
-    var formControlButtons = [
-        '<div class="row mb-3 justify-content-md-center">',      
-            '<div class="col-lg mb-5 text-end">',
-                '<input type="reset" value="Annuler" class="btn btn-light me-3"/>',
-                '<input type="submit" value="Valider" class="btn btn-dark"/>',
-            '</div>',
-        '</div>'
-    ].join('');
+// function insertFormControlButtons() {
+//     var formControlButtons = [
+//         '<div class="row mb-3 justify-content-md-center">',      
+//             '<div class="col-lg mb-5 text-end">',
+//                 '<input type="reset" value="Annuler" class="btn btn-light me-3"/>',
+//                 '<input type="submit" value="Valider" class="btn btn-dark"/>',
+//             '</div>',
+//         '</div>'
+//     ].join('');
 
-    $(formControlButtons).insertAfter("#records_log");
-}
+//     $(formControlButtons).insertAfter("#records_log");
+// }
