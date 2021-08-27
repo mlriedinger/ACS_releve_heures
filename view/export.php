@@ -74,15 +74,6 @@ $heading = "Exporter des relevés";
                                     <input type="date" name="periodEnd" id="periodEnd" class="form-control" aria-label="Sélectionnez une date de fin" aria-describedby="periodEnd_selector"/>
                                 </div>
 
-                                <?php if ($_SESSION['userGroup'] == '1') {?>
-
-                                    <label for="selectManager" class="mt-4 mb-2">Exporter les relevés de tous les salariés liés à un manager </label>
-                                    <select name="manager" id="selectManager" class="form-select mb-3" aria-label="Default select example">
-                                        <option value ="" selected>Sélectionnez un manager</option>
-                                    </select>
-                                <?php }
-                                ?>
-
                                 <label for="selectUser" class="mt-4 mb-2">Exporter les relevés d'un salarié en particulier </label>
                                 <select name="user" id="selectUser" class="form-select mb-3" aria-label="Default select example">
                                     <option value ="" selected>Sélectionnez un salarié</option>
