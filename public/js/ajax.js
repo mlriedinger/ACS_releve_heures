@@ -76,8 +76,7 @@ function displayDeleteConfirmation(recordId) {
         }
     })
     .done((content) => {
-        $(".modal-title").html("Confirmation de suppression");
-        $(".modal-body").html(content);
+        addModalContent(content, "delete");
     });
 }
 
