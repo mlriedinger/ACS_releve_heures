@@ -18,7 +18,7 @@ $iconSelector = "#newRecordIcon";
 ?>
 
 <?php ob_start(); ?>
-getWorksites(<?= $_SESSION['userId']?>);
+getWorksites(<?= $_SESSION['userId'] . "," . $_SESSION['worksiteId']?>)
 getWorkCategories();
 getWorkSubCategories();
 
