@@ -3,13 +3,10 @@
  * @param  {object} data
  */
 function selectWorksite(worksiteId) {
-    console.log(typeof(worksiteId));
     var worksitesCollection = document.getElementById("selectWorksite").children;
-    console.log(worksitesCollection);
 
     for (let item of worksitesCollection) {
         if (parseInt(item.value) === worksiteId) {
-            console.log("trouvé");
             item.setAttribute("selected", "");
         }
     }
@@ -24,11 +21,13 @@ function selectWorksite(worksiteId) {
     var basis = data.recordBasis;
     var details = data.recordDetails;
 
-    selectWorksite(data['id_chantier']);
+    selectWorksite(parseInt(basis['id_chantier']));
     prefillDate(basis);
     prefillWorkLength(basis);
+    
     var aggregatedDetails = concatInputsInfosAndRecordDetails(details);
     prefillSubCategories(aggregatedDetails);
+    
     prefillTripLength(basis);
     prefillBreakLength(basis);
     prefillComment(basis);

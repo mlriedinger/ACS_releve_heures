@@ -185,11 +185,3 @@
 </form>
 
 </div>
-
-<script src="public/js/ajax.js"></script>
-
-<script>
-    getWorksites(<?= $_POST['userId'] ?>);
-    getWorkCategories();
-    getWorkSubCategories();
-</script>

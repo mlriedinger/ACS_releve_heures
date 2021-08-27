@@ -223,3 +223,18 @@ async function clearTable(tableId) {
 function displayNoRecordMessage() {
     document.getElementById("no_record_message").hidden = false;
 }
+
+function hideNoRecordMessage() {
+    document.getElementById("no_record_message").hidden = true;
+}
+
+function addModalContent(content, formType) {
+    return new Promise((resolve) => {
+        let modalTitle = "";
+        formType === "edit" ? modalTitle = "Editer un relevé" : modalTitle = "Confirmation de suppression";
+        
+        $(".modal-title").html(modalTitle);
+        $(".modal-body").html(content);
+        resolve();
+    })
+}
