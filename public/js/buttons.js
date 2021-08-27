@@ -7,7 +7,13 @@ function insertEditRecordButton(newEdit, records, counter) {
     var recordId = parseInt(records[counter].ID);
     var userId = parseInt(records[counter].id_login);
 
-    var newEditText = `<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayRecordForm(${ recordId }, ${ userId })" data-bs-whatever="Editer"><i class="far fa-edit"></i></button>`;
+    var newEditText = [
+        `<div class="text-center">
+            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#formModal" onclick="editRecord(${ recordId }, ${ userId })" data-bs-whatever="Editer">
+                <i class="far fa-edit"></i>
+            </button>
+        </div>`
+    ];
     newEdit.innerHTML += newEditText;
 }
 
@@ -20,7 +26,13 @@ function insertEditRecordButton(newEdit, records, counter) {
 function insertDeleteRecordButton(newDelete, records, counter) {
     var recordId = parseInt(records[counter].ID);
 
-    var newDeleteText = `<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(${ recordId })"><i class="far fa-trash-alt"></i></button>`;
+    var newDeleteText = [
+        `<div class="text-center">
+            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#formModal" onclick="displayDeleteConfirmation(${ recordId })">
+                <i class="far fa-trash-alt"></i>
+            </button>
+        </div>`
+    ];
     newDelete.innerHTML += newDeleteText;
 }
 
@@ -42,18 +54,17 @@ function insertSwitchButton(newIsValid, records, counter) {
     newIsValid.innerHTML += html;
 }
 
+function insertViewButton(newView, records, counter) {
+    var recordId = parseInt(records[counter].ID);
+    var userId = parseInt(records[counter].id_login);
 
-/* Fonction qui permet d'insérer des boutons de contrôle de formulaire 
-*/
-// function insertFormControlButtons() {
-//     var formControlButtons = [
-//         '<div class="row mb-3 justify-content-md-center">',      
-//             '<div class="col-lg mb-5 text-end">',
-//                 '<input type="reset" value="Annuler" class="btn btn-light me-3"/>',
-//                 '<input type="submit" value="Valider" class="btn btn-dark"/>',
-//             '</div>',
-//         '</div>'
-//     ].join('');
+    var html = 
+    `<div class="text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16" data-bs-toggle="modal" data-bs-target="#formModal" onclick="viewRecord(${ recordId }, ${ userId })" data-bs-whatever="Visualiser">
+            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+        </svg>
+    </div>`
 
-//     $(formControlButtons).insertAfter("#records_log");
-// }
+    newView.innerHTML += html;
+}

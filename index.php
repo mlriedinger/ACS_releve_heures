@@ -244,10 +244,9 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
                     if(inputValidation($_POST['userId'] !== null)) {
                         $recordInfo = new Record();
-                        $recordInfo->setUserId($_SESSION['userId']);
+                        $recordInfo->setUserId($_POST['userId']);
 
                         $recordController->getWorksites($recordInfo);
-
                     }
                 } else throw new AuthenticationException();
                 break;

@@ -18,11 +18,12 @@ function checkRecordValidationStatus(newLines, records, currentUserId, counter) 
             insertDeleteRecordButton(newLines.newDelete, records, counter);
         }
     } 
-    else if (validationStatus === "0" && deleteStatus === "1") {
+    else if (deleteStatus === "1") {
         newValidationText = document.createTextNode("Supprimé");
     }
     else {
         newValidationText = document.createTextNode("Validé");
+        insertViewButton(newLines.newEdit, records, counter);
     }
     
     newLines.newStatus.appendChild(newValidationText);
@@ -169,6 +170,10 @@ function createNewLines(newRow) {
                 case "select":
                     newLines['newIsValid'] = newRow.insertCell(tableHead.children[i].cellIndex);
                     break; 
+
+                case "view":
+                    newLines['newView'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                    break;
             }
         }
         if(Object.keys(newLines).length != 0) {
@@ -203,6 +208,7 @@ async function appendLine(tableId, result, counter) {
                 checkRecordValidationStatus(newLines, records, currentUserId, counter);
             }
             if(scope === "global" && status === "pending" && newLines.newIsValid != undefined) {
+                insertViewButton(newLines.newView, records, counter);
                 insertSwitchButton(newLines.newIsValid, records, counter);
             }
         });
@@ -228,10 +234,16 @@ function hideNoRecordMessage() {
     document.getElementById("no_record_message").hidden = true;
 }
 
-function addModalContent(content, formType) {
+function addModalContent(content, action) {
     return new Promise((resolve) => {
         let modalTitle = "";
-        formType === "edit" ? modalTitle = "Editer un relevé" : modalTitle = "Confirmation de suppression";
+        if(action === "edit") {
+            modalTitle = "Editer un relevé";
+        } else if(action === "view") {
+            modalTitle = "Détails d'un relevé";
+        } else {
+            modalTitle = "Confirmation de suppression";
+        }
         
         $(".modal-title").html(modalTitle);
         $(".modal-body").html(content);

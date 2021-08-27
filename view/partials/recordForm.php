@@ -10,7 +10,7 @@
 
             <div class="col mb-3" style="flex-grow: 2;" data-step="1" data-intro="Sélectionnez une affaire pour laquelle vous souhaitez relever des heures.">
                 <span class="input-group-text" id="worksite_selector">Affaire</span>
-                <select class="form-select" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez une affaire" aria-describedby="worksite_selector" required>
+                <select class="form-select form-control" name="worksiteId" id="selectWorksite" aria-label="Sélectionnez une affaire" aria-describedby="worksite_selector" required>
                     <option value="0" disabled selected>Sélectionnez une affaire</option>
                 </select>
             </div>
@@ -172,7 +172,7 @@
         </div>
 
         <!-- Boutons de validation du formulaire -->
-        <div class="row mb-3 justify-content-md-center">
+        <div class="row mb-3 justify-content-md-center" id="formButtons">
             
             <div class="col mb-5 text-center">
                 <input type="hidden" value="<?= isset($_POST['recordId']) ? ($_POST['recordId']) : "" ;?>" name="recordId"/>

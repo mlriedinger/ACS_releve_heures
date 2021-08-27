@@ -34,12 +34,35 @@ function updateRecordsLog(scope, status) {
     });
 }
 
+function viewRecord(recordId, userId) {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getForm",
+        data: {
+            "recordId": recordId,
+            "formFile": "recordForm"
+        }
+    })
+    .done((content) => {
+        addModalContent(content, "view")
+        .then(() => {
+            console.log(userId);
+            getWorksites(userId);
+            getWorkCategories();
+            getWorkSubCategories();
+        })
+        .then(() => {
+            getRecord(recordId, "view");
+        })
+    })
+}
+
 
 /** Appel AJAX pour récupérer le contenu à insérer dans la fenêtre modale d'édition d'un relevé
  * @param  {number} recordId identifiant du relevé à modifier
  * @param  {number} userId identifiant de l'utilisateur
  */
-function displayRecordForm(recordId, userId) {
+function editRecord(recordId, userId) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getForm",
@@ -84,7 +107,7 @@ function displayDeleteConfirmation(recordId) {
 /** Appel AJAX pour récupérer les données d'un relevé
  * @param  {number} recordId identifiant du relevé dont on souhaite récupérer les informations
  */
-function getRecord(recordId) {
+function getRecord(recordId, action="") {
     $.ajax({
         type: "POST",
         url: "index.php?action=getRecord",
@@ -95,6 +118,10 @@ function getRecord(recordId) {
     })
     .done((response) => {
         prefillRecordData(response);
+        if(action === "view") {
+            addReadOnlyAttributes();
+            hideFormButtons();
+        }
     })
 }
 

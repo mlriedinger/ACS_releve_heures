@@ -24,6 +24,7 @@ $heading = "Validations en attente";
                         <?= $_SESSION['tripMgmt'] == 1 ? '<th scope="col" id="tripTime">Trajet</th>' : ""; ?>
                         <th scope="col" class="records_log_comment" id="comment">Commentaire</th>
                         <th scope="col" class="records_log_last_modification" id="updateDate">Modifié le</th>
+                        <th scope="col" class="view" id="view">Détails</th>
                         <th scope="col" id="select">
                             <button type="button" class="btn btn-dark btn-sm" onclick="selectAll();" id="selectAllButton">Sélectionner tout</button>
                         </th>

@@ -135,3 +135,14 @@ function hideUnrelatedSubCategories(categoryId) {
         parentCategoryId !== categoryId ? $(this).attr("hidden", true) : $(this).attr("hidden", false);
     });
 }
+
+function addReadOnlyAttributes() {
+    $('.form-control').each(function() {
+        //console.log($(this));
+        $(this).attr("readonly", true);
+    })
+}
+
+function hideFormButtons() {
+    document.getElementById("formButtons").style = "display:none";
+}
