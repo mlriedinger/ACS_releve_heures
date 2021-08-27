@@ -18,13 +18,15 @@ function updateRecordsLog(scope, status) {
         clearTable("records_log")
         .then(() => {
             parseMultipleLines(result)
-            .then(() => {
+            .then((onfulfilled) => {
+                hideNoRecordMessage();
                 let records = result.records;
                 for(let i = 0 ; i < records.length ; i++) {
                     appendLine("records_log", result, i);
                 }
+            }, (onrejected) => {
+                displayNoRecordMessage();
             })
-            .catch(alert)
         })
     })
     .fail((error) => {
@@ -42,15 +44,21 @@ function displayRecordForm(recordId, userId) {
         type: "POST",
         url: "index.php?action=getForm",
         data: {
-            // "recordId": recordId,
+            "recordId": recordId,
             "userId": userId,
             "formFile": "recordForm"
         }
     })
     .done((content) => {
-        $(".modal-title").html("Editer un relevé");
-        $(".modal-body").html(content);
-        getRecord(recordId);
+        addModalContent(content, "edit")
+        .then(()=> {
+            getWorksites(userId);
+            getWorkCategories();
+            getWorkSubCategories();
+        })
+        .then(() => {
+            getRecord(recordId);
+        })
     });
 }
 
@@ -106,7 +114,7 @@ function updateValidationBadge(scope, status) {
         },
         dataType: "json"
     })
-    .done(function(response) {
+    .done((response) => {
         displayNumberOfPendingRecords(response);
     })
 }
@@ -120,7 +128,7 @@ function getUsers() {
         url: "index.php?action=getUsers",
         dataType: "json"
     })
-    .done(function(response) {
+    .done((response) => {
         addUsersToSelectTag(response);
     })
 }
@@ -136,7 +144,7 @@ function getWorksites(userId) {
         },
         dataType: "json"
     })
-    .done(function(response) {
+    .done((response) => {
         addWorksitesToSelectTag(response);
     })
 }
@@ -150,7 +158,7 @@ function getWorksites(userId) {
         url: "index.php?action=getWorkCategories",
         dataType: "json"
     })
-    .done(function(response) {
+    .done((response) => {
         displayWorkCategories(response);
     })
 }
@@ -164,8 +172,12 @@ function getWorksites(userId) {
         url: "index.php?action=getWorkSubCategories",
         dataType: "json"
     })
-    .done(function(response) {
-        displayWorkSubCategories(response);
+    .done((response) => {
+        displayWorkSubCategories(response)
+        .then((firstCategoryId) => {
+            hideUnrelatedSubCategories(firstCategoryId);
+            addEventCalculateTotalWorkingHours();
+        });
     })
 }
 
@@ -181,7 +193,7 @@ function getEventsFromPlanning(userId) {
         },
         dataType: "json"
     })
-    .done(function(response) {
+    .done((response) => {
         displayEventsFromPlanning(response);
     })
 }

@@ -8,7 +8,7 @@ function parseMultipleLines(result) {
             resolve(result);
         }
         else {
-            reject(displayNoRecordMessage());
+            reject();
         }
     })
 }
