@@ -28,7 +28,7 @@ class RecordController extends AbstractController {
 
         if($addRecordDetailsAttempt) {
             $_SESSION['success'] = true;
-            $this->displayView('personalRecordsLog');
+            header('Location: index.php?action=showHomePage');
         }
         else {
             $_SESSION['success'] = false;
