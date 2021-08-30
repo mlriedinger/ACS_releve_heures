@@ -140,6 +140,9 @@ function addReadOnlyAttributes() {
     $('.form-control').each(function() {
         //console.log($(this));
         $(this).attr("readonly", true);
+    });
+    $('svg').each(function() {
+        $(this).attr("onclick", "");
     })
 }
 
