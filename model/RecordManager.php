@@ -43,6 +43,7 @@ class RecordManager extends DatabaseConnection {
         $tripLength = $recordInfo->getTripLength();
         $workLength = $recordInfo->getWorkLength();
         $worksite = $recordInfo->getWorksite();
+        $weight = $recordInfo->getWeight();
         
         // Validation automatique des relevés saisis par un utilisateur de type "admin"
         $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
@@ -57,6 +58,7 @@ class RecordManager extends DatabaseConnection {
             date_hrs_fin, 
             date_releve,
             tps_travail,
+            poids_piece,
             tps_pause,
             tps_trajet,
             statut_validation, 
@@ -75,6 +77,7 @@ class RecordManager extends DatabaseConnection {
                 WHEN date_hrs_debut <> "0000-00-00 00:00:00" AND date_hrs_fin <> "0000-00-00 00:00:00" THEN TIMESTAMPDIFF(MINUTE, :dateTimeStart, :dateTimeEnd)
                 ELSE :workLength
             END,
+            :weight,
             :pauseLength,
             :tripLength, 
             :validation_status,
@@ -89,6 +92,7 @@ class RecordManager extends DatabaseConnection {
             'dateTimeEnd' => $dateTimeEnd,
             'recordDate' => $recordDate,
             'workLength' => $workLength,
+            'weight' => $weight,
             'pauseLength' => $breakLength,
             'tripLength' => $tripLength,
             'validation_status' => $validation_status,
@@ -154,6 +158,7 @@ class RecordManager extends DatabaseConnection {
         $tripLength = $recordInfo->getTripLength();
         $workLength = $recordInfo->getWorkLength();
         $worksiteId = $recordInfo->getWorksite();
+        $weight = $recordInfo->getWeight();
 
         $isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
@@ -171,7 +176,8 @@ class RecordManager extends DatabaseConnection {
 					END,
 				tps_pause = :pauseLength,
 				tps_trajet = :tripLength, 
-				commentaire = :comment
+				commentaire = :comment,
+                poids_piece = :weight
 			WHERE ID = :recordId';
 
         $query = $pdo->prepare($sql);
@@ -184,7 +190,8 @@ class RecordManager extends DatabaseConnection {
             'workLength' =>  $workLength,
             'pauseLength' => $breakLength,
             'tripLength' => $tripLength,
-            'comment' => $comment
+            'comment' => $comment,
+            'weight' => $weight
         ));
 
         if($attempt) $isUpdateSuccessfull = true;
@@ -304,7 +311,8 @@ class RecordManager extends DatabaseConnection {
             Releve.tps_trajet,
             Releve.statut_validation,
             Releve.commentaire,
-            Releve.supprimer
+            Releve.supprimer,
+            Releve.poids_piece
         FROM t_saisie_heure AS Releve
         WHERE Releve.ID = :recordId';
 

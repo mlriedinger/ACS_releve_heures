@@ -55,5 +55,6 @@ class SettingController extends AbstractController {
         $_SESSION['lengthByCategoryMgmt'] = $settings['releve_heures_duree_categorie'];
         $_SESSION['tripMgmt'] = $settings['releve_heures_trajet'];
         $_SESSION['breakMgmt'] = $settings['releve_heures_pause'];
+        $_SESSION['specificInfoMgmt'] = $settings['releve_heures_info_specifique'];
     }
 }

@@ -24,6 +24,7 @@ function selectWorksite(worksiteId) {
     selectWorksite(parseInt(basis['id_chantier']));
     prefillDate(basis);
     prefillWorkLength(basis);
+    prefillWeight(basis);
     
     var aggregatedDetails = concatInputsInfosAndRecordDetails(details);
     prefillSubCategories(aggregatedDetails);
@@ -93,6 +94,14 @@ function prefillSubCategories(aggregatedDetails) {
     }
 }
 
+function prefillWeight(record) {
+    var inputWeight = document.getElementById("weight");
+
+    if(inputWeight !== null) {
+        inputWeight.setAttribute("value", record["poids_piece"]);
+    }
+}
+
 
 /**
  * Crée un tableau recensant les informations des inputs associés aux sous-catégories de postes.
@@ -129,7 +138,6 @@ function parseInputsData() {
     }
 
     return data;
-
 }
 
 

@@ -160,6 +160,26 @@
             </div>
         <?php } ?>
 
+        <?php 
+        if($_SESSION['specificInfoMgmt'] == 1) { ?>
+        <!-- Champs pour capter des informations spécifiques à l'activité -->
+            <div id="divSpecificInput"  data-step="7" data-intro="Indiquez le poids de la pièce terminée.">
+                
+                <fieldset class="mb-4">
+                    <span class="input-group-text">Poids de la pièce fabriquée</span>
+                    <div class="row mb-4 justify-content-center mt-4">
+                        <div class="col-3 me-5">
+                            <div class="d-flex flex-row align-items-center">
+                                <input type="number" min="0" max="3000" class="form-control" value="0" name="weight" id="weight">
+                                <span class="input-group-text text-dark">kg</span>
+
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        <?php } ?>
+
         <!-- Champs commentaire -->
         <div id="divCommentFieldInput">
 

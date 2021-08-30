@@ -20,6 +20,7 @@ class Record {
     private $_userId;
     private $_userGroup;
     private $_workstations;
+    private $_weight;
 
     // Constructeur
     public function __construct() {
@@ -30,6 +31,7 @@ class Record {
         $_tripLength = $this->setTripLength(0);
         $_workLength = $this->setWorkLength(0);
         $_workstations = [];
+        $_weight = $this->setWeight(0);
     }
     
     // Mutateurs (setters)
@@ -123,6 +125,11 @@ class Record {
         return $this;
     }
 
+    public function setWeight(int $weight) {
+        $this->_weight = $weight;
+        return $this;
+    }
+
     // Accesseurs (getters)
     public function getBreakLength(){
         return $this->_breakLength;
@@ -178,5 +185,9 @@ class Record {
     
     public function getWorkstations() {
         return $this->_workstations;
+    }
+
+    public function getWeight() {
+        return $this->_weight;
     }
 }

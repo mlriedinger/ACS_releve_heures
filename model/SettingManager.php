@@ -33,7 +33,8 @@ class SettingManager extends DatabaseConnection {
             releve_heures_duree,
             releve_heures_duree_categorie,
             releve_heures_trajet, 
-            releve_heures_pause 
+            releve_heures_pause,
+            releve_heures_info_specifique
         FROM t_parametres 
         WHERE ID = :id');
         $query->execute(array('id' => 2));

@@ -96,8 +96,10 @@ if(isset($_GET['action'])) {
                     if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && isset($_SESSION['userGroup'])) {
                         $recordInfo = new Record();
                         $recordInfo = fillBasicRecordInfos($recordInfo);
+                        
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
+                        $recordInfo->setWeight(inputValidation($_POST['weight']));
 
                         $recordController->addNewRecord($recordInfo);
                     } else throw new AuthenticationException();
@@ -112,6 +114,7 @@ if(isset($_GET['action'])) {
                             $recordInfo = new Record();
                             $recordInfo = fillBasicRecordInfos($recordInfo);
                             $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
+                            $recordInfo->setWeight(inputValidation($_POST['weight']));
 
                             $recordController->updateRecord($recordInfo);
                         } else throw new UpdateProblemException();
