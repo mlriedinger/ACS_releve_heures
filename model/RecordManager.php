@@ -309,7 +309,7 @@ class RecordManager extends DatabaseConnection {
      * @param  Record $recordInfo
      * @return string $userRecords
      */
-    public function getRecordsFromUser(Record $recordInfo){
+    public function getUserRecords(Record $recordInfo){
         $pdo = $this->dbConnect();
 
         $userId = $recordInfo->getUserId();
@@ -363,7 +363,7 @@ class RecordManager extends DatabaseConnection {
      * @param  Record $recordInfo
      * @return string $teamRecords
      */
-    public function getRecordsFromTeam(Record $recordInfo){
+    public function getTeamRecords(Record $recordInfo){
         $managerId = $recordInfo->getUserId();
         $scope = $recordInfo->getScope();
         $teamRecords["currentUserId"] = $managerId;
