@@ -45,6 +45,11 @@ function fillRecordsTable(newLines, records, counter) {
             let newText = document.createTextNode(records[counter].prenom_salarie + ' ' + records[counter].nom_salarie);
             newLines.newEmployee.appendChild(newText);
         }
+
+        if(newLines.newManager !== undefined) {
+            let newText = document.createTextNode(records[counter].prenom_manager + ' ' + records[counter].nom_manager);
+            newLines.newManager.appendChild(newText);
+        }
     
         if(newLines.newStartTime !== undefined) {
             let newText = document.createTextNode(records[counter].date_hrs_debut);
@@ -117,6 +122,10 @@ function createNewLines(newRow) {
                 case "worksite":
                     newLines['newWorkSite'] = newRow.insertCell(tableHead.children[i].cellIndex);
                     break;
+                
+                case "manager":
+                    newLines['newManager'] = newRow.insertCell(tableHead.children[i].cellIndex);
+                    break;
 
                 case "employee":
                     newLines['newEmployee'] = newRow.insertCell(tableHead.children[i].cellIndex);
@@ -187,6 +196,7 @@ function createNewLines(newRow) {
  * @param  {number} counter
  */
 async function appendLine(tableId, result, counter) {
+    console.log(result);
     var records = result.records;
     var currentUserId = result.currentUserId;
     var scope = result.scope;

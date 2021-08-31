@@ -104,6 +104,7 @@ if(isset($_GET['action'])) {
                         $recordInfo = fillBasicRecordInfos($recordInfo);
                         $recordInfo->setUserId($_SESSION['userId']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
+                        echo 'index.php';
 
                         $recordController->addNewRecord($recordInfo);
                     } else throw new AuthenticationException();
@@ -192,15 +193,16 @@ if(isset($_GET['action'])) {
                 break;
 
             // Récupérer les données de l'historique personnel
-            case "getPersonalRecordsLog":
+            case "getRecords":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
                     if(isset($_POST['scope']) && isset($_POST['status'])) {
                         $recordInfo = new Record();
                         $recordInfo->setUserId($_SESSION['userId']);
+                        $recordInfo->setUserGroup($_SESSION['userGroup']);
                         $recordInfo->setScope(inputValidation($_POST['scope']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
                         
-                        $recordController->getRecords($recordInfo, 'user');
+                        $recordController->getRecords($recordInfo);
                     }
                     else throw new NoDataFoundException();
                 } else throw new AuthenticationException();

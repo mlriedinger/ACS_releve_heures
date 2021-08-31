@@ -23,7 +23,8 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function addNewRecord(Record $recordInfo){
-        $isSendingSuccessfull = $this->recordManager->addNewRecord($recordInfo);
+        echo 'record controller';
+        $isSendingSuccessfull = $this->_recordManager->addNewRecord($recordInfo);
 
         if($isSendingSuccessfull) {
             $_SESSION['success'] = true;
@@ -43,7 +44,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function updateRecord(Record $recordInfo){
-        $isUpdateSuccessfull = $this->recordManager->updateRecord($recordInfo);
+        $isUpdateSuccessfull = $this->_recordManager->updateRecord($recordInfo);
         
         $isUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
@@ -60,7 +61,7 @@ class RecordController extends AbstractController {
         $updateResults = [];
 
         foreach($recordsCheckList as $recordChecked){
-            $updateAttempt = $this->recordManager->updateRecordStatus($recordChecked); 
+            $updateAttempt = $this->_recordManager->updateRecordStatus($recordChecked); 
             if($updateAttempt) array_push($updateResults, $updateAttempt);
         }
 
@@ -78,7 +79,7 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function deleteRecord(Record $recordInfo){
-        $isDeleteSuccessfull = $this->recordManager->deleteRecord($recordInfo);
+        $isDeleteSuccessfull = $this->_recordManager->deleteRecord($recordInfo);
 
         $isDeleteSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
@@ -120,19 +121,11 @@ class RecordController extends AbstractController {
         }
     }
 
-    public function getUsers() {
-        $this->_recordManager->getUsers();
+    public function getUsers(Record $recordInfo) {
+        $this->_recordManager->getUsers($recordInfo);
     }
 
     public function getWorksites(Record $recordInfo) {
         $this->_recordManager->getWorksites($recordInfo);
-    }
-
-    public function getWorkCategories() {
-        $this->_recordManager->getWorkCategories();
-    }
-
-    public function getWorkSubCategories() {
-        $this->_recordManager->getWorkSubCategories();
     }
 }

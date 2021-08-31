@@ -5,6 +5,7 @@ function addUsersToSelectTag(users) {
 }
 
 function addWorksitesToSelectTag(worksites) {
+    console.log(worksites);
     return new Promise((resolve) => {
         for(let i = 0 ; i < worksites.length ; i++) {
             $('#selectWorksite').append(new Option(worksites[i].Nom, worksites[i].ID));

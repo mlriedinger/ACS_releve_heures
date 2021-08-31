@@ -62,7 +62,7 @@ $iconSelector = "#historyIcon";
 ?>
 
 <?php ob_start(); ?>
-updateTeamRecordsLog('Team', 'all');
+updateRecordsLog('team', 'all');
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 

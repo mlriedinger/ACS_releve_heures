@@ -53,8 +53,8 @@ function displayRecordForm(recordId, userId) {
         addModalContent(content, "edit")
         .then(()=> {
             getWorksites(userId);
-            getWorkCategories();
-            getWorkSubCategories();
+            //getWorkCategories();
+            //getWorkSubCategories();
         })
         .then(() => {
             getRecord(recordId);
@@ -141,7 +141,7 @@ function getWorksites(userId) {
         data: {
             "userId": userId
         },
-        dataType: "json"
+        //dataType: "json"
     })
     .done((response) => {
         addWorksitesToSelectTag(response);

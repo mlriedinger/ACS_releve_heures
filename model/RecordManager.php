@@ -272,13 +272,10 @@ class RecordManager extends DatabaseConnection {
      */
     public function addQueryScopeAndOrderByClause(string $sql, string $status, string $typeOfRecords){
         switch($status) {
-            case "all":
-                if($typeOfRecords != "export") $sql .= ' AND Releve.supprimer = 0';
-                break;
-            case "valid":
+            case "approved":
                 $sql .= ' AND Releve.statut_validation = 1 AND Releve.supprimer = 0';
                 break;
-            case "unchecked":
+            case "pending":
                 $sql .= ' AND Releve.statut_validation = 0 AND Releve.supprimer = 0';
                 break;
             case "deleted":
@@ -289,7 +286,7 @@ class RecordManager extends DatabaseConnection {
         }
 
         // Si on souhaite exporter des données ou récupérer tous les relevés, on remplace la première occurrence de 'AND' par 'WHERE'
-        if($typeOfRecords == "all"){
+        if($scope == "global"){
             $occurence = strpos($sql, "AND");
             if($occurence !== false) {
                 $textSubtitute = "WHERE";
@@ -483,17 +480,30 @@ class RecordManager extends DatabaseConnection {
         echo json_encode($records);
     }
 
-    public function getUsers() {
+    public function getUsers(Record $recordInfo) {
+        // A FIXER !
+        $userGroup = $recordInfo->getUserGroup();
+        $userId = $recordInfo->getUserId();
+
         $pdo = $this->dbConnect();
 
-        $sql = 'SELECT ID, 
-            Nom, 
-            Prenom 
-            FROM t_login
-            ORDER BY t_login.Nom ASC';
+        if ($userGroup == '1') {
+            $sql = 'SELECT ID, Nom, Prenom FROM t_login';
+        } else {
+            $sql = 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom
+                FROM t_equipe
+                INNER JOIN t_login
+                ON t_equipe.id_login = t_login.ID
+                WHERE id_chantier = (SELECT t_equipe.id_chantier
+                FROM t_equipe
+                WHERE t_equipe.id_login = :userId AND t_equipe.chef_equipe = 1) AND chef_equipe <> 1 ';
+        }
 
         $query = $pdo->prepare($sql);
-        $query->execute();
+        $queryParams = array(
+            'userId' => $userId
+        );
+        $query->execute($queryParams);
 
         $users = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -502,6 +512,7 @@ class RecordManager extends DatabaseConnection {
     }
 
     public function getManagers(Record $recordInfo) {
+        // A FIXER !
         $userGroup = $recordInfo->getUserGroup();
         $sql ="";
 
@@ -525,61 +536,20 @@ class RecordManager extends DatabaseConnection {
 
         $pdo = $this->dbConnect();
 
-        $sql = 'SELECT 
-            id_chantier AS "ID", 
-            CONCAT(REF, " - ", REF_interne) AS "Nom" 
-            FROM t_equipe
-            INNER JOIN t_document
-            ON t_equipe.id_chantier = t_document.ID
-            WHERE t_equipe.id_login = :userId
-            AND t_equipe.supprimer = 0
-            ORDER BY t_document.REF ASC';
+        $sql = 'SELECT  
+            t_affaires.ID,
+            CONCAT(t_affaires.REF, " - ", t_affaires.Nom) AS "Nom"
+            FROM t_affaires
+            ORDER BY t_affaires.Nom ASC';
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
             'userId' => $userId));
 
         $worksites = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        header("Content-Type: text/json");
-        echo json_encode($worksites);
-    }
-    
-    public function getWorkCategories() {
-        $pdo = $this->dbConnect();
-
-        $sql = "SELECT ID, 
-            Code AS 'code_poste', 
-            Libelle AS 'libelle_poste', 
-            Supprimer 
-        FROM t_saisie_heure_categorie
-        WHERE Supprimer = 0";
         
-        $query = $pdo->prepare($sql);
-        $query->execute();
-        $workCategories = $query->fetchAll(PDO::FETCH_ASSOC);
-
         //$query->debugDumpParams();
         header("Content-Type: text/json");
-        echo json_encode($workCategories);
-    }
-
-    public function getWorkSubCategories() {
-        $pdo = $this->dbConnect();
-
-        $sql = "SELECT ID, 
-            ID_categorie,
-            Code AS 'code_poste', 
-            Libelle AS 'libelle_poste', 
-            Supprimer 
-        FROM t_saisie_heure_sous_categorie
-        WHERE Supprimer = 0";
-        
-        $query = $pdo->prepare($sql);
-        $query->execute();
-        $workSubCategories = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        header("Content-Type: text/json");
-        echo json_encode($workSubCategories);
+        echo json_encode($worksites);
     }
 }

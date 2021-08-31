@@ -15,20 +15,21 @@ function selectWorksite(worksiteId) {
 /** Met à jour les champs du formulaire dans la fenêtre modale d'édition d'un relevé.
  * @param  {object} data contenu de la réponse à la requête AJAX
  */
- function prefillRecordData(data) {  
-    var basis = data.recordBasis;
+ function prefillRecordData(records) {  
+     console.log(records);
+    
     //var details = data.recordDetails;
 
-    selectWorksite(parseInt(basis['id_chantier']));
-    prefillDate(basis);
-    prefillWorkLength(basis);
+    selectWorksite(parseInt(records['id_affaire']));
+    prefillDate(records);
+    prefillWorkLength(records);
     
     //var aggregatedDetails = concatInputsInfosAndRecordDetails(details);
     //prefillSubCategories(aggregatedDetails);
     
-    prefillTripLength(basis);
-    prefillBreakLength(basis);
-    prefillComment(basis);
+    prefillTripLength(records);
+    prefillBreakLength(records);
+    prefillComment(records);
 }
 
 
