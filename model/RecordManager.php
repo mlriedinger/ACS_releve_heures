@@ -313,7 +313,7 @@ class RecordManager extends DatabaseConnection {
         $pdo = $this->dbConnect();
 
         $userId = $recordInfo->getUserId();
-        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
         $status = $recordInfo->getStatus();
 
         $sql = 'SELECT 
@@ -342,14 +342,14 @@ class RecordManager extends DatabaseConnection {
 			
         WHERE Releve.id_login = :userId';
 
-        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
+        $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
             'userId' => $userId));
         
         $userRecords["currentUserId"] = $userId ;
-        $userRecords["typeOfRecords"] = $typeOfRecords;
+        $userRecords["scope"] = $scope;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
         header("Content-Type: text/json");
@@ -365,9 +365,9 @@ class RecordManager extends DatabaseConnection {
      */
     public function getRecordsFromTeam(Record $recordInfo){
         $managerId = $recordInfo->getUserId();
-        $typeOfRecords = $recordInfo->getTypeOfRecords();
+        $scope = $recordInfo->getScope();
         $teamRecords["currentUserId"] = $managerId;
-        $teamRecords["typeOfRecords"] = $typeOfRecords;
+        $teamRecords["scope"] = $scope;
         $teamRecords["records"] = [];
         $status = $recordInfo->getStatus();
 
@@ -409,7 +409,7 @@ class RecordManager extends DatabaseConnection {
                     ON Releve.id_login = t_login.ID
                 WHERE Releve.id_login = :teamMember';
 
-                $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $typeOfRecords);
+                $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $scope);
     
             $query = $pdo->prepare($sql);
             $query->execute(array(
@@ -499,24 +499,23 @@ class RecordManager extends DatabaseConnection {
         echo json_encode($users);
     }
 
-    public function getManagers() {
+    public function getManagers(Record $recordInfo) {
+        $userGroup = $recordInfo->getUserGroup();
         $sql ="";
 
-                if ($userGroup == '1') {
-                    $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom 
-                        FROM t_equipe 
-                        INNER JOIN t_login 
-                        ON t_equipe.id_login = t_login.ID 
-                        WHERE t_equipe.chef_equipe = 1
-                        ORDER BY t_login.Nom ASC';
-                    break;
-                } else {
-                    $sql .= 'SELECT t_login.ID, t_login.Nom, t_login.Prenom 
-                        FROM t_login  
-                        WHERE ID = :userId
-                        ORDER BY t_login.Nom ASC';
-                    break;
-                }
+        if ($userGroup == '1') {
+            $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom 
+                FROM t_equipe 
+                INNER JOIN t_login 
+                ON t_equipe.id_login = t_login.ID 
+                WHERE t_equipe.chef_equipe = 1
+                ORDER BY t_login.Nom ASC';
+        } else {
+            $sql .= 'SELECT t_login.ID, t_login.Nom, t_login.Prenom 
+                FROM t_login  
+                WHERE ID = :userId
+                ORDER BY t_login.Nom ASC';
+        }
     }
 
     public function getWorksites(Record $recordInfo) {

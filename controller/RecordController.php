@@ -128,13 +128,19 @@ class RecordController extends AbstractController {
         }
     }
 
-    /**
-     * Permet de récupérer (au choix) la liste des managers, des salariés ou des chantiers pour les afficher dans un <select>
-     *
-     * @param  Record $recordInfo : "managers", "users" ou "worksites"
-     */
-    public function getOptionsData(Record $recordInfo) {
-        $recordManager = new RecordManager();
-        $recordManager->getDataForOptionSelect($recordInfo);
+    public function getUsers() {
+        $this->_recordManager->getUsers();
+    }
+
+    public function getWorksites(Record $recordInfo) {
+        $this->_recordManager->getWorksites($recordInfo);
+    }
+
+    public function getWorkCategories() {
+        $this->_recordManager->getWorkCategories();
+    }
+
+    public function getWorkSubCategories() {
+        $this->_recordManager->getWorkSubCategories();
     }
 }
