@@ -125,6 +125,10 @@ class RecordController extends AbstractController {
         $this->_recordManager->getUsers($recordInfo);
     }
 
+    public function getManagers() {
+        $this->_recordManager->getManagers();
+    }
+
     public function getWorksites(Record $recordInfo) {
         $this->_recordManager->getWorksites($recordInfo);
     }

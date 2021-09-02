@@ -1,14 +1,32 @@
+/** Alimente une liste déroulante #selectUser avec les noms et prénoms des salariés.
+ * @param  {} users
+ */
 function addUsersToSelectTag(users) {
     for(let i = 0 ; i < users.length ; i++) {
-        $('#selectUser').append(new Option(users[i].Nom + ' ' + users[i].Prenom, users[i].ID));
+        $("#selectUser").append(new Option(users[i].Nom + ' ' + users[i].Prenom, users[i].ID));
     }
 }
 
+
+/** Alimenter une liste déroulante #selectManager avec les noms et prénoms des managers.
+ * @param  {} managers
+ */
+function addManagersToSelectTag(managers) {
+    for(let i = 0 ; i < managers.length ; i++) {
+        $("#selectManager").append(new Option(managers[i].Nom + ' ' + managers[i].Prenom, managers[i].ID));
+    }
+}
+
+
+/** Alimente une liste déroulante #selectWorksite avec les noms et références des affaires
+ * @param {any} worksites
+ * @returns {any}
+ */
 function addWorksitesToSelectTag(worksites) {
     console.log(worksites);
     return new Promise((resolve) => {
         for(let i = 0 ; i < worksites.length ; i++) {
-            $('#selectWorksite').append(new Option(worksites[i].Nom, worksites[i].ID));
+            $("#selectWorksite").append(new Option(worksites[i].Nom, worksites[i].ID));
         }
         resolve();
     })
@@ -44,7 +62,6 @@ function displayWorkCategories(data) {
         workCategoriesNav.firstElementChild.firstElementChild.classList.add("active");
         resolve();
     })
-    
 }
 
 

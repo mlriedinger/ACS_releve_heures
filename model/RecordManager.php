@@ -270,7 +270,7 @@ class RecordManager extends DatabaseConnection {
      * @param  string $scope: une chaîne de caractères désignant le type de relevés demandés (personnels, équipe, à valider ou tous)
      * @return string $sql
      */
-    public function addQueryScopeAndOrderByClause(string $sql, string $status, string $typeOfRecords){
+    public function addQueryScopeAndOrderByClause(string $sql, string $status, string $scope){
         switch($status) {
             case "approved":
                 $sql .= ' AND Releve.statut_validation = 1 AND Releve.supprimer = 0';
@@ -481,7 +481,6 @@ class RecordManager extends DatabaseConnection {
     }
 
     public function getUsers(Record $recordInfo) {
-        // A FIXER !
         $userGroup = $recordInfo->getUserGroup();
         $userId = $recordInfo->getUserId();
 
@@ -511,24 +510,23 @@ class RecordManager extends DatabaseConnection {
         echo json_encode($users);
     }
 
-    public function getManagers(Record $recordInfo) {
-        // A FIXER !
-        $userGroup = $recordInfo->getUserGroup();
-        $sql ="";
+    public function getManagers() {
+        $pdo = $this->dbConnect();
 
-        if ($userGroup == '1') {
-            $sql .= 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom 
-                FROM t_equipe 
-                INNER JOIN t_login 
-                ON t_equipe.id_login = t_login.ID 
-                WHERE t_equipe.chef_equipe = 1
-                ORDER BY t_login.Nom ASC';
-        } else {
-            $sql .= 'SELECT t_login.ID, t_login.Nom, t_login.Prenom 
-                FROM t_login  
-                WHERE ID = :userId
-                ORDER BY t_login.Nom ASC';
-        }
+        $sql = 'SELECT t_equipe.id_login AS "ID", t_login.Nom, t_login.Prenom 
+            FROM t_equipe 
+            INNER JOIN t_login 
+            ON t_equipe.id_login = t_login.ID 
+            WHERE t_equipe.chef_equipe = 1
+            ORDER BY t_login.Nom ASC';
+
+        $query = $pdo->prepare($sql);
+        $query->execute();
+        $managers = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        header("Content-type: text/json");
+        echo json_encode($managers);
+        
     }
 
     public function getWorksites(Record $recordInfo) {

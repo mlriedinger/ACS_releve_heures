@@ -113,13 +113,20 @@ $heading = "Exporter des relevés";
 <?php $content = ob_get_clean(); ?>
 
 <?php 
+if($_SESSION['userGroup'] == 2){
+    $menuSelector = "#exportLink";
+    $iconSelector = "#exportIcon";
+}
+else {
+    $menuSelector = "#adminLink";
+    $iconSelector = "#adminIcon";
+}
 
-$menuSelector = "#adminLink";
-$iconSelector = "#adminIcon";
 ?>
 
 <?php ob_start(); ?>
 getUsers();
+getManagers();
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 

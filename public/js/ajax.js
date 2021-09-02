@@ -132,6 +132,21 @@ function getUsers() {
     })
 }
 
+
+/** Appel AJAX pour récupérer la liste des managers
+ */
+ function getManagers() {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getManagers",
+        dataType: "json"
+    })
+    .done((response) => {
+        addManagersToSelectTag(response);
+    })
+}
+
+
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */
 function getWorksites(userId) {

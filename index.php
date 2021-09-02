@@ -242,8 +242,20 @@ if(isset($_GET['action'])) {
             // Récupérer la liste des salariés
             case "getUsers":
                 if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                    if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2') {
+                        $recordInfo = new Record();
+                        $recordInfo->setUserGroup($_SESSION['userGroup']);
+                        $recordInfo->setUserId($_SESSION['userId']);
+                        $recordController->getUsers($recordInfo);
+                    }
+                } else throw new AuthenticationException();
+                break;
+
+            // Récupérer la liste des managers
+            case "getManagers":
+                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
                     if($_SESSION['userGroup'] == '1') {
-                        $recordController->getUsers();
+                        $recordController->getManagers();
                     }
                 } else throw new AuthenticationException();
                 break;
