@@ -6,22 +6,7 @@ require_once 'RecordManager.php';
  * Classe qui permet de gérer l'export de données.
  * Hérite de RecordManager pour pouvoir utiliser la méthode addQueryScopeAndOrderByClause().
  */
-class ExportManager extends RecordManager {
-
-    /**
-     * Permet d'exporter des données selon les options sélectionnées dans le formulaire d'export.
-     * 3 étapes : 
-     * - récupérer le contenu à exporter, c'est-à-dire la liste des relevés
-     * - écrire un nom de fichier pertinent en fonction des données exportées
-     * - écrire le fichier CSV
-     *
-     * @param  Export $exportInfo
-     */
-    public function exportRecords(Export $exportInfo){
-        $rows = $this->getRecordsToExport($exportInfo);
-        $fileName = $this->getFileName($exportInfo);
-        $this->writeCsvFile($rows, $fileName);
-    }
+class ExportManager extends RecordManager {    
     
     /**
      * Permet de récupérer le contenu à exporter, c'est-à-dire la liste des relevés, selon les options choisies dans le formulaire d'export.
@@ -249,37 +234,5 @@ class ExportManager extends RecordManager {
         $fileName = date('Ymd') . '_export_releves_heures' . $fileNameDetails . '.csv';
 
         return $fileName;
-    }
-
-    /**
-     * Permet d'écrire un fichier CSV.
-     *
-     * @param  array $rows
-     * @param  string $fileName
-     */
-    public function writeCsvFile(array $rows, string $fileName){
-        $columnNames = array();
-
-        if(!empty($rows)){
-            $firstRow = $rows[0];
-
-            foreach($firstRow as $colName => $value){
-                $columnNames[] = $colName;
-            }
-        }
-
-        header("Content-type: text/csv ; charset=UTF-8");
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
-
-        // On crée un pointeur de fichier dans le flux output pour envoyer le fichier directement au navigateur
-        $filePointer = fopen('php://output', 'w');
-        fputcsv($filePointer, $columnNames, $delimiter = ";");
-
-        foreach ($rows as $row) {
-            
-            fputcsv($filePointer, $row, $delimiter = ";");
-        }
-
-        fclose($filePointer);
     }
 }
