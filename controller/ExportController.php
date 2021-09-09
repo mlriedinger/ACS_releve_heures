@@ -19,9 +19,27 @@ class ExportController extends AbstractController {
      */
     public function exportRecords(Export $exportInfo){
         $exportManager = new ExportManager();
+
         $rows = $exportManager->getRecordsToExport($exportInfo);
+        $columnNames = $this->getColumnNames($rows);
+        array_unshift($rows, $columnNames);
+        
         $fileName = $exportManager->getFileName($exportInfo);
-        $this->writeCsvFile($rows, $fileName);
+        $this->writeXlsxFile($rows, $fileName);
+    }
+
+    public function getColumnNames($array) {
+        $columnNames = array();
+
+        if(!empty($array)){
+            $firstRow = $array[0];
+
+            foreach($firstRow as $columnName => $value) {
+                $columnNames[] = $columnName;
+            }
+        }
+
+        return $columnNames;
     }
 
     /**
@@ -31,15 +49,7 @@ class ExportController extends AbstractController {
      * @param  string $fileName
      */
     public function writeCsvFile(array $rows, string $fileName){
-        $columnNames = array();
-
-        if(!empty($rows)){
-            $firstRow = $rows[0];
-
-            foreach($firstRow as $colName => $value){
-                $columnNames[] = $colName;
-            }
-        }
+        $columnNames = $this->getColumnNames($rows);
 
         header("Content-type: text/csv ; charset=UTF-8");
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
@@ -54,5 +64,10 @@ class ExportController extends AbstractController {
         }
 
         fclose($filePointer);
+    }
+
+    public function writeXlsxFile(array $rows, string $fileName) {
+        $xlsxFile = SimpleXLSXGen::fromArray($rows);
+        $xlsxFile->downloadAs($fileName);
     }
 }

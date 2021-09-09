@@ -40,14 +40,9 @@ class ExportManager extends RecordManager {
         else $query->execute();
         $rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        //$query->debugDumpParams();
+        //$query->debugDumpParams();  
 
-        // On force la boucle à pointer sur l'emplacement mémoire et à ne pas créer de copie temporaire avec "&"
-        foreach($rows as &$row) {
-            $row["tps_travail_heures"] = str_replace('.', ',', $row["tps_travail_heures"]);
-            $row["tps_trajet_heures"] = str_replace('.', ',', $row["tps_trajet_heures"]);
-        }    
-
+        //print_r($rows);
         return $rows;
     }
     
@@ -97,7 +92,7 @@ class ExportManager extends RecordManager {
         $sql = $this->sqlAddSettingsOptions($sql);
             
         $sql .= "Releve.commentaire,
-            Releve.statut_validation AS 'statut_validation',
+            CAST(Releve.statut_validation AS FLOAT) AS 'statut_validation',
             Releve.date_hrs_creation AS 'date_heure_creation',
             Releve.date_hrs_modif AS 'date_heure_modification',
             Releve.supprimer AS 'releve_supprime',
@@ -134,15 +129,15 @@ class ExportManager extends RecordManager {
             $sql .= "Releve.date_releve,";
         }
             
-        $sql .= "Releve.tps_travail AS 'tps_travail_minutes',
-                ROUND((Releve.tps_travail / 60), 2) AS 'tps_travail_heures',";
+        $sql .= "CAST(Releve.tps_travail AS DOUBLE) AS 'tps_travail_minutes',
+                CAST(ROUND((Releve.tps_travail / 60), 2) AS DOUBLE) AS 'tps_travail_heures',";
 
         if($_SESSION['breakMgmt'] == 1){
             $sql .= " Releve.tps_pause AS 'tps_pause_minutes',";
         }
         if($_SESSION['tripMgmt'] == 1){
-            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes',
-                    ROUND((Releve.tps_trajet / 60), 2) AS 'tps_trajet_heures',";
+            $sql .= "CAST(Releve.tps_trajet AS DOUBLE) AS 'tps_trajet_minutes',
+                    CAST(ROUND((Releve.tps_trajet / 60), 2) AS DOUBLE) AS 'tps_trajet_heures',";
         }
 
         return $sql;
@@ -231,7 +226,7 @@ class ExportManager extends RecordManager {
         if($periodStart != "") $fileNameDetails .= "_from_" . $periodStart;
         if($periodEnd != "") $fileNameDetails .= "_to_" . $periodEnd;
 
-        $fileName = date('Ymd') . '_export_releves_heures' . $fileNameDetails . '.csv';
+        $fileName = date('Ymd') . '_export_releves_heures' . $fileNameDetails . '.xlsx';
 
         return $fileName;
     }
