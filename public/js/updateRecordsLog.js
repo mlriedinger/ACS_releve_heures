@@ -18,7 +18,7 @@ function checkRecordValidationStatus(newLines, records, currentUserId, counter) 
             insertDeleteRecordButton(newLines.newDelete, records, counter);
         }
     } 
-    else if (validationStatus === "0" && deleteStatus === "1") {
+    else if (deleteStatus === "1") {
         newValidationText = document.createTextNode("Supprimé");
     }
     else {
