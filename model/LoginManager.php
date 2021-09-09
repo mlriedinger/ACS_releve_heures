@@ -23,8 +23,8 @@ class LoginManager extends DatabaseConnection {
     public function getUserData(string $login, string $password){
         $pdo = $this->dbConnect($login, $password);
      
-        $query = $pdo->prepare('SELECT ID,
-			id_groupe,
+        $query = $pdo->prepare('SELECT ID_CHAR,
+			ID_CHAR_GROUPE,
 			Administrateur,
 			CompteActif,
 			Nom,
