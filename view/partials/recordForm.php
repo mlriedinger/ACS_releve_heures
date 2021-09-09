@@ -51,19 +51,41 @@
     if($_SESSION['lengthMgmt'] == 1) { ?>
         <!-- Champs pour un relevé avec seulement une durée -->
         <div id="divWorkLengthInput" class="row mb-3 justify-content-md-center">
+            <div class="col mb-3">
+                <span class="input-group-text" id="work_hours_indicator">Temps de travail</span>
 
-            <p class="h6 text-center mb-3">Temps de travail</p>
+                <fieldset>
+                    <div class="row mt-3 mb-3 justify-content-md-center">
+                        <div class="col-3 me-5 me-5">
+                            <div class="d-flex flex-row align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('hour', workLengthHours, workLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
 
-            <div class="col mb-3" data-step="3" data-intro="Indiquez le nombre d'heures de travail réalisées.">
-                <span class="input-group-text" id="work_hours_indicator">Heures</span>
-                <input type="number" min="-15" name="workLengthHours" id="workLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="work_hours_indicator" required/>
+                                <input type="number" min="0" class="form-control timeInput" value="0" name="workLengthHours" id="workLengthHours">
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('hour', workLengthHours, workLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    
+                        <div class="col-3 me-5">
+                            <div class="d-flex flex-row align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('minutes', workLengthHours, workLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
+
+                                <input type="number" min="-15" step="15" max="60" class="form-control timeInput" value="0" name="workLengthMinutes" id="workLengthMinutes" onchange="updateHoursInput(workLengthHours, workLengthMinutes)">
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('minutes', workLengthHours, workLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
-
-            <div class="col mb-3" data-step="4" data-intro="Au besoin, indiquez le nombre de minutes (palier de 15 minutes).">
-                <span class="input-group-text" id="work_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="workLengthMinutes" value="0" id="workLengthMinutes" onchange="updateHoursInput(workLengthHours, workLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="work_minutes_indicator" required/>
-            </div>
-
         </div>
     <?php } ?>
 
@@ -92,16 +114,40 @@
         <!-- Champs pour un relevé avec gestion du temps de trajet -->
         <div id="divTripTimeInput" class="row mb-3 justify-content-md-center" <?= $_SESSION['tripMgmt'] == 0 ? "hidden" : ""; ?> data-step="5" data-intro="De la même manière, indiquez le nombre d'heures de trajet.">
 
-            <p class="h6 text-center mb-3">Temps de trajet</p>
-
             <div class="col mb-3">
-                <span class="input-group-text" id="trip_hours_indicator">Heures</span>
-                <input type="number" min="-15" name="tripLengthHours" id="tripLengthHours" value="0" class="form-control" aria-label="Indiquez le nombre d'heures de trajet" aria-describedby="trip_hours_indicator" />
-            </div>
+                <span class="input-group-text" id="work_hours_indicator">Temps de trajet</span>
 
-            <div class="col mb-3">
-                <span class="input-group-text" id="trip_minutes_indicator">Minutes</span>
-                <input type="number" min="-15" step="15" max="60" name="tripLengthMinutes" id="tripLengthMinutes" value="0" onchange="updateHoursInput(tripLengthHours, tripLengthMinutes)" class="form-control" aria-label="Indiquez le nombre de minutes de trajet" aria-describedby="trip_minutes_indicator" />
+                <fieldset>
+                    <div class="row mt-3 mb-3 justify-content-md-center">
+                        <div class="col-3 me-5 me-5">
+                            <div class="d-flex flex-row align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('hour', tripLengthHours, tripLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
+
+                                <input type="number" min="0" class="form-control timeInput" value="0" name="tripLengthHours" id="tripLengthHours">
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('hour', tripLengthHours, tripLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    
+                        <div class="col-3 me-5">
+                            <div class="d-flex flex-row align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-dash-circle-fill me-3" viewBox="0 0 16 16" onclick="decrement('minutes', tripLengthHours, tripLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1h-7z"/>
+                                </svg>
+
+                                <input type="number" min="-15" step="15" max="60" class="form-control timeInput" value="0" name="tripLengthMinutes" id="tripLengthMinutes" onchange="updateHoursInput(tripLengthHours, tripLengthMinutes)">
+                                
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#C63527" class="bi bi-dash-circle-fill ms-3" viewBox="0 0 16 16" onclick="increment('minutes', tripLengthHours, tripLengthMinutes)">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
 
         </div>

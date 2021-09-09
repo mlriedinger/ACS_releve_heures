@@ -125,6 +125,11 @@ input[readonly], .form-control[readonly] {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px #c63527;
 }
 
+fieldset {
+  border: 1px solid #ced4da;
+  border-radius: 0.25em;
+}
+
 /* Masque des colonnes des tableaux historique si l'utilisateur est en mode portrait sur un smartphone */
 
 @media (min-width: 320px)
