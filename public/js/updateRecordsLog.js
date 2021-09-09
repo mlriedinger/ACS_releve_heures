@@ -212,7 +212,7 @@ async function appendLine(tableId, result, counter) {
             if(newLines.newStatus != undefined) {
                 checkRecordValidationStatus(newLines, records, currentUserId, counter);
             }
-            if(scope === "global" && status === "pending" && newLines.newIsValid != undefined) {
+            if(scope === "team" && status === "pending" && newLines.newIsValid != undefined) {
                 insertSwitchButton(newLines.newIsValid, records, counter);
             }
         });
@@ -236,6 +236,18 @@ function displayNoRecordMessage() {
 
 function hideNoRecordMessage() {
     document.getElementById("no_record_message").hidden = true;
+}
+
+function displayFormControlButtons() {
+    if(document.getElementById("formButtons") != null) {
+        document.getElementById("formButtons").hidden = false;
+    }
+}
+
+function hideFormControlButtons() {
+    if(document.getElementById("formButtons") != null) {
+        document.getElementById("formButtons").hidden = true;
+    }
 }
 
 function addModalContent(content, formType) {

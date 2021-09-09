@@ -104,7 +104,7 @@ class RecordManager extends DatabaseConnection {
             :comment)';
 		
         $query = $pdo->prepare($sql);
-        $attempt = $query->execute(array(
+        $query->execute(array(
             'id' => 0,
             'id_affaire' => $worksite,
             'id_login' => $userId,
@@ -139,7 +139,6 @@ class RecordManager extends DatabaseConnection {
         $workLength = $recordInfo->getWorkLength();
         $worksiteId = $recordInfo->getWorksite();
 
-        $isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
 		
 		$sql = 'UPDATE t_saisie_heure
@@ -159,7 +158,8 @@ class RecordManager extends DatabaseConnection {
 			WHERE ID = :recordId';
 
         $query = $pdo->prepare($sql);
-        $attempt = $query->execute(array(
+
+        return $query->execute(array(
             'worksiteId' => $worksiteId,
             'recordId' => $recordId,
             'dateTimeStart' => $dateTimeStart,
@@ -170,10 +170,6 @@ class RecordManager extends DatabaseConnection {
             'tripLength' => $tripLength,
             'comment' => $comment
         ));
-
-        if($attempt) $isUpdateSuccessfull = true;
-
-        return $isUpdateSuccessfull;
     }
 
     /**
@@ -183,17 +179,13 @@ class RecordManager extends DatabaseConnection {
      * @return bool $isUpdateSuccessfull
      */
     public function updateRecordStatus(int $recordId){
-        $isUpdateSuccessfull = false;      
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
 			SET statut_validation = 1
 			WHERE ID = :recordId');
-        $attempt = $query->execute(array('recordId' => $recordId));
 
-        if($attempt) $isUpdateSuccessfull = true;
-
-        return $isUpdateSuccessfull;
+        return $query->execute(array('recordId' => $recordId));
     }
 
     /**
@@ -206,7 +198,6 @@ class RecordManager extends DatabaseConnection {
         $recordId = $recordInfo->getRecordId();
         $comment = $recordInfo->getComment();
 
-        $isDeleteSuccessfull = false;
         $pdo = $this->dbConnect();
 	
 		$sql = 'UPDATE t_saisie_heure
@@ -216,14 +207,11 @@ class RecordManager extends DatabaseConnection {
 			WHERE ID = :recordId';
 			
         $query = $pdo->prepare($sql);
-        $attempt = $query->execute(array(
+
+        return $query->execute(array(
             'recordId' => $recordId,
             'comment' => $comment
         ));
-
-        if($attempt) $isDeleteSuccessfull = true;
-
-        return $isDeleteSuccessfull;
     }
 
     /**
@@ -255,10 +243,8 @@ class RecordManager extends DatabaseConnection {
 
         $query = $pdo->prepare($sql);
         $query->execute(array('recordId' => $recordId));
-        $recordData = $query->fetch(PDO::FETCH_ASSOC);
 
-        header("Content-Type: text/json");
-        echo json_encode($recordData);
+        return $query->fetch(PDO::FETCH_ASSOC);
     }
     
     /**
@@ -347,10 +333,10 @@ class RecordManager extends DatabaseConnection {
         
         $userRecords["currentUserId"] = $userId ;
         $userRecords["scope"] = $scope;
+        $userRecords["status"] = $status;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        header("Content-Type: text/json");
-        echo json_encode($userRecords);
+        return $userRecords;
     }
     
     /**
@@ -358,15 +344,17 @@ class RecordManager extends DatabaseConnection {
      * Retourne les données au format JSON pour être exploitables par les requêtes AJAX.
      *
      * @param  Record $recordInfo
-     * @return string $teamRecords
+     * @return 
      */
     public function getTeamRecords(Record $recordInfo){
         $managerId = $recordInfo->getUserId();
         $scope = $recordInfo->getScope();
+        $status = $recordInfo->getStatus();
+
         $teamRecords["currentUserId"] = $managerId;
         $teamRecords["scope"] = $scope;
+        $teamRecords["status"] = $status;
         $teamRecords["records"] = [];
-        $status = $recordInfo->getStatus();
 
         $pdo = $this->dbConnect();
 
@@ -416,8 +404,8 @@ class RecordManager extends DatabaseConnection {
 
             $teamRecords["records"] = array_merge($teamRecords["records"], $records);
         }
-		header("Content-Type: text/json");
-        echo json_encode($teamRecords);
+        
+        return $teamRecords;
     }  
     
     /**
@@ -475,11 +463,16 @@ class RecordManager extends DatabaseConnection {
         $records["scope"] = $scope;
         $records["status"] = $status;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
-		
-        header("Content-Type: text/json");
-        echo json_encode($records);
-    }
 
+        return $records;
+    }
+    
+    /**
+     * getUsers
+     *
+     * @param  mixed $recordInfo
+     * @return void
+     */
     public function getUsers(Record $recordInfo) {
         $userGroup = $recordInfo->getUserGroup();
         $userId = $recordInfo->getUserId();
@@ -504,10 +497,7 @@ class RecordManager extends DatabaseConnection {
         );
         $query->execute($queryParams);
 
-        $users = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        header("Content-Type: text/json");
-        echo json_encode($users);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getManagers() {
@@ -522,11 +512,8 @@ class RecordManager extends DatabaseConnection {
 
         $query = $pdo->prepare($sql);
         $query->execute();
-        $managers = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        header("Content-type: text/json");
-        echo json_encode($managers);
         
+        return $query->fetchAll(PDO::FETCH_ASSOC);        
     }
 
     public function getWorksites(Record $recordInfo) {
@@ -544,10 +531,6 @@ class RecordManager extends DatabaseConnection {
         $query->execute(array(
             'userId' => $userId));
 
-        $worksites = $query->fetchAll(PDO::FETCH_ASSOC);
-        
-        //$query->debugDumpParams();
-        header("Content-Type: text/json");
-        echo json_encode($worksites);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 }

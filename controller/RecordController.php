@@ -91,7 +91,10 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function getRecord(Record $recordInfo) {
-        $this->_recordManager->getRecord($recordInfo);
+        $record = $this->_recordManager->getRecord($recordInfo);
+
+        header("Content-Type: text/json");
+        echo json_encode($record);
     }
     
     /**
@@ -106,30 +109,38 @@ class RecordController extends AbstractController {
 
         switch($scope) {
             case "user":
-                $this->_recordManager->getUserRecords($recordInfo);
+                $records = $this->_recordManager->getUserRecords($recordInfo);
                 break;
             case "team":
-                $this->recordManager->getTeamRecords($recordInfo);
+                $records = $this->_recordManager->getTeamRecords($recordInfo);
                 break;
             case "global":
                 if($userGroup === 1) {
-                    $this->_recordManager->getAllRecords($recordInfo);
+                    $records = $this->_recordManager->getAllRecords($recordInfo);
                 } else throw new AccessDeniedException();
                 break;
             default:
                 throw new InvalidParameterException();
         }
+        header("Content-Type: text/json");
+        echo json_encode($records);
     }
 
     public function getUsers(Record $recordInfo) {
-        $this->_recordManager->getUsers($recordInfo);
+        $users = $this->_recordManager->getUsers($recordInfo);
+        header("Content-Type: text/json");
+        echo json_encode($users);
     }
 
     public function getManagers() {
-        $this->_recordManager->getManagers();
+        $managers = $this->_recordManager->getManagers();
+        header("Content-type: text/json");
+        echo json_encode($managers);
     }
 
     public function getWorksites(Record $recordInfo) {
-        $this->_recordManager->getWorksites($recordInfo);
+        $worksites = $this->_recordManager->getWorksites($recordInfo);
+        header("Content-Type: text/json");
+        echo json_encode($worksites);
     }
 }

@@ -37,7 +37,7 @@ $heading = "Validations en attente";
             </table>
             
             <input type="hidden" value="<?= $_SESSION['csrfToken'] ;?>" name="csrfToken"/>
-            <div class="row mb-3 justify-content-md-center">      
+            <div class="row mb-3 justify-content-md-center" id="formButtons">      
                 <div class="col-lg mb-5 text-end">
                     <input type="reset" value="Annuler" class="btn btn-light me-3"/>
                     <input type="submit" value="Valider" class="btn btn-dark"/>
@@ -72,7 +72,7 @@ function selectAll(){
 <?php $script = ob_get_clean(); ?>
 
 <?php ob_start(); ?>
-updateRecordsLog('global', 'pending');
+updateRecordsLog('team', 'pending');
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 
