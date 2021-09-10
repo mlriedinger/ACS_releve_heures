@@ -39,7 +39,7 @@ if(isset($_GET['action'])) {
             // Vue "Nouveau Relevé"
             case "showNewRecordForm":
                 if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1') {
-                    isset($_GET['worksiteId']) ? $_SESSION['worksiteId'] = $_GET['worksiteId'] : $_SESSION['worksiteId'] = 0 ;
+                    isset($_GET['worksiteUUID']) ? $_SESSION['worksiteUUID'] = $_GET['worksiteUUID'] : $_SESSION['worksiteUUID'] = 0 ;
                     $recordController->displayView('newRecord');
                 } else throw new AuthenticationException();
                 break;
@@ -247,7 +247,7 @@ if(isset($_GET['action'])) {
                 if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                     if(inputValidation($_POST['userUUID'] !== null)) {
                         $recordInfo = new Record();
-                        $recordInfo->setUserUUID($_POST['userUUID']);
+                        $recordInfo->setUserUUID(inputValidation($_POST['userUUID']));
 
                         $recordController->getWorksites($recordInfo);
                     }

@@ -85,7 +85,7 @@ class Record {
         return $this;
     }
 
-    public function setWorksite(int $worksite){
+    public function setWorksiteUUID(string $worksite){
         $this->_worksite = $worksite;
         return $this;
     }
@@ -95,7 +95,7 @@ class Record {
         return $this;
     }
 
-    public function setUserGroup(int $userGroup){
+    public function setUserGroup(string $userGroup){
         $this->_userGroup = $userGroup;
         return $this;
     }
@@ -171,7 +171,7 @@ class Record {
         return $this->_workLength;
     }
 
-    public function getWorksite(){
+    public function getWorksiteUUID(){
         return $this->_worksite;
     }
 

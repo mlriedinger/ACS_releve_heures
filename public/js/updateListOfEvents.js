@@ -8,7 +8,7 @@ function displayEventsFromPlanning(data) {
         var newEvent = document.createElement("div");
         newEvent.setAttribute("class", "col-sm-3 mb-4");
 
-        var worksiteId = data[i].id_chantier;
+        var worksiteUUID = data[i].id_chantier;
         var worksiteReference = data[i].Ref;
         var worksiteTitle = data[i].Ref_interne;
         var worksiteStartDate = data[i].DatePlanningDebut;
@@ -59,7 +59,7 @@ function displayEventsFromPlanning(data) {
                 </div>
 
                 <div class="card-footer text-muted">
-                    <a href="index.php?action=showNewRecordForm&worksiteId=${ worksiteId }" class="btn btn-dark mt-2 mb-2">Saisir un relevé</a>
+                    <a href="index.php?action=showNewRecordForm&worksiteUUID=${ worksiteUUID }" class="btn btn-dark mt-2 mb-2">Saisir un relevé</a>
                 </div>
             </div>`
         ];

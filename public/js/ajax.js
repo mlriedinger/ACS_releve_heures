@@ -161,20 +161,20 @@ function getUsers() {
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */
-function getWorksites(userUUID, worksiteId) {
+function getWorksites(userUUID, worksiteUUID) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getWorksites",
         data: {
             "userUUID": userUUID,
-            "worksiteId": worksiteId
+            "worksiteUUID": worksiteUUID
         },
         dataType: "json"
     })
     .done((response) => {
         addWorksitesToSelectTag(response);
-        if(worksiteId != 0) {
-            selectWorksite(worksiteId);
+        if(worksiteUUID != 0) {
+            selectWorksite(worksiteUUID);
         }
     })
 }

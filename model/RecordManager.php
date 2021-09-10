@@ -42,7 +42,7 @@ class RecordManager extends DatabaseConnection {
         $recordDate = $recordInfo->getDate();
         $tripLength = $recordInfo->getTripLength();
         $workLength = $recordInfo->getWorkLength();
-        $worksite = $recordInfo->getWorksite();
+        $worksite = $recordInfo->getWorksiteUUID();
         $weight = $recordInfo->getWeight();
         
         // Validation automatique des relevés saisis par un utilisateur de type "admin"
@@ -52,7 +52,7 @@ class RecordManager extends DatabaseConnection {
 		
 		$sql = 'INSERT INTO t_saisie_heure(
             ID, 
-            id_chantier,
+            id_document,
             id_login,
             date_hrs_debut, 
             date_hrs_fin, 
@@ -65,7 +65,7 @@ class RecordManager extends DatabaseConnection {
             commentaire)
             VALUES (
             :id,
-            :id_chantier, 
+            :id_document, 
             :id_login,
             :dateTimeStart, 
             :dateTimeEnd,
@@ -86,7 +86,7 @@ class RecordManager extends DatabaseConnection {
         $query = $pdo->prepare($sql);
         $attempt = $query->execute(array(
             'id' => 0,
-            'id_chantier' => $worksite,
+            'id_document' => $worksite,
             'id_login' => $userUUID,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
@@ -99,7 +99,7 @@ class RecordManager extends DatabaseConnection {
             'comment' => $comment
         ));
 
-        //$query->debugDumpParams();
+        //return $query->debugDumpParams();
 
         return $pdo->lastInsertId();
     }
@@ -157,7 +157,7 @@ class RecordManager extends DatabaseConnection {
         $recordId = $recordInfo->getRecordId();
         $tripLength = $recordInfo->getTripLength();
         $workLength = $recordInfo->getWorkLength();
-        $worksiteId = $recordInfo->getWorksite();
+        $worksiteUUID = $recordInfo->getWorksiteUUID();
         $weight = $recordInfo->getWeight();
 
         //$isUpdateSuccessfull = false;
@@ -165,7 +165,7 @@ class RecordManager extends DatabaseConnection {
 		
 		$sql = 'UPDATE t_saisie_heure
 			SET 
-				id_chantier = :worksiteId,
+				id_chantier = :worksiteUUID,
 				date_hrs_debut = :dateTimeStart, 
 				date_hrs_fin = :dateTimeEnd,
 				date_releve = :recordDate,
@@ -182,7 +182,7 @@ class RecordManager extends DatabaseConnection {
 
         $query = $pdo->prepare($sql);
         // $attempt = $query->execute(array(
-        //     'worksiteId' => $worksiteId,
+        //     'worksiteUUID' => $worksiteUUID,
         //     'recordId' => $recordId,
         //     'dateTimeStart' => $dateTimeStart,
         //     'dateTimeEnd' => $dateTimeEnd,
@@ -198,7 +198,7 @@ class RecordManager extends DatabaseConnection {
         //return $isUpdateSuccessfull;
 
         return $query->execute(array(
-            'worksiteId' => $worksiteId,
+            'worksiteUUID' => $worksiteUUID,
             'recordId' => $recordId,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
@@ -515,11 +515,11 @@ class RecordManager extends DatabaseConnection {
         $pdo = $this->dbConnect();
 
         $sql = 'SELECT 
-            id_chantier AS "ID", 
+            id_document AS "ID", 
             CONCAT(REF, " - ", REF_interne) AS "Nom" 
             FROM t_equipe
             INNER JOIN t_document
-            ON t_equipe.id_chantier = t_document.ID
+            ON t_equipe.id_document = t_document.ID_CHAR
             WHERE t_equipe.id_login = :userUUID
             AND t_equipe.supprimer = 0
             ORDER BY t_document.REF ASC';
@@ -527,6 +527,8 @@ class RecordManager extends DatabaseConnection {
         $query = $pdo->prepare($sql);
         $query->execute(array(
             'userUUID' => $userUUID));
+
+        //return $query->debugDumpParams();
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }

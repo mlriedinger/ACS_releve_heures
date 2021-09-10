@@ -2,11 +2,11 @@
  * Ajoute un attribut "selected" à une option de liste déroulante.
  * @param  {object} data
  */
-function selectWorksite(worksiteId) {
+function selectWorksite(worksiteUUID) {
     var worksitesCollection = document.getElementById("selectWorksite").children;
 
     for (let item of worksitesCollection) {
-        if (parseInt(item.value) === worksiteId) {
+        if (parseInt(item.value) === worksiteUUID) {
             item.setAttribute("selected", "");
         }
     }

@@ -33,8 +33,8 @@ function convertLengthIntoMinutes(int $hours, int $minutes) {
  * @return Record $recordInfo : l'objet Record rempli
  */
 function fillBasicRecordInfos(Record $recordInfo) {
-    if(!empty($_POST['worksiteId']) ){
-        $recordInfo->setWorksite(intval(inputValidation($_POST['worksiteId'])));
+    if(!empty($_POST['worksiteUUID']) ){
+        $recordInfo->setWorksiteUUID(intval(inputValidation($_POST['worksiteUUID'])));
     }
 
     if(isset($_POST['comment'])) {
