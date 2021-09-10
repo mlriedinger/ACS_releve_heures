@@ -112,7 +112,7 @@ class RecordController extends AbstractController {
                 $records = $this->_recordManager->getUserRecords($recordInfo);
                 break;
             case "global":
-                if($userGroup === 1) {
+                if($userGroup === $_SESSION['groupAdmin']) {
                     $records = $this->_recordManager->getAllRecords($recordInfo);
                 } else throw new AccessDeniedException();
                 break;

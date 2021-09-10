@@ -12,9 +12,10 @@ function updateRecordsLog(scope, status) {
             "scope": scope, 
             "status": status
         },
-        dataType: "json"
+        //dataType: "json"
     })
     .done((result) => {
+        console.log(result);
         clearTable("records_log")
         .then(() => {
             parseMultipleLines(result)

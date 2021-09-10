@@ -454,7 +454,7 @@ class RecordManager extends DatabaseConnection {
         $status = $recordInfo->getStatus();
         
         $sql = 'SELECT 
-			Releve.id_chantier AS "id_affaire",
+			Releve.id_document AS "id_affaire",
 			CONCAT(REF, " - ", REF_interne) AS "affaire",
 			Membre.Nom AS "nom_salarie",
 			Membre.Prenom AS "prenom_salarie",
@@ -466,20 +466,20 @@ class RecordManager extends DatabaseConnection {
 			Releve.date_hrs_modif,
 			Releve.ID,
 			Releve.supprimer,
-			Membre.ID AS "id_login",
+			Membre.ID_CHAR AS "id_login",
 			Releve.tps_pause,
 			Releve.tps_trajet,
             DATE_FORMAT(Releve.date_releve, "%d/%m/%Y") AS "date_releve",
 			Releve.tps_travail,
-            Membre.id_groupe
+            Membre.ID_CHAR_GROUPE AS "id_groupe"
 		   
 		FROM t_saisie_heure AS Releve
 
         INNER JOIN t_document
-            ON Releve.id_chantier = t_document.ID
+            ON Releve.id_document = t_document.ID_CHAR
 		   
 		INNER JOIN t_login AS Membre
-		   ON Releve.id_login = Membre.ID';
+		   ON Releve.id_login = Membre.ID_CHAR';
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $scope);
 
@@ -490,7 +490,7 @@ class RecordManager extends DatabaseConnection {
         $records["status"] = $status;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 		
-        //$query->debugDumpParams();
+        //return $query->debugDumpParams();
         return $records;
     }
 
