@@ -100,7 +100,6 @@ if(isset($_GET['action'])) {
                         $recordInfo->setUserUUID($_SESSION['userUUID']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
                         $recordInfo->setWeight(inputValidation($_POST['weight']));
-
                         $recordController->addNewRecord($recordInfo);
                     } else throw new AuthenticationException();
                 } else throw new AuthenticationException(); 

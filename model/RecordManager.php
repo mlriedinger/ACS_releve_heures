@@ -42,7 +42,7 @@ class RecordManager extends DatabaseConnection {
         $recordDate = $recordInfo->getDate();
         $tripLength = $recordInfo->getTripLength();
         $workLength = $recordInfo->getWorkLength();
-        $worksite = $recordInfo->getWorksiteUUID();
+        $worksiteUUID = $recordInfo->getWorksiteUUID();
         $weight = $recordInfo->getWeight();
         
         // Validation automatique des relevés saisis par un utilisateur de type "admin"
@@ -86,7 +86,7 @@ class RecordManager extends DatabaseConnection {
         $query = $pdo->prepare($sql);
         $attempt = $query->execute(array(
             'id' => 0,
-            'id_document' => $worksite,
+            'id_document' => $worksiteUUID,
             'id_login' => $userUUID,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,

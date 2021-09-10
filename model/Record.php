@@ -16,7 +16,7 @@ class Record {
     private $_tripLength;
     private $_scope;
     private $_workLength;
-    private $_worksite;
+    private $_worksiteUUID;
     private $_userUUID;
     private $_userGroup;
     private $_workstations;
@@ -85,8 +85,8 @@ class Record {
         return $this;
     }
 
-    public function setWorksiteUUID(string $worksite){
-        $this->_worksite = $worksite;
+    public function setWorksiteUUID(string $worksiteUUID){
+        $this->_worksiteUUID = $worksiteUUID;
         return $this;
     }
 
@@ -172,7 +172,7 @@ class Record {
     }
 
     public function getWorksiteUUID(){
-        return $this->_worksite;
+        return $this->_worksiteUUID;
     }
 
     public function getUserUUID(){
