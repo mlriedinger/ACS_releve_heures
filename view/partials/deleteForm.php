@@ -13,7 +13,7 @@
 
             <div class="col-sm-8 mb-3">
                 <span class="input-group-text" id="comment_section">Commentaire</span>
-                <textarea autocapitalize="sentences" maxlength="255" name="comment" id="comment" class="form-control" aria-label="Commentaire" aria-describedby="comment_section" <?= $_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2' ? "required" : "" ;?>></textarea>
+                <textarea autocapitalize="sentences" maxlength="255" name="comment" id="comment" class="form-control" aria-label="Commentaire" aria-describedby="comment_section" <?= $_SESSION['userGroup'] === $_SESSION['GroupAdmin'] || $_SESSION['userGroup'] === $_SESSION['GroupManager'] ? "required" : "" ;?>></textarea>
                 <small class="form-text text-muted">255 caractères maximum</small>
             </div>
 

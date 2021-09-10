@@ -25,7 +25,7 @@
                 </li>
 
                 <?php 
-                if($_SESSION['userGroup'] == 1 || $_SESSION['userGroup'] == 2){ 
+                if($_SESSION['userGroup'] === $_SESSION['GroupAdmin'] || $_SESSION['userGroup'] === $_SESSION['GroupManager']){ 
                     ?>
                     <li class="nav-item ps-5 mb-3 mb-lg-0">
                         <div class="d-flex flex-column align-items-center navbar-div">
@@ -42,7 +42,7 @@
                                 <li><a class="dropdown-item" href="index.php?action=showPersonalRecordsLog">Historique personnel</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <?php 
-                                if($_SESSION['userGroup'] == 1) {
+                                if($_SESSION['userGroup'] === $_SESSION['GroupAdmin']) {
                                     ?>
                                     <li><a class="dropdown-item" href="index.php?action=showAllRecordsLog">Historique global</a></li>
                                 <?php
@@ -63,7 +63,7 @@
                 } ?>
 
                 <?php 
-                if($_SESSION['userGroup'] == 2){ 
+                if($_SESSION['userGroup'] === $_SESSION['GroupManager']){ 
                     ?>
                     <li class="nav-item ps-5 mb-3 mb-lg-0">
                         <div class="d-flex flex-column align-items-center navbar-div">
@@ -77,7 +77,7 @@
             
             <ul class="navbar-nav mb-2 mb-lg-0">
             <?php 
-            if($_SESSION['userGroup'] == 1){ 
+            if($_SESSION['userGroup'] === $_SESSION['GroupAdmin']){ 
                 ?>
                 <li class="nav-item dropdown ps-5 mb-3 mb-lg-0">
                     <div class="d-flex flex-column align-items-center navbar-div">
