@@ -434,6 +434,7 @@ class RecordManager extends DatabaseConnection {
         
         $userRecords["currentUserUUID"] = $userUUID ;
         $userRecords["scope"] = $scope;
+        $userRecords["status"] = $status;
         $userRecords["userGroups"] = [
             'groupAdmin' => $_SESSION['groupAdmin'], 
             'groupManager' => $_SESSION['groupManager'], 
@@ -493,6 +494,10 @@ class RecordManager extends DatabaseConnection {
         $records["currentUserUUID"] = $userUUID;
         $records["scope"] = $scope;
         $records["status"] = $status;
+        $records["userGroups"] = [
+            'groupAdmin' => $_SESSION['groupAdmin'], 
+            'groupManager' => $_SESSION['groupManager'], 
+            'groupEmployee' => $_SESSION['groupEmployee']];
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 		
         //return $query->debugDumpParams();
