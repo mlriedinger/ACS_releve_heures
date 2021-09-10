@@ -4,16 +4,18 @@
  * @param  {number} currentUserUUID identifiant de l'utilisateur actuellement connecté
  * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
  */
-function checkRecordValidationStatus(newLines, records, currentUserUUID, counter) {
+function checkRecordValidationStatus(newLines, result, currentUserUUID, counter) {
+    let records = result.records;
     let validationStatus = records[counter].statut_validation;
     let deleteStatus = records[counter].supprimer;
-	let userGroup = records[counter].id_groupe;
+	let userGroup = String(records[counter].id_groupe);
+    let groupAdmin = String(result.userGroups.groupAdmin);
 
     let newValidationText = "";
     
-    if ((validationStatus === "0" && deleteStatus === "0") || (userGroup === "1" && deleteStatus === "0")) {
-        userGroup === "1" ? newValidationText = document.createTextNode("Auto-validé") : newValidationText = document.createTextNode("En attente");
-        if (currentUserUUID === parseInt(records[counter].id_login)) {
+    if ((validationStatus === "0" && deleteStatus === "0") || (userGroup == groupAdmin && deleteStatus === "0")) {
+        userGroup == groupAdmin ? newValidationText = document.createTextNode("Auto-validé") : newValidationText = document.createTextNode("En attente");
+        if (currentUserUUID === String(records[counter].id_login)) {
             insertEditRecordButton(newLines.newEdit, records, counter);
             insertDeleteRecordButton(newLines.newDelete, records, counter);
         }
@@ -205,7 +207,7 @@ async function appendLine(tableId, result, counter) {
         fillRecordsTable(newLines, records, counter)
         .then(() => {
             if(newLines.newStatus != undefined) {
-                checkRecordValidationStatus(newLines, records, currentUserUUID, counter);
+                checkRecordValidationStatus(newLines, result, currentUserUUID, counter);
             }
             if(scope === "global" && status === "pending" && newLines.newIsValid != undefined) {
                 insertViewButton(newLines.newView, records, counter);

@@ -46,7 +46,7 @@ class RecordManager extends DatabaseConnection {
         $weight = $recordInfo->getWeight();
         
         // Validation automatique des relevés saisis par un utilisateur de type "admin"
-        $userGroup == 1 ? $validation_status = 1 : $validation_status = 0;
+        $userGroup === $_SESSION['groupAdmin'] ? $validation_status = 1 : $validation_status = 0;
         
         $pdo = $this->dbConnect();
 		
@@ -415,14 +415,14 @@ class RecordManager extends DatabaseConnection {
             Releve.tps_travail, 
             Releve.tps_pause,
             Releve.tps_trajet,
-			t_login.id_groupe
+			t_login.ID_CHAR_GROUPE AS "id_groupe"
         FROM t_saisie_heure AS Releve
 		
         INNER JOIN t_document
-            ON Releve.id_chantier = t_document.ID
+            ON Releve.id_document = t_document.ID_CHAR
 			
 		INNER JOIN t_login
-			ON Releve.id_login = t_login.ID
+			ON Releve.id_login = t_login.ID_CHAR
 			
         WHERE Releve.id_login = :userUUID';
 
@@ -434,9 +434,14 @@ class RecordManager extends DatabaseConnection {
         
         $userRecords["currentUserUUID"] = $userUUID ;
         $userRecords["scope"] = $scope;
+        $userRecords["userGroups"] = [
+            'groupAdmin' => $_SESSION['groupAdmin'], 
+            'groupManager' => $_SESSION['groupManager'], 
+            'groupEmployee' => $_SESSION['groupEmployee']];
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
         return $userRecords;
+        //return $query->debugDumpParams();
     }
     
     /**
