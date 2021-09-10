@@ -61,8 +61,8 @@ class SettingController extends AbstractController {
     }
 
     public function fillSessionArrayWithUserGroups(array $userGroups) {
-        $_SESSION['GroupAdmin'] = $userGroups[0]['ID'];
-        $_SESSION['GroupManager'] = $userGroups[1]['ID'];
-        $_SESSION['GroupEmployee'] = $userGroups[2]['ID'];
+        $_SESSION['groupAdmin'] = $userGroups[0]['ID'];
+        $_SESSION['groupManager'] = $userGroups[1]['ID'];
+        $_SESSION['groupEmployee'] = $userGroups[2]['ID'];
     }
 }

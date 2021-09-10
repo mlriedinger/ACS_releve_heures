@@ -21,7 +21,6 @@ if(isset($_GET['action'])) {
                 if(isset($_POST['login']) && isset($_POST['password']) || $_POST['login'] != "" || $_POST['password'] != "") {
                     $settingController->getSettings();
                     $loginController->verifyLogin(inputValidation($_POST['login']), inputValidation($_POST['password']));
-                    var_dump($_SESSION);
                 } else throw new InvalidParameterException();
                 break;
 
@@ -47,7 +46,7 @@ if(isset($_GET['action'])) {
 
             // Vue "Validation des relevés en attente"
             case "showPendingRecordsLog":
-                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && ($_SESSION['userGroup'] === $_SESSION['GroupAdmin'] || $_SESSION['userGroup'] === $_SESSION['GroupManager'])) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && ($_SESSION['userGroup'] === $_SESSION['groupAdmin'] || $_SESSION['userGroup'] === $_SESSION['groupManager'])) {
                     $recordController->displayView('pendingRecordsLog');
                 } else throw new AuthenticationException();
                 break;
@@ -61,28 +60,28 @@ if(isset($_GET['action'])) {
 
             // Vue historique global
             case "showAllRecordsLog":
-                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && $_SESSION['userGroup'] === $_SESSION['GroupAdmin']) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && $_SESSION['userGroup'] === $_SESSION['groupAdmin']) {
                     $recordController->displayView('globalRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue export
             case "showExportForm":
-                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && ($_SESSION['userGroup'] === $_SESSION['GroupAdmin'] || $_SESSION['userGroup'] === $_SESSION['GroupManager'])) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && ($_SESSION['userGroup'] === $_SESSION['groupAdmin'] || $_SESSION['userGroup'] === $_SESSION['groupManager'])) {
                     $exportController->displayView('export');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue paramètres de saisie
             case "showSettingsForm":
-                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && $_SESSION['userGroup'] === $_SESSION['GroupAdmin']) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && $_SESSION['userGroup'] === $_SESSION['groupAdmin']) {
                     $settingController->displayView('settingsForm');
                 } else throw new AuthenticationException();
                 break;
             
             // Mise à jour des paramètres de saisie
             case "updateSettings":
-                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && $_SESSION['userGroup'] === $_SESSION['GroupAdmin']) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && $_SESSION['userGroup'] === $_SESSION['groupAdmin']) {
                     $settingInfo = new Setting();
                     $settingInfo = fillSettingInfos($settingInfo);
 
@@ -137,7 +136,7 @@ if(isset($_GET['action'])) {
             case "deleteRecord":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
                     if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1"){
-                        if($_SESSION['userGroup'] === $_SESSION['GroupAdmin'] || $_SESSION['userGroup'] === $_SESSION['GroupManager']){
+                        if($_SESSION['userGroup'] === $_SESSION['groupAdmin'] || $_SESSION['userGroup'] === $_SESSION['groupManager']){
                             if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['comment']) && inputValidation($_POST['comment'] != " ")) {
                                 $recordInfo = new Record();
                                 $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
@@ -206,7 +205,7 @@ if(isset($_GET['action'])) {
             // Exporter les données en CSV
             case "exportRecords":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
-                    if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && ($_SESSION['userGroup'] === $_SESSION['GroupAdmin'] || $_SESSION['userGroup'] === $_SESSION['GroupManager'])) { 
+                    if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && ($_SESSION['userGroup'] === $_SESSION['groupAdmin'] || $_SESSION['userGroup'] === $_SESSION['groupManager'])) { 
                         // if(isset($_GET['scope']) && $_GET['scope'] == 'export') {
                             if(isset($_POST['status']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['user'])) {
                                 $exportInfo = new Export();
@@ -217,7 +216,7 @@ if(isset($_GET['action'])) {
                                 $exportInfo->setPeriodStart(inputValidation($_POST['periodStart']));
                                 $exportInfo->setPeriodEnd(inputValidation($_POST['periodEnd']));
 
-                                if ($_SESSION['userGroup'] === $_SESSION['GroupManager']) {
+                                if ($_SESSION['userGroup'] === $_SESSION['groupManager']) {
                                     $exportInfo->setManagerId(intval(inputValidation($_SESSION['userUUID'])));
                                 } else {
                                     if(isset($_POST['manager'])) {
@@ -236,7 +235,7 @@ if(isset($_GET['action'])) {
             // Récupérer la liste des salariés
             case "getUsers":
                 if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1"){
-                    if($_SESSION['userGroup'] === $_SESSION['GroupAdmin']) {
+                    if($_SESSION['userGroup'] === $_SESSION['groupAdmin']) {
                         $recordController->getUsers();
                     }
                 } else throw new AuthenticationException();

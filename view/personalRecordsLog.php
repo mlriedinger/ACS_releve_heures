@@ -17,7 +17,7 @@ $heading = "Historique personnel";
                 <button class="nav-link" id="approved_records_tab" onclick="updateRecordsLog('user', 'approved')" data-bs-toggle="tab" data-bs-target="#approved_records" type="button" role="tab" aria-controls="approved_records_tab" aria-selected="false">Validés</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pending_records_tab" onclick="updateRecordsLog('user', 'pending')" data-bs-toggle="tab" data-bs-target="#pending_records" type="button" role="tab" aria-controls="pending_records_tab" aria-selected="false" <?= $_SESSION['userGroup'] === $_SESSION['GroupAdmin'] ? "hidden" : "" ?>>En attente</button>
+                <button class="nav-link" id="pending_records_tab" onclick="updateRecordsLog('user', 'pending')" data-bs-toggle="tab" data-bs-target="#pending_records" type="button" role="tab" aria-controls="pending_records_tab" aria-selected="false" <?= $_SESSION['userGroup'] === $_SESSION['groupAdmin'] ? "hidden" : "" ?>>En attente</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="deleted_records_tab" onclick="updateRecordsLog('user', 'deleted')" data-bs-toggle="tab" data-bs-target="#deleted_records" type="button" role="tab" aria-controls="deleted_records_tab" aria-selected="false">Supprimés</button>
