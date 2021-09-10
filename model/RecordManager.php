@@ -165,7 +165,7 @@ class RecordManager extends DatabaseConnection {
 		
 		$sql = 'UPDATE t_saisie_heure
 			SET 
-				id_chantier = :worksiteUUID,
+				id_document = :worksiteUUID,
 				date_hrs_debut = :dateTimeStart, 
 				date_hrs_fin = :dateTimeEnd,
 				date_releve = :recordDate,
@@ -314,7 +314,7 @@ class RecordManager extends DatabaseConnection {
         $pdo = $this->dbConnect();
 		
 		$sql = 'SELECT
-            Releve.id_chantier, 
+            Releve.id_document, 
             Releve.id_login,
             Releve.date_hrs_debut,
             Releve.date_hrs_fin,
@@ -507,7 +507,7 @@ class RecordManager extends DatabaseConnection {
     public function getUsers() {
         $pdo = $this->dbConnect();
 
-        $sql = 'SELECT ID, 
+        $sql = 'SELECT ID_CHAR AS "ID", 
             Nom, 
             Prenom 
             FROM t_login

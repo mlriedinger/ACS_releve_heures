@@ -6,7 +6,7 @@ function selectWorksite(worksiteUUID) {
     var worksitesCollection = document.getElementById("selectWorksite").children;
 
     for (let item of worksitesCollection) {
-        if (parseInt(item.value) === worksiteUUID) {
+        if (String(item.value) === worksiteUUID) {
             item.setAttribute("selected", "");
         }
     }
@@ -21,7 +21,9 @@ function selectWorksite(worksiteUUID) {
     var basis = data.recordBasis;
     var details = data.recordDetails;
 
-    selectWorksite(parseInt(basis['id_chantier']));
+    console.log(data.recordBasis);
+
+    selectWorksite(String(basis['id_document']));
     prefillDate(basis);
     prefillWorkLength(basis);
     prefillWeight(basis);

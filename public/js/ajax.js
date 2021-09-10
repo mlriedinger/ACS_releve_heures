@@ -174,7 +174,7 @@ function getWorksites(userUUID, worksiteUUID) {
     })
     .done((response) => {
         addWorksitesToSelectTag(response);
-        if(worksiteUUID != 0) {
+        if(worksiteUUID != undefined) {
             selectWorksite(worksiteUUID);
         }
     })
