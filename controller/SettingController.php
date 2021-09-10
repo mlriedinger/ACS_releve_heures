@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require_once 'AbstractController.php';
 require 'autoloader.php';
@@ -18,10 +19,12 @@ class SettingController extends AbstractController {
      * Permet de récupérer les paramètres enregistrés en base de données.
      */
     public function getSettings() {
-        $settings = $this->_settingManager->getSettings();
+        $settings = $this->_settingManager->getAppSettings();
+        $userGroups = $this->_settingManager->getUserGroupsSettings();
 
-        if (!empty($settings)) {
-            $this->fillSessionData($settings);
+        if (!empty($settings) && !empty($userGroups)) {
+            $this->fillSessionArrayWithAppSettings($settings);
+            $this->fillSessionArrayWithUserGroups($userGroups);
         }
     }
     
@@ -46,8 +49,7 @@ class SettingController extends AbstractController {
      *
      * @param  array $settings
      */
-    public function fillSessionData(array $settings) {
-        session_start();
+    public function fillSessionArrayWithAppSettings(array $settings) {
         $_SESSION['imgFilePath'] = $settings['chemin_dossier_images'];
         $_SESSION['logo'] = $settings['image_logo'];
         $_SESSION['dateTimeMgmt'] = $settings['releve_heures_date_debut_fin'];
@@ -56,5 +58,11 @@ class SettingController extends AbstractController {
         $_SESSION['tripMgmt'] = $settings['releve_heures_trajet'];
         $_SESSION['breakMgmt'] = $settings['releve_heures_pause'];
         $_SESSION['specificInfoMgmt'] = $settings['releve_heures_info_specifique'];
+    }
+
+    public function fillSessionArrayWithUserGroups(array $userGroups) {
+        $_SESSION['GroupAdmin'] = $userGroups[0]['ID'];
+        $_SESSION['GroupManager'] = $userGroups[1]['ID'];
+        $_SESSION['GroupEmployee'] = $userGroups[2]['ID'];
     }
 }

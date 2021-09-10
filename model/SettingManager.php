@@ -23,10 +23,10 @@ class SettingManager extends DatabaseConnection {
      *
      * @return array $settings
      */
-    public function getSettings() {
+    public function getAppSettings() {
         $pdo = $this->dbConnect($this->_dbUserForSettings, $this->_dbPasswordForSettings);
         
-        $query = $pdo->prepare('SELECT 
+        $sql = "SELECT 
             chemin_dossier_images,
             image_logo, 
             releve_heures_date_debut_fin, 
@@ -36,11 +36,29 @@ class SettingManager extends DatabaseConnection {
             releve_heures_pause,
             releve_heures_info_specifique
         FROM t_parametres 
-        WHERE ID = :id');
+        WHERE ID = :id";
+        $query = $pdo->prepare($sql);
         $query->execute(array('id' => 2));
         $settings = $query->fetch(PDO::FETCH_ASSOC);
  
         return $settings;
+    }
+
+    public function getUserGroupsSettings() {
+        $pdo = $this->dbConnect();
+
+        $sql = "SELECT
+            ID_CHAR AS 'ID',
+            Nom
+        FROM t_login_groupe";
+
+        $query = $pdo->query($sql);
+        $query->execute();
+        $userGroups = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        //$query->debugDumpParams();
+ 
+        return $userGroups;
     }
     
     /**

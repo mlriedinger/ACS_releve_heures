@@ -22,16 +22,19 @@ class LoginManager extends DatabaseConnection {
      */
     public function getUserData(string $login, string $password){
         $pdo = $this->dbConnect($login, $password);
-     
-        $query = $pdo->prepare('SELECT ID_CHAR,
-			ID_CHAR_GROUPE,
-			Administrateur,
-			CompteActif,
-			Nom,
-			Prenom,
-			Supprimer 
+
+        $sql = "SELECT ID_CHAR AS 'ID',
+            ID_CHAR_GROUPE AS 'id_groupe',
+            Utilisateur,
+            Administrateur,
+            CompteActif,
+            Nom,
+            Prenom,
+            Supprimer 
         FROM t_login 
-        WHERE Utilisateur = :login');
+        WHERE Utilisateur = :login";
+     
+        $query = $pdo->prepare($sql);
         $query->execute(array('login' => $login));
         $userData = $query->fetch();
  

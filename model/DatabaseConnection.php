@@ -43,7 +43,7 @@ class DatabaseConnection {
         if($dbName != "") $this->_dbName = $dbName;
 
         $pdo = new PDO('mysql:host=' . $this->_dbHost . ';port=' . $this->_dbPort . ';dbname=' . $this->_dbName . ';charset=utf8', $this->_dbUser, $this->_dbPassword);
-        
+
         return $pdo;
     }    
 }
