@@ -1,10 +1,10 @@
 /** Gère l'affichage du statut d'un relevé ainsi que l'affichage des boutons d'édition et de suppression.
  * @param  {object} newLines correspond à un objet contenant toutes les cellules d'une nouvelle ligne du tableau
  * @param  {object} records contenu de la réponse à la requête AJAX
- * @param  {number} currentUserId identifiant de l'utilisateur actuellement connecté
+ * @param  {number} currentUserUUID identifiant de l'utilisateur actuellement connecté
  * @param  {number} counter index du tour de boucle actuel qui permet de créer des id uniques sur les balises HTML créées
  */
-function checkRecordValidationStatus(newLines, records, currentUserId, counter) {
+function checkRecordValidationStatus(newLines, records, currentUserUUID, counter) {
     let validationStatus = records[counter].statut_validation;
     let deleteStatus = records[counter].supprimer;
 	let userGroup = records[counter].id_groupe;
@@ -13,7 +13,7 @@ function checkRecordValidationStatus(newLines, records, currentUserId, counter) 
     
     if ((validationStatus === "0" && deleteStatus === "0") || (userGroup === "1" && deleteStatus === "0")) {
         userGroup === "1" ? newValidationText = document.createTextNode("Auto-validé") : newValidationText = document.createTextNode("En attente");
-        if (currentUserId === parseInt(records[counter].id_login)) {
+        if (currentUserUUID === parseInt(records[counter].id_login)) {
             insertEditRecordButton(newLines.newEdit, records, counter);
             insertDeleteRecordButton(newLines.newDelete, records, counter);
         }
@@ -193,7 +193,7 @@ function createNewLines(newRow) {
  */
 async function appendLine(tableId, result, counter) {
     var records = result.records;
-    var currentUserId = result.currentUserId;
+    var currentUserUUID = result.currentUserUUID;
     var scope = result.scope;
     var status = result.status;
 
@@ -205,7 +205,7 @@ async function appendLine(tableId, result, counter) {
         fillRecordsTable(newLines, records, counter)
         .then(() => {
             if(newLines.newStatus != undefined) {
-                checkRecordValidationStatus(newLines, records, currentUserId, counter);
+                checkRecordValidationStatus(newLines, records, currentUserUUID, counter);
             }
             if(scope === "global" && status === "pending" && newLines.newIsValid != undefined) {
                 insertViewButton(newLines.newView, records, counter);

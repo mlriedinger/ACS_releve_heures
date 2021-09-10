@@ -14,10 +14,10 @@ class EventManager extends DatabaseConnection {
     /**
      * getEventsFromPlanning
      *
-     * @param  mixed $userId
+     * @param  mixed $userUUID
      * @return void
      */
-    public function getEventsFromPlanning(int $userId) {
+    public function getEventsFromPlanning(int $userUUID) {
         $pdo = $this->dbConnect();
 
         $sql ="SELECT t_equipe.id_chantier, 
@@ -33,7 +33,7 @@ class EventManager extends DatabaseConnection {
             ON t_document.ID = t_planning_chantier.ID_chantier
         LEFT JOIN t_doc_etat
             ON t_document.IDDoc_etat = t_doc_etat.ID
-        WHERE t_equipe.id_login = :userId
+        WHERE t_equipe.id_login = :userUUID
             AND t_equipe.supprimer = 0
             AND t_document.IDType_doc = 3
             AND t_document.Chantier_termine = 0
@@ -41,7 +41,7 @@ class EventManager extends DatabaseConnection {
         ";
 
         $query = $pdo->prepare($sql);
-        $query->execute(array('userId' => $userId));
+        $query->execute(array('userUUID' => $userUUID));
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -31,14 +31,14 @@ if(isset($_GET['action'])) {
 
             // Vue "Accueil"
             case "showHomePage":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1') {
                     $loginController->displayView('home');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue "Nouveau Relevé"
             case "showNewRecordForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1') {
                     isset($_GET['worksiteId']) ? $_SESSION['worksiteId'] = $_GET['worksiteId'] : $_SESSION['worksiteId'] = 0 ;
                     $recordController->displayView('newRecord');
                 } else throw new AuthenticationException();
@@ -46,42 +46,42 @@ if(isset($_GET['action'])) {
 
             // Vue "Validation des relevés en attente"
             case "showPendingRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                     $recordController->displayView('pendingRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue "Historique personnel"
             case "showPersonalRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1') {
                     $recordController->displayView('personalRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue historique global
             case "showAllRecordsLog":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
                     $recordController->displayView('globalRecordsLog');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue export
             case "showExportForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) {
                     $exportController->displayView('export');
                 } else throw new AuthenticationException();
                 break;
 
             // Vue paramètres de saisie
             case "showSettingsForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
                     $settingController->displayView('settingsForm');
                 } else throw new AuthenticationException();
                 break;
             
             // Mise à jour des paramètres de saisie
             case "updateSettings":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && $_SESSION['userGroup'] == '1') {
                     $settingInfo = new Setting();
                     $settingInfo = fillSettingInfos($settingInfo);
 
@@ -93,11 +93,11 @@ if(isset($_GET['action'])) {
             // Ajout d'un nouveau relevé
             case "addNewRecord":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
-                    if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && isset($_SESSION['userGroup'])) {
+                    if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && isset($_SESSION['userGroup'])) {
                         $recordInfo = new Record();
                         $recordInfo = fillBasicRecordInfos($recordInfo);
                         
-                        $recordInfo->setUserId($_SESSION['userId']);
+                        $recordInfo->setUserUUID($_SESSION['userUUID']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
                         $recordInfo->setWeight(inputValidation($_POST['weight']));
 
@@ -109,7 +109,7 @@ if(isset($_GET['action'])) {
             // Modification d'un relevé non validé
             case "updateRecord":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
-                    if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                    if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                         if(isset($_POST['recordId']) && is_numeric($_POST['recordId'])) {
                             $recordInfo = new Record();
                             $recordInfo = fillBasicRecordInfos($recordInfo);
@@ -125,7 +125,7 @@ if(isset($_GET['action'])) {
             // Modification du statut du relevé
             case "updateRecordStatus":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
-                    if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                    if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                         if(!empty($_POST['checkList'])){
                             $recordController->updateRecordStatus($_POST['checkList']);
                         } else throw new InvalidParameterException('Veuillez sélectionner un ou plusieurs relevé(s) à valider.');
@@ -136,7 +136,7 @@ if(isset($_GET['action'])) {
             // Supprimer un relevé
             case "deleteRecord":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
-                    if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                    if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                         if($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2'){
                             if(isset($_POST['recordId']) && is_numeric($_POST['recordId']) && !empty($_POST['comment']) && inputValidation($_POST['comment'] != " ")) {
                                 $recordInfo = new Record();
@@ -161,7 +161,7 @@ if(isset($_GET['action'])) {
 
             // Renvoyer le formulaire de saisie
             case "getForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1') {
                     if (isset($_POST['formFile'])){
                         $recordController->displayPartial($_POST['formFile']);
                     }
@@ -170,7 +170,7 @@ if(isset($_GET['action'])) {
 
             // Renvoyer le formulaire de confirmation de suppression
             case "getDeleteConfirmationForm":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1') {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1') {
                     $recordController->displayPartial('deleteForm');
                 } else throw new AuthenticationException();
                 break;
@@ -178,7 +178,7 @@ if(isset($_GET['action'])) {
 
             // Récupérer les données d'un relevé
             case "getRecord":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                     if(isset($_POST['recordId'])){
                         $recordInfo = new Record();
                         $recordInfo->setRecordId(intval(inputValidation($_POST['recordId'])));
@@ -189,10 +189,10 @@ if(isset($_GET['action'])) {
                 break;
 
             case "getRecords":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                     if(isset($_POST['scope']) && isset($_POST['status'])) {
                         $recordInfo = new Record();
-                        $recordInfo->setUserId($_SESSION['userId']);
+                        $recordInfo->setUserUUID($_SESSION['userUUID']);
                         $recordInfo->setUserGroup($_SESSION['userGroup']);
                         $recordInfo->setScope(inputValidation($_POST['scope']));
                         $recordInfo->setStatus(inputValidation($_POST['status']));
@@ -206,19 +206,19 @@ if(isset($_GET['action'])) {
             // Exporter les données en CSV
             case "exportRecords":
                 if(!empty($_POST['csrfToken']) && hash_equals($_SESSION['csrfToken'], inputValidation($_POST['csrfToken']))) {
-                    if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) { 
+                    if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && ($_SESSION['userGroup'] == '1' || $_SESSION['userGroup'] == '2')) { 
                         // if(isset($_GET['scope']) && $_GET['scope'] == 'export') {
                             if(isset($_POST['status']) && isset($_POST['periodStart']) && isset($_POST['periodEnd']) && isset($_POST['user'])) {
                                 $exportInfo = new Export();
                                 $exportInfo->setScope(inputValidation($_GET['scope']));
                                 $exportInfo->setStatus(inputValidation($_POST['status']));
-                                $exportInfo->setUserId(intval(inputValidation($_POST['user'])));
+                                $exportInfo->setUserUUID(intval(inputValidation($_POST['user'])));
                                 $exportInfo->setUserGroup(intval(inputValidation($_SESSION['userGroup'])));
                                 $exportInfo->setPeriodStart(inputValidation($_POST['periodStart']));
                                 $exportInfo->setPeriodEnd(inputValidation($_POST['periodEnd']));
 
                                 if ($_SESSION['userGroup'] == '2') {
-                                    $exportInfo->setManagerId(intval(inputValidation($_SESSION['userId'])));
+                                    $exportInfo->setManagerId(intval(inputValidation($_SESSION['userUUID'])));
                                 } else {
                                     if(isset($_POST['manager'])) {
                                         $exportInfo->setManagerId(intval(inputValidation($_POST['manager'])));
@@ -235,7 +235,7 @@ if(isset($_GET['action'])) {
 
             // Récupérer la liste des salariés
             case "getUsers":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                     if($_SESSION['userGroup'] == '1') {
                         $recordController->getUsers();
                     }
@@ -244,10 +244,10 @@ if(isset($_GET['action'])) {
             
             // Récupérer la liste des chantiers
             case "getWorksites":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
-                    if(inputValidation($_POST['userId'] !== null)) {
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
+                    if(inputValidation($_POST['userUUID'] !== null)) {
                         $recordInfo = new Record();
-                        $recordInfo->setUserId($_POST['userId']);
+                        $recordInfo->setUserUUID($_POST['userUUID']);
 
                         $recordController->getWorksites($recordInfo);
                     }
@@ -257,22 +257,22 @@ if(isset($_GET['action'])) {
 
             // Récupérer la liste des catégories de postes de travail
             case "getWorkCategories":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                     $recordController->getWorkCategories();
                 } else throw new AuthenticationException();
                 break;
 
             // Récupérer la liste des sous-catégories de postes de travail
             case "getWorkSubCategories":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1'){
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1'){
                     $recordController->getWorkSubCategories();
                 } else throw new AuthenticationException();
                 break;
 
             // Récupérer les événements du planning
             case "getEventsFromPlanning":
-                if(isset($_SESSION['userId']) && $_SESSION['isActive'] == '1' && isset($_POST['userId'] ) && inputValidation($_POST['userId'] !== null)){
-                    $eventController->getEventsFromPlanning(intval(inputValidation($_POST['userId'])));
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] == '1' && isset($_POST['userUUID'] ) && inputValidation($_POST['userUUID'] !== null)){
+                    $eventController->getEventsFromPlanning(intval(inputValidation($_POST['userUUID'])));
                 } else throw new AuthenticationException();
                 break;
         }

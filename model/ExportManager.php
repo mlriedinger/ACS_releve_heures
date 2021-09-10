@@ -106,7 +106,7 @@ class ExportManager extends RecordManager {
     public function sqlAddExportOptions(Export $exportInfo, string $sql){
         $periodStart = $exportInfo->getPeriodStart();
         $periodEnd = $exportInfo->getPeriodEnd();
-        $userId = $exportInfo->getUserId();
+        $userUUID = $exportInfo->getUserUUID();
         $userGroup = $exportInfo->getUserGroup();
 		
         if($periodStart != "" && $periodEnd != "") {
@@ -117,7 +117,7 @@ class ExportManager extends RecordManager {
 			}
 		}
 
-        if($userId != "") $sql .= " AND Membre.ID = :userId";
+        if($userUUID != "") $sql .= " AND Membre.ID = :userUUID";
 
         return $sql;
     }
@@ -131,12 +131,12 @@ class ExportManager extends RecordManager {
     public function fillQueryParamsArray(Export $exportInfo){
         $periodStart = $exportInfo->getPeriodStart();
         $periodEnd = $exportInfo->getPeriodEnd();
-        $userId = $exportInfo->getUserId();
+        $userUUID = $exportInfo->getUserUUID();
 
         $queryParams = array();
 
-        if($userId != "") {
-            $queryParams['userId'] = $userId;
+        if($userUUID != "") {
+            $queryParams['userUUID'] = $userUUID;
         }
         if($periodStart != "") {
             $periodStart .= " 00:00:01";

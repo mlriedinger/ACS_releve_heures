@@ -6,7 +6,7 @@
 class Export {
 
     // Attributs
-    private $_userId;
+    private $_userUUID;
     private $_managerId;
     private $_periodStart;
     private $_periodEnd;
@@ -15,8 +15,8 @@ class Export {
     private $_userGroup;
 
     // Mutateurs (setters)
-    public function setUserId(int $userId){
-        $this->_userId = $userId;
+    public function setUserUUID(int $userUUID){
+        $this->_userUUID = $userUUID;
         return $this;
     }
 
@@ -58,8 +58,8 @@ class Export {
     }
 
     // Accesseurs (getters)
-    public function getUserId(){
-        return $this->_userId;
+    public function getUserUUID(){
+        return $this->_userUUID;
     }
 
     public function getManagerId(){

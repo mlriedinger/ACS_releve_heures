@@ -35,12 +35,12 @@ class ExportController extends AbstractController {
         $status = $exportInfo->getStatus();
         $periodStart = $exportInfo->getPeriodStart();
         $periodEnd = $exportInfo->getPeriodEnd();
-        $userId = $exportInfo->getUserId();
+        $userUUID = $exportInfo->getUserUUID();
 
         $fileNameDetails ="_";
         $fileNameDetails .= $status . "_records";
 
-        if($userId != "") $fileNameDetails .= "_user_" . $userId;
+        if($userUUID != "") $fileNameDetails .= "_user_" . $userUUID;
         if($periodStart != "") $fileNameDetails .= "_from_" . $periodStart;
         if($periodEnd != "") $fileNameDetails .= "_to_" . $periodEnd;
 

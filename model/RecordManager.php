@@ -33,7 +33,7 @@ class RecordManager extends DatabaseConnection {
      * @return bool $pdo->lastInsertId()
      */
     public function addNewRecord(Record $recordInfo){
-        $userId = $recordInfo->getUserId();
+        $userUUID = $recordInfo->getUserUUID();
         $userGroup = $recordInfo->getUserGroup();
         $breakLength = $recordInfo->getBreakLength();
         $comment = $recordInfo->getComment();
@@ -87,7 +87,7 @@ class RecordManager extends DatabaseConnection {
         $attempt = $query->execute(array(
             'id' => 0,
             'id_chantier' => $worksite,
-            'id_login' => $userId,
+            'id_login' => $userUUID,
             'dateTimeStart' => $dateTimeStart,
             'dateTimeEnd' => $dateTimeEnd,
             'recordDate' => $recordDate,
@@ -396,7 +396,7 @@ class RecordManager extends DatabaseConnection {
     public function getUserRecords(Record $recordInfo){
         $pdo = $this->dbConnect();
 
-        $userId = $recordInfo->getUserId();
+        $userUUID = $recordInfo->getUserUUID();
         $scope = $recordInfo->getScope();
         $status = $recordInfo->getStatus();
 
@@ -424,15 +424,15 @@ class RecordManager extends DatabaseConnection {
 		INNER JOIN t_login
 			ON Releve.id_login = t_login.ID
 			
-        WHERE Releve.id_login = :userId';
+        WHERE Releve.id_login = :userUUID';
 
         $sql = $this->addQueryScopeAndOrderByClause($sql, $status, $scope);
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
-            'userId' => $userId));
+            'userUUID' => $userUUID));
         
-        $userRecords["currentUserId"] = $userId ;
+        $userRecords["currentUserUUID"] = $userUUID ;
         $userRecords["scope"] = $scope;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -447,7 +447,7 @@ class RecordManager extends DatabaseConnection {
      * @return string $records
      */
     public function getAllRecords(Record $recordInfo){
-        $userId = $recordInfo->getUserId();
+        $userUUID = $recordInfo->getUserUUID();
         $pdo = $this->dbConnect();
 
         $scope = $recordInfo->getScope();
@@ -485,7 +485,7 @@ class RecordManager extends DatabaseConnection {
 
         $query = $pdo->prepare($sql);
         $query->execute();
-        $records["currentUserId"] = $userId;
+        $records["currentUserUUID"] = $userUUID;
         $records["scope"] = $scope;
         $records["status"] = $status;
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -510,7 +510,7 @@ class RecordManager extends DatabaseConnection {
     }
 
     public function getWorksites(Record $recordInfo) {
-        $userId = $recordInfo->getUserId();
+        $userUUID = $recordInfo->getUserUUID();
 
         $pdo = $this->dbConnect();
 
@@ -520,13 +520,13 @@ class RecordManager extends DatabaseConnection {
             FROM t_equipe
             INNER JOIN t_document
             ON t_equipe.id_chantier = t_document.ID
-            WHERE t_equipe.id_login = :userId
+            WHERE t_equipe.id_login = :userUUID
             AND t_equipe.supprimer = 0
             ORDER BY t_document.REF ASC';
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
-            'userId' => $userId));
+            'userUUID' => $userUUID));
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }

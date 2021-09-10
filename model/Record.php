@@ -17,7 +17,7 @@ class Record {
     private $_scope;
     private $_workLength;
     private $_worksite;
-    private $_userId;
+    private $_userUUID;
     private $_userGroup;
     private $_workstations;
     private $_weight;
@@ -90,8 +90,8 @@ class Record {
         return $this;
     }
 
-    public function setUserId(string $userId){
-        $this->_userId = $userId;
+    public function setUserUUID(string $userUUID){
+        $this->_userUUID = $userUUID;
         return $this;
     }
 
@@ -175,8 +175,8 @@ class Record {
         return $this->_worksite;
     }
 
-    public function getUserId(){
-        return $this->_userId;
+    public function getUserUUID(){
+        return $this->_userUUID;
     }
 
     public function getUserGroup(){

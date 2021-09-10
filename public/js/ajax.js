@@ -34,7 +34,7 @@ function updateRecordsLog(scope, status) {
     });
 }
 
-function viewRecord(recordId, userId) {
+function viewRecord(recordId, userUUID) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getForm",
@@ -46,8 +46,8 @@ function viewRecord(recordId, userId) {
     .done((content) => {
         addModalContent(content, "view")
         .then(() => {
-            console.log(userId);
-            getWorksites(userId);
+            console.log(userUUID);
+            getWorksites(userUUID);
             getWorkCategories();
             getWorkSubCategories();
         })
@@ -60,22 +60,22 @@ function viewRecord(recordId, userId) {
 
 /** Appel AJAX pour récupérer le contenu à insérer dans la fenêtre modale d'édition d'un relevé
  * @param  {number} recordId identifiant du relevé à modifier
- * @param  {number} userId identifiant de l'utilisateur
+ * @param  {number} userUUID identifiant de l'utilisateur
  */
-function editRecord(recordId, userId) {
+function editRecord(recordId, userUUID) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getForm",
         data: {
             "recordId": recordId,
-            "userId": userId,
+            "userUUID": userUUID,
             "formFile": "recordForm"
         }
     })
     .done((content) => {
         addModalContent(content, "edit")
         .then(()=> {
-            getWorksites(userId);
+            getWorksites(userUUID);
             getWorkCategories();
             getWorkSubCategories();
         })
@@ -161,12 +161,12 @@ function getUsers() {
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */
-function getWorksites(userId, worksiteId) {
+function getWorksites(userUUID, worksiteId) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getWorksites",
         data: {
-            "userId": userId,
+            "userUUID": userUUID,
             "worksiteId": worksiteId
         },
         dataType: "json"
@@ -214,12 +214,12 @@ function getWorksites(userId, worksiteId) {
 
 /** Appel AJAX pour récupérer la liste des événements du planning
 */
-function getEventsFromPlanning(userId) {
+function getEventsFromPlanning(userUUID) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getEventsFromPlanning",
         data: {
-            "userId": userId
+            "userUUID": userUUID
         },
         dataType: "json"
     })
