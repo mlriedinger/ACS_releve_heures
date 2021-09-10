@@ -52,7 +52,7 @@ class ExportManager extends RecordManager {
         $sql = $this->sqlAddSettingsOptions($sql);
             
         $sql .= "Releve.commentaire,
-            Releve.statut_validation AS 'statut_validation',
+            CAST(Releve.statut_validation AS FLOAT) AS 'statut_validation',
             Releve.date_hrs_creation AS 'date_heure_creation',
             Releve.date_hrs_modif AS 'date_heure_modification',
             Releve.supprimer AS 'releve_supprime',
@@ -60,10 +60,10 @@ class ExportManager extends RecordManager {
         FROM t_saisie_heure AS Releve
 		   
 		INNER JOIN t_document AS Chantier
-			ON Releve.id_chantier = Chantier.ID
+			ON Releve.id_document = Chantier.ID_CHAR
 		   
 		INNER JOIN t_login AS Membre
-		   ON Releve.id_login = Membre.ID";
+		   ON Releve.id_login = Membre.ID_CHAR";
 
         return $sql;
     }
@@ -83,13 +83,19 @@ class ExportManager extends RecordManager {
             $sql .= "Releve.date_releve,";
         }
             
-        $sql .= "Releve.tps_travail AS 'tps_travail_minutes',";
+        $sql .= "
+            CAST(Releve.tps_travail AS DOUBLE) AS 'tps_travail_minutes',
+            CAST(ROUND((Releve.tps_travail / 60), 2) AS DOUBLE) AS 'tps_travail_heures',
+        ";
 
         if($_SESSION['breakMgmt'] == 1){
             $sql .= " Releve.tps_pause AS 'tps_pause_minutes',";
         }
         if($_SESSION['tripMgmt'] == 1){
-            $sql .= "Releve.tps_trajet AS 'tps_trajet_minutes',";
+            $sql .= "
+                CAST(Releve.tps_trajet AS DOUBLE) AS 'tps_trajet_minutes',
+                CAST(ROUND((Releve.tps_trajet / 60), 2) AS DOUBLE) AS 'tps_trajet_heures',
+            ";
         }
 
         return $sql;
