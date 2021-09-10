@@ -34,7 +34,7 @@ function convertLengthIntoMinutes(int $hours, int $minutes) {
  */
 function fillBasicRecordInfos(Record $recordInfo) {
     if(!empty($_POST['worksiteUUID']) ){
-        $recordInfo->setWorksiteUUID(intval(inputValidation($_POST['worksiteUUID'])));
+        $recordInfo->setWorksiteUUID(inputValidation($_POST['worksiteUUID']));
     }
 
     if(isset($_POST['comment'])) {
