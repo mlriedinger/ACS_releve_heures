@@ -47,9 +47,6 @@ class RecordController extends AbstractController {
         $isRecordUpdateSuccessfull = $this->_recordManager->updateRecord($recordInfo);
         $isDetailUpdateSuccessfull = $this->_recordManager->updateRecordDetails($recordInfo);
         
-        // echo "RecordUpdate : " . $isRecordUpdateSuccessfull;
-        // echo "<br>";
-        // echo "DetailUpdate : " .$isDetailUpdateSuccessfull;
         $isRecordUpdateSuccessfull && $isDetailUpdateSuccessfull ? $_SESSION['success'] = true : $_SESSION['success'] = false;
         echo '<script>window.history.go(-1);</script>';
     }
@@ -95,7 +92,10 @@ class RecordController extends AbstractController {
      * @param  Record $recordInfo
      */
     public function getRecord(Record $recordInfo) {
-        $this->_recordManager->getRecord($recordInfo);
+        $recordData = $this->_recordManager->getRecord($recordInfo);
+
+        header("Content-Type: text/json");
+        echo json_encode($recordData);
     }
     
     /**
@@ -109,31 +109,46 @@ class RecordController extends AbstractController {
 
         switch($scope) {
             case "user":
-                $this->_recordManager->getUserRecords($recordInfo);
+                $records = $this->_recordManager->getUserRecords($recordInfo);
                 break;
             case "global":
                 if($userGroup === 1) {
-                    $this->_recordManager->getAllRecords($recordInfo);
+                    $records = $this->_recordManager->getAllRecords($recordInfo);
                 } else throw new AccessDeniedException();
                 break;
             default:
                 throw new InvalidParameterException();
         }
+
+        header("Content-Type: text/json");
+        echo json_encode($records);
     }
 
     public function getUsers() {
-        $this->_recordManager->getUsers();
+        $users = $this->_recordManager->getUsers();
+
+        header("Content-Type: text/json");
+        echo json_encode($users);
     }
 
     public function getWorksites(Record $recordInfo) {
-        $this->_recordManager->getWorksites($recordInfo);
+        $worksites = $this->_recordManager->getWorksites($recordInfo);
+
+        header("Content-Type: text/json");
+        echo json_encode($worksites);
     }
 
     public function getWorkCategories() {
-        $this->_recordManager->getWorkCategories();
+        $workCategories = $this->_recordManager->getWorkCategories();
+
+        header("Content-Type: text/json");
+        echo json_encode($workCategories);
     }
 
     public function getWorkSubCategories() {
-        $this->_recordManager->getWorkSubCategories();
+        $subCategories = $this->_recordManager->getWorkSubCategories();
+
+        header("Content-Type: text/json");
+        echo json_encode($subCategories);
     }
 }

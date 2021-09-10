@@ -90,7 +90,7 @@ class Record {
         return $this;
     }
 
-    public function setUserId(int $userId){
+    public function setUserId(string $userId){
         $this->_userId = $userId;
         return $this;
     }

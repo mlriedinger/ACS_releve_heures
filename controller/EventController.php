@@ -20,6 +20,9 @@ class EventController extends AbstractController {
      * @param  int $userId
      */
     public function getEventsFromPlanning(int $userId){
-        $this->_eventManager->getEventsFromPlanning($userId);
+        $events = $this->_eventManager->getEventsFromPlanning($userId);
+
+        header("Content-Type: text/json");
+        echo json_encode($events);
     }
 }

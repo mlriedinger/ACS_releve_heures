@@ -43,11 +43,6 @@ class EventManager extends DatabaseConnection {
         $query = $pdo->prepare($sql);
         $query->execute(array('userId' => $userId));
 
-        $events = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        header("Content-Type: text/json");
-        echo json_encode($events);
-
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
-
 }

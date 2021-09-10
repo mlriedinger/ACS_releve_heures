@@ -138,8 +138,8 @@ class RecordManager extends DatabaseConnection {
 
             //$query->debugDumpParams();
         }
-        if(count($workstations) == count($updateResults)) $isUpdateSuccessfull = true;
-        return $isUpdateSuccessfull;
+        //if(count($workstations) == count($updateResults)) $isUpdateSuccessfull = true;
+        return (count($workstations) == count($updateResults));
     }
     
     /**
@@ -160,7 +160,7 @@ class RecordManager extends DatabaseConnection {
         $worksiteId = $recordInfo->getWorksite();
         $weight = $recordInfo->getWeight();
 
-        $isUpdateSuccessfull = false;
+        //$isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
 		
 		$sql = 'UPDATE t_saisie_heure
@@ -181,7 +181,23 @@ class RecordManager extends DatabaseConnection {
 			WHERE ID = :recordId';
 
         $query = $pdo->prepare($sql);
-        $attempt = $query->execute(array(
+        // $attempt = $query->execute(array(
+        //     'worksiteId' => $worksiteId,
+        //     'recordId' => $recordId,
+        //     'dateTimeStart' => $dateTimeStart,
+        //     'dateTimeEnd' => $dateTimeEnd,
+        //     'recordDate' => $recordDate,
+        //     'workLength' =>  $workLength,
+        //     'pauseLength' => $breakLength,
+        //     'tripLength' => $tripLength,
+        //     'comment' => $comment,
+        //     'weight' => $weight
+        // ));
+
+        //if($attempt) $isUpdateSuccessfull = true;
+        //return $isUpdateSuccessfull;
+
+        return $query->execute(array(
             'worksiteId' => $worksiteId,
             'recordId' => $recordId,
             'dateTimeStart' => $dateTimeStart,
@@ -193,10 +209,6 @@ class RecordManager extends DatabaseConnection {
             'comment' => $comment,
             'weight' => $weight
         ));
-
-        if($attempt) $isUpdateSuccessfull = true;
-
-        return $isUpdateSuccessfull;
     }
 
     
@@ -228,14 +240,12 @@ class RecordManager extends DatabaseConnection {
             ));
 
             // $query->debugDumpParams();
-            // echo '<br>';
-            // echo '<br>';
 
             if($updateAttempt) array_push($updateResults, $updateAttempt);
         }
-        count($workstations) == count($updateResults) ? $isUpdateSuccessfull = true : $isUpdateSuccessfull = false;
+        //count($workstations) == count($updateResults) ? $isUpdateSuccessfull = true : $isUpdateSuccessfull = false;
         
-        return $isUpdateSuccessfull;
+        return count($workstations) == count($updateResults);
     }
 
     /**
@@ -245,17 +255,16 @@ class RecordManager extends DatabaseConnection {
      * @return bool $isUpdateSuccessfull
      */
     public function updateRecordStatus(int $recordId){
-        $isUpdateSuccessfull = false;      
+        //$isUpdateSuccessfull = false;      
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
 			SET statut_validation = 1
 			WHERE ID = :recordId');
-        $attempt = $query->execute(array('recordId' => $recordId));
+        //$attempt = $query->execute(array('recordId' => $recordId));
+        //if($attempt) $isUpdateSuccessfull = true;
 
-        if($attempt) $isUpdateSuccessfull = true;
-
-        return $isUpdateSuccessfull;
+        return $query->execute(array('recordId' => $recordId));
     }
 
     /**
@@ -268,7 +277,7 @@ class RecordManager extends DatabaseConnection {
         $recordId = $recordInfo->getRecordId();
         $comment = $recordInfo->getComment();
 
-        $isDeleteSuccessfull = false;
+        //$isDeleteSuccessfull = false;
         $pdo = $this->dbConnect();
 	
 		$sql = 'UPDATE t_saisie_heure
@@ -278,14 +287,18 @@ class RecordManager extends DatabaseConnection {
 			WHERE ID = :recordId';
 			
         $query = $pdo->prepare($sql);
-        $attempt = $query->execute(array(
+        // $attempt = $query->execute(array(
+        //     'recordId' => $recordId,
+        //     'comment' => $comment
+        // ));
+
+        //if($attempt) $isDeleteSuccessfull = true;
+
+        //return $isDeleteSuccessfull;
+        return $query->execute(array(
             'recordId' => $recordId,
             'comment' => $comment
         ));
-
-        if($attempt) $isDeleteSuccessfull = true;
-
-        return $isDeleteSuccessfull;
     }
 
     /**
@@ -332,8 +345,7 @@ class RecordManager extends DatabaseConnection {
         $query->execute(array('recordId' => $recordId));
         $recordData["recordDetails"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        header("Content-Type: text/json");
-        echo json_encode($recordData);
+        return $recordData;
     }
     
     /**
@@ -424,11 +436,7 @@ class RecordManager extends DatabaseConnection {
         $userRecords["scope"] = $scope;
         $userRecords["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        header("Content-Type: text/json");
-        // $query->debugDumpParams();
-        // echo "<br/>";
-        // var_dump($userRecords);
-        echo json_encode($userRecords);
+        return $userRecords;
     }
     
     /**
@@ -483,8 +491,7 @@ class RecordManager extends DatabaseConnection {
         $records["records"] = $query->fetchAll(PDO::FETCH_ASSOC);
 		
         //$query->debugDumpParams();
-        header("Content-Type: text/json");
-        echo json_encode($records);
+        return $records;
     }
 
     public function getUsers() {
@@ -499,10 +506,7 @@ class RecordManager extends DatabaseConnection {
         $query = $pdo->prepare($sql);
         $query->execute();
 
-        $users = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        header("Content-Type: text/json");
-        echo json_encode($users);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getWorksites(Record $recordInfo) {
@@ -524,10 +528,7 @@ class RecordManager extends DatabaseConnection {
         $query->execute(array(
             'userId' => $userId));
 
-        $worksites = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        header("Content-Type: text/json");
-        echo json_encode($worksites);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     
     public function getWorkCategories() {
@@ -542,11 +543,8 @@ class RecordManager extends DatabaseConnection {
         
         $query = $pdo->prepare($sql);
         $query->execute();
-        $workCategories = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        //$query->debugDumpParams();
-        header("Content-Type: text/json");
-        echo json_encode($workCategories);
+        
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getWorkSubCategories() {
@@ -562,10 +560,7 @@ class RecordManager extends DatabaseConnection {
         
         $query = $pdo->prepare($sql);
         $query->execute();
-        $workCategories = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        //$query->debugDumpParams();
-        header("Content-Type: text/json");
-        echo json_encode($workCategories);
+        
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 }
