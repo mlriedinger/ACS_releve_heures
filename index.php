@@ -40,6 +40,7 @@ if(isset($_GET['action'])) {
             case "showNewRecordForm":
                 if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1") {
                     isset($_GET['worksiteUUID']) ? $_SESSION['worksiteUUID'] = $_GET['worksiteUUID'] : $_SESSION['worksiteUUID'] = 0 ;
+                    isset($_GET['eventType']) ? $_SESSION['eventType'] = $_GET['eventType'] : $_SESSION['eventType'] = "" ;
                     $recordController->displayView('newRecord');
                 } else throw new AuthenticationException();
                 break;

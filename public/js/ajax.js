@@ -183,14 +183,14 @@ function getWorksites(userUUID, worksiteUUID) {
 
 /** Appel AJAX pour récupérer la liste des catégories de postes de travail
  */
- function getWorkCategories() {
+ function getWorkCategories(eventType) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getWorkCategories",
         dataType: "json"
     })
     .done((response) => {
-        displayWorkCategories(response);
+        displayWorkCategories(response, eventType);
     })
 }
 

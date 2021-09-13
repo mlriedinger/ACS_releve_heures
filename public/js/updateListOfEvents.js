@@ -13,10 +13,10 @@ function displayEventsFromPlanning(data) {
         var worksiteTitle = data[i].Ref_interne;
         var worksiteStartDate = data[i].DatePlanningDebut;
         var worksiteEndDate = data[i].DatePlanningFin;
-        var typeOfEvent = data[i].Type;
+        var eventType = data[i].Type;
         var uniqueIcon, firstIcon, secondIcon = "";
 
-        switch(typeOfEvent) {
+        switch(eventType) {
             case "Fabrication":
                 uniqueIcon = "tools";
                 break;
@@ -47,10 +47,10 @@ function displayEventsFromPlanning(data) {
         var html = [
             `<div class="card text-center">
                 <div class="card-header ">
-                    ${ typeOfEvent }
+                    ${ eventType }
                 </div>
                 
-                ${ typeOfEvent === 'Fab+Pose' ? divImgDouble : divImgSimple }
+                ${ eventType === 'Fab+Pose' ? divImgDouble : divImgSimple }
 
                 <div class="card-body">
                     <h5 class="card-title">${ worksiteReference }</h5>
@@ -59,7 +59,7 @@ function displayEventsFromPlanning(data) {
                 </div>
 
                 <div class="card-footer text-muted">
-                    <a href="index.php?action=showNewRecordForm&worksiteUUID=${ worksiteUUID }" class="btn btn-dark mt-2 mb-2">Saisir un relevé</a>
+                    <a href="index.php?action=showNewRecordForm&worksiteUUID=${ worksiteUUID }&eventType=${ eventType }" class="btn btn-dark mt-2 mb-2">Saisir un relevé</a>
                 </div>
             </div>`
         ];

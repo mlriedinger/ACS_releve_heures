@@ -19,7 +19,7 @@ $iconSelector = "#newRecordIcon";
 
 <?php ob_start(); ?>
 getWorksites(<?= "'" . $_SESSION['userUUID'] . "','" . $_SESSION['worksiteUUID'] . "'"?>);
-getWorkCategories();
+getWorkCategories(<?= "'" . $_SESSION['eventType'] . "','" . $_SESSION['eventType'] . "'"?>);
 getWorkSubCategories();
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>

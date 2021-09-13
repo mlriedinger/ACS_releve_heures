@@ -15,23 +15,23 @@ function addWorksitesToSelectTag(worksites) {
 
 
 /** Affiche les différentes catégories de postes de travail sous forme de boutons de navigation.
- * @param  {object} data contenu de la réponse à la requête AJAX
+ * @param  {object} workCategories contenu de la réponse à la requête AJAX
  */
-function displayWorkCategories(data) {
+function displayWorkCategories(workCategories, eventType) {
     return new Promise((resolve) => {
         var workCategoriesNav = document.getElementById("workCategoriesNav");
 
-        for(let i = 0 ; i < data.length ; i ++) {
+        for(let i = 0 ; i < workCategories.length ; i ++) {
             // On crée un nouvel item de liste pour chaque catégorie trouvée
             var newListItem = document.createElement("li");
             newListItem.setAttribute("class", "nav-item");
             newListItem.setAttribute("role", "presentation");
     
-            var categoryId = data[i].ID;
-            var categoryDescription = data[i].libelle_poste;
+            var categoryId = workCategories[i].ID;
+            var categoryDescription = workCategories[i].libelle_poste;
     
             var html = [
-                `<button type="button" class="nav-link" id="${ categoryDescription }_tab" role="tab" data-bs-toggle="pill" aria-current="page" onclick="hideUnrelatedSubCategories(${ categoryId })">${ categoryDescription }</button>`
+                `<button type="button" class="nav-link" id="${ categoryDescription }_tab_${ categoryId }" role="tab" data-bs-toggle="pill" aria-current="page" onclick="hideUnrelatedSubCategories(${ categoryId })">${ categoryDescription }</button>`
             ];
             
             newListItem.innerHTML = html;
@@ -40,10 +40,45 @@ function displayWorkCategories(data) {
             workCategoriesNav.appendChild(newListItem);
         }
         // On rend actif le premier bouton par défaut
-        workCategoriesNav.firstElementChild.firstElementChild.classList.add("active");
+        addActiveAttribute(eventType);
         resolve();
     })
-    
+}
+
+
+function addActiveAttribute(eventType) {
+    let workCategories = document.getElementById("workCategoriesNav").children;
+    let selector = 0 ;
+
+    switch(eventType){
+        case "Fabrication":
+        case "Fab Pose":
+            selector = 0;
+            break;
+        case "Pose":
+            selector = 1;
+            break;
+    }
+    workCategories[selector].firstElementChild.classList.add("active");
+}
+
+
+function getFirstCategoryId() {
+    let firstCategoryId = 0;
+    // cibler les categories
+    let workCategories = document.getElementById("workCategoriesNav").children;
+    // rechercher celle avec un attribut "active"
+    for (let i = 0 ; i < workCategories.length ; i ++) {
+        if(workCategories[i].firstElementChild.classList.contains("active")) {
+            let categoryId = workCategories[i].firstElementChild.id;
+            // récupérer son id
+            firstCategoryId = categoryId.substring(categoryId.lastIndexOf('_') + 1);
+            firstCategoryId = parseInt(firstCategoryId);
+        }
+    };
+    // renvoyer l'id
+    console.log(firstCategoryId);
+    return firstCategoryId;
 }
 
 
@@ -52,7 +87,7 @@ function displayWorkCategories(data) {
  */
 function displayWorkSubCategories(data) {
     return new Promise((resolve) => {
-        var firstCategoryId = 0;
+        var firstCategoryId = getFirstCategoryId();
         var divWorkLengthBySubCategoryInputs = document.getElementById("divWorkLengthBySubCategoryInputs");
     
         // Pour chaque sous-catégorie, on crée une div avec des champs "heures" et "minutes"
@@ -63,9 +98,9 @@ function displayWorkSubCategories(data) {
             var subCategoryId = data[i].ID;
     
             // Pour la première sous-catégorie trouvée, on stocke l'ID de sa catégorie parente
-            if(i == 0) {
-                firstCategoryId = parseInt(parentCategoryId);
-            } 
+            // if(i == 0) {
+            //     firstCategoryId = parseInt(parentCategoryId);
+            // } 
     
             var subCategoryCode = data[i].code_poste.toLowerCase();
             // On s'assure qu'il n'y a pas d'espaces ou de slash dans le nom de code de la catégorie
@@ -119,6 +154,7 @@ function displayWorkSubCategories(data) {
     
         // On ajoute un gestionnaire d'événements pour détecter les modifications dans les inputs "heures" et "minutes"
         // addEventCalculateTotalWorkingHours();
+        console.log(firstCategoryId);
         resolve(firstCategoryId);
     })
 }
@@ -128,10 +164,12 @@ function displayWorkSubCategories(data) {
  * @param  {number} categoryId
  */
 function hideUnrelatedSubCategories(categoryId) {
+    
     $('.subCategory').each(function() {
         // On récupère le dernier caractère de l'attribut id de la balise (qui contient l'id de la catégorie parente)
         let parentCategoryId = parseFloat($(this).attr('id').substr(-1, 1));
-
+        console.log(categoryId);
+        console.log(parentCategoryId);
         parentCategoryId !== categoryId ? $(this).attr("hidden", true) : $(this).attr("hidden", false);
     });
 }
