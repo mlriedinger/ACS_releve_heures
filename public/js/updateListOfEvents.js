@@ -8,7 +8,7 @@ function displayEventsFromPlanning(data) {
         var newEvent = document.createElement("div");
         newEvent.setAttribute("class", "col-sm-3 mb-4");
 
-        var worksiteUUID = data[i].id_chantier;
+        var worksiteUUID = data[i].id_document;
         var worksiteReference = data[i].Ref;
         var worksiteTitle = data[i].Ref_interne;
         var worksiteStartDate = data[i].DatePlanningDebut;
@@ -25,7 +25,7 @@ function displayEventsFromPlanning(data) {
                 uniqueIcon = "truck";
                 break;
             
-            case "Fabrication et pose":
+            case "Fab+Pose":
                 firstIcon = "tools";
                 secondIcon = "truck";
                 break;
@@ -50,7 +50,7 @@ function displayEventsFromPlanning(data) {
                     ${ typeOfEvent }
                 </div>
                 
-                ${ typeOfEvent === 'Fabrication et pose' ? divImgDouble : divImgSimple }
+                ${ typeOfEvent === 'Fab+Pose' ? divImgDouble : divImgSimple }
 
                 <div class="card-body">
                     <h5 class="card-title">${ worksiteReference }</h5>

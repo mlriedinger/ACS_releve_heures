@@ -211,16 +211,16 @@ if(isset($_GET['action'])) {
                                 $exportInfo = new Export();
                                 $exportInfo->setScope(inputValidation($_GET['scope']));
                                 $exportInfo->setStatus(inputValidation($_POST['status']));
-                                $exportInfo->setUserUUID(intval(inputValidation($_POST['user'])));
-                                $exportInfo->setUserGroup(intval(inputValidation($_SESSION['userGroup'])));
+                                $exportInfo->setUserUUID(inputValidation($_POST['user']));
+                                $exportInfo->setUserGroup(inputValidation($_SESSION['userGroup']));
                                 $exportInfo->setPeriodStart(inputValidation($_POST['periodStart']));
                                 $exportInfo->setPeriodEnd(inputValidation($_POST['periodEnd']));
 
                                 if ($_SESSION['userGroup'] === $_SESSION['groupManager']) {
-                                    $exportInfo->setManagerId(intval(inputValidation($_SESSION['userUUID'])));
+                                    $exportInfo->setManagerId(inputValidation($_SESSION['userUUID']));
                                 } else {
                                     if(isset($_POST['manager'])) {
-                                        $exportInfo->setManagerId(intval(inputValidation($_POST['manager'])));
+                                        $exportInfo->setManagerId(inputValidation($_POST['manager']));
                                     }
                                 }
 
@@ -271,7 +271,7 @@ if(isset($_GET['action'])) {
             // Récupérer les événements du planning
             case "getEventsFromPlanning":
                 if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID'] ) && inputValidation($_POST['userUUID'] !== null)){
-                    $eventController->getEventsFromPlanning(intval(inputValidation($_POST['userUUID'])));
+                    $eventController->getEventsFromPlanning(inputValidation($_POST['userUUID']));
                 } else throw new AuthenticationException();
                 break;
         }

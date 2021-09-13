@@ -17,9 +17,9 @@ class EventController extends AbstractController {
     /**
      * Permet de récupérer les événements du planning liés à un salarié.
      *
-     * @param  int $userUUID
+     * @param  string $userUUID
      */
-    public function getEventsFromPlanning(int $userUUID){
+    public function getEventsFromPlanning(string $userUUID){
         $events = $this->_eventManager->getEventsFromPlanning($userUUID);
 
         header("Content-Type: text/json");

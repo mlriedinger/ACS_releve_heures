@@ -42,7 +42,7 @@ currentDate.innerHTML += today.toLocaleDateString('fr-FR', options).substr(1);
 
 <?php ob_start(); ?>
 getCurrentDate();
-getEventsFromPlanning(<?= $_SESSION['userUUID']?>);
+getEventsFromPlanning('<?= $_SESSION['userUUID']?>');
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 
