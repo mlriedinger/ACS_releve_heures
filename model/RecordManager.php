@@ -138,7 +138,6 @@ class RecordManager extends DatabaseConnection {
 
             //$query->debugDumpParams();
         }
-        //if(count($workstations) == count($updateResults)) $isUpdateSuccessfull = true;
         return (count($workstations) == count($updateResults));
     }
     
@@ -160,7 +159,6 @@ class RecordManager extends DatabaseConnection {
         $worksiteUUID = $recordInfo->getWorksiteUUID();
         $weight = $recordInfo->getWeight();
 
-        //$isUpdateSuccessfull = false;
         $pdo = $this->dbConnect();
 		
 		$sql = 'UPDATE t_saisie_heure
@@ -181,21 +179,6 @@ class RecordManager extends DatabaseConnection {
 			WHERE ID = :recordId';
 
         $query = $pdo->prepare($sql);
-        // $attempt = $query->execute(array(
-        //     'worksiteUUID' => $worksiteUUID,
-        //     'recordId' => $recordId,
-        //     'dateTimeStart' => $dateTimeStart,
-        //     'dateTimeEnd' => $dateTimeEnd,
-        //     'recordDate' => $recordDate,
-        //     'workLength' =>  $workLength,
-        //     'pauseLength' => $breakLength,
-        //     'tripLength' => $tripLength,
-        //     'comment' => $comment,
-        //     'weight' => $weight
-        // ));
-
-        //if($attempt) $isUpdateSuccessfull = true;
-        //return $isUpdateSuccessfull;
 
         return $query->execute(array(
             'worksiteUUID' => $worksiteUUID,
@@ -242,9 +225,7 @@ class RecordManager extends DatabaseConnection {
             // $query->debugDumpParams();
 
             if($updateAttempt) array_push($updateResults, $updateAttempt);
-        }
-        //count($workstations) == count($updateResults) ? $isUpdateSuccessfull = true : $isUpdateSuccessfull = false;
-        
+        }        
         return count($workstations) == count($updateResults);
     }
 
@@ -255,14 +236,11 @@ class RecordManager extends DatabaseConnection {
      * @return bool $isUpdateSuccessfull
      */
     public function updateRecordStatus(int $recordId){
-        //$isUpdateSuccessfull = false;      
         $pdo = $this->dbConnect();
 
         $query = $pdo->prepare('UPDATE t_saisie_heure
 			SET statut_validation = 1
 			WHERE ID = :recordId');
-        //$attempt = $query->execute(array('recordId' => $recordId));
-        //if($attempt) $isUpdateSuccessfull = true;
 
         return $query->execute(array('recordId' => $recordId));
     }
@@ -277,7 +255,6 @@ class RecordManager extends DatabaseConnection {
         $recordId = $recordInfo->getRecordId();
         $comment = $recordInfo->getComment();
 
-        //$isDeleteSuccessfull = false;
         $pdo = $this->dbConnect();
 	
 		$sql = 'UPDATE t_saisie_heure
@@ -287,14 +264,7 @@ class RecordManager extends DatabaseConnection {
 			WHERE ID = :recordId';
 			
         $query = $pdo->prepare($sql);
-        // $attempt = $query->execute(array(
-        //     'recordId' => $recordId,
-        //     'comment' => $comment
-        // ));
 
-        //if($attempt) $isDeleteSuccessfull = true;
-
-        //return $isDeleteSuccessfull;
         return $query->execute(array(
             'recordId' => $recordId,
             'comment' => $comment
