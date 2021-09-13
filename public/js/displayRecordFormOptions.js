@@ -1,9 +1,20 @@
+/**
+ * Ajoute les noms, prénoms et ID des utilisateurs à la liste déroulante #selectUser du formulaire d'ajout selon le tableau passé en paramètre.
+ * @param {any} users
+ * @returns {any}
+ */
 function addUsersToSelectTag(users) {
     for(let i = 0 ; i < users.length ; i++) {
         $('#selectUser').append(new Option(users[i].Nom + ' ' + users[i].Prenom, users[i].ID));
     }
 }
 
+
+/**
+ * Ajoute les noms et ID des chantiers à la liste déroulante #selectWorksite du formulaire d'ajout selon le tableau passé en paramètre.
+ * @param {any} worksites
+ * @returns {any}
+ */
 function addWorksitesToSelectTag(worksites) {
     return new Promise((resolve) => {
         for(let i = 0 ; i < worksites.length ; i++) {
@@ -39,13 +50,15 @@ function displayWorkCategories(workCategories, eventType) {
             // On ajoute le nouvel item à la liste existante
             workCategoriesNav.appendChild(newListItem);
         }
-        // On rend actif le premier bouton par défaut
-        addActiveAttribute(eventType);
         resolve();
     })
 }
 
 
+/**
+ * Ajoute un attribut "active" sur la catégorie correspondant au type d'événement passé en paramètre.
+ * @param {any} eventType
+ */
 function addActiveAttribute(eventType) {
     let workCategories = document.getElementById("workCategoriesNav").children;
     let selector = 0 ;
@@ -63,22 +76,26 @@ function addActiveAttribute(eventType) {
 }
 
 
+/**
+ * Retourne l'ID de la catégorie active (càd, celle qui a un attribut "active").
+ * @returns {Promise}
+ */
 function getFirstCategoryId() {
-    let firstCategoryId = 0;
-    // cibler les categories
-    let workCategories = document.getElementById("workCategoriesNav").children;
-    // rechercher celle avec un attribut "active"
-    for (let i = 0 ; i < workCategories.length ; i ++) {
-        if(workCategories[i].firstElementChild.classList.contains("active")) {
-            let categoryId = workCategories[i].firstElementChild.id;
-            // récupérer son id
-            firstCategoryId = categoryId.substring(categoryId.lastIndexOf('_') + 1);
-            firstCategoryId = parseInt(firstCategoryId);
-        }
-    };
-    // renvoyer l'id
-    console.log(firstCategoryId);
-    return firstCategoryId;
+    return new Promise((resolve) => {
+        let firstCategoryId = 0;
+        // cibler les categories
+        let workCategories = document.getElementById("workCategoriesNav").children;
+        // rechercher celle avec un attribut "active"
+        for (let i = 0 ; i < workCategories.length ; i ++) {
+            if(workCategories[i].firstElementChild.classList.contains("active")) {
+                let categoryId = workCategories[i].firstElementChild.id;
+                // récupérer son id
+                firstCategoryId = categoryId.substring(categoryId.lastIndexOf('_') + 1);
+                firstCategoryId = parseInt(firstCategoryId);
+            }
+        };
+        resolve(firstCategoryId);
+    })
 }
 
 
@@ -87,7 +104,7 @@ function getFirstCategoryId() {
  */
 function displayWorkSubCategories(data) {
     return new Promise((resolve) => {
-        var firstCategoryId = getFirstCategoryId();
+        //var firstCategoryId = getFirstCategoryId();
         var divWorkLengthBySubCategoryInputs = document.getElementById("divWorkLengthBySubCategoryInputs");
     
         // Pour chaque sous-catégorie, on crée une div avec des champs "heures" et "minutes"
@@ -96,13 +113,8 @@ function displayWorkSubCategories(data) {
             var subCategoryName = data[i].code_poste[0].toUpperCase() + data[i].code_poste.substr(1).toLowerCase();
             var parentCategoryId = data[i].ID_categorie;
             var subCategoryId = data[i].ID;
-    
-            // Pour la première sous-catégorie trouvée, on stocke l'ID de sa catégorie parente
-            // if(i == 0) {
-            //     firstCategoryId = parseInt(parentCategoryId);
-            // } 
-    
             var subCategoryCode = data[i].code_poste.toLowerCase();
+
             // On s'assure qu'il n'y a pas d'espaces ou de slash dans le nom de code de la catégorie
             subCategoryCode = subCategoryCode.replace(/\s+/g, '');
             subCategoryCode = subCategoryCode.replace("/", "_");
@@ -149,13 +161,8 @@ function displayWorkSubCategories(data) {
             newDivSubCategory.innerHTML = html;
             divWorkLengthBySubCategoryInputs.appendChild(newDivSubCategory);
         }
-        // On masque les sous-catégories qui n'appartiennent pas à la première catégorie trouvée dans les enregistrements pour qu'elle n'apparaissent pas au chargement de la page
-        //hideUnrelatedSubCategories(firstCategoryId);
-    
-        // On ajoute un gestionnaire d'événements pour détecter les modifications dans les inputs "heures" et "minutes"
-        // addEventCalculateTotalWorkingHours();
-        console.log(firstCategoryId);
-        resolve(firstCategoryId);
+        // On résoud la Promise en renvyant l'id de la catégorie active
+        resolve();
     })
 }
 
@@ -164,16 +171,16 @@ function displayWorkSubCategories(data) {
  * @param  {number} categoryId
  */
 function hideUnrelatedSubCategories(categoryId) {
-    
     $('.subCategory').each(function() {
         // On récupère le dernier caractère de l'attribut id de la balise (qui contient l'id de la catégorie parente)
         let parentCategoryId = parseFloat($(this).attr('id').substr(-1, 1));
-        console.log(categoryId);
-        console.log(parentCategoryId);
         parentCategoryId !== categoryId ? $(this).attr("hidden", true) : $(this).attr("hidden", false);
     });
 }
 
+/**
+ * Ajoute un attribut "readonly" sur les inputs de formulaire.
+ */
 function addReadOnlyAttributes() {
     $('.form-control').each(function() {
         //console.log($(this));
@@ -184,6 +191,9 @@ function addReadOnlyAttributes() {
     })
 }
 
+/**
+ * Masque les boutons de contrôle de formulaire.
+ */
 function hideFormButtons() {
     document.getElementById("formButtons").style = "display:none";
 }

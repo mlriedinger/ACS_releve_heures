@@ -190,7 +190,8 @@ function getWorksites(userUUID, worksiteUUID) {
         dataType: "json"
     })
     .done((response) => {
-        displayWorkCategories(response, eventType);
+        displayWorkCategories(response);
+        addActiveAttribute(eventType);
     })
 }
 
@@ -205,11 +206,14 @@ function getWorksites(userUUID, worksiteUUID) {
     })
     .done((response) => {
         displayWorkSubCategories(response)
-        .then((firstCategoryId) => {
+        .then(() => {
+            getFirstCategoryId()
+            .then((firstCategoryId) => {
             hideUnrelatedSubCategories(firstCategoryId);
             addEventCalculateTotalWorkingHours();
+            });
         });
-    })
+    });
 }
 
 
