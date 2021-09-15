@@ -10,7 +10,7 @@ $id="homeBackGround";
     $firstDayOfWeek = date("Y-m-d", strtotime(sprintf("%4dW%02d", strftime('%G'), strftime('%V'))));
     $monday = new DateTime($firstDayOfWeek);
 ?>
-    <h3 class="mt-4">Mes heures</h3>
+    <h4 class="mt-4">Mes heures</h4>
     <hr class="mb-5">
 
     <fieldset class="mb-5">
@@ -68,7 +68,7 @@ $id="homeBackGround";
 
         </fieldset>
 
-    <h3 class="mt-4">Mes chantiers</h3>
+    <h4 class="mt-4">Mes chantiers</h4>
     <hr class="mb-5">
 
     <div class="row mb-3 justify-content-between" id="listOfEvents">
