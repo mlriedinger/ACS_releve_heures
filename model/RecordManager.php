@@ -545,4 +545,72 @@ class RecordManager extends DatabaseConnection {
         
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getUserDailyTotal(Record $recordInfo) {
+        $userUUID = $recordInfo->getUserUUID();
+
+        $pdo = $this->dbConnect();
+
+        $sql = "SELECT t_login.ID_CHAR AS 'userUUID',
+            t_login.Utilisateur AS 'user',
+            SUM(t_saisie_heure.tps_travail) AS 'total'
+        FROM t_saisie_heure
+        LEFT JOIN t_login
+            ON t_saisie_heure.id_login = t_login.ID_CHAR
+        WHERE id_login = :userUUID
+        AND t_saisie_heure.date_releve = CURDATE()";
+
+        $query = $pdo->prepare($sql);
+        $query->execute(array(
+            'userUUID' => $userUUID
+        ));
+
+        return $query->fetch(PDO::FETCH_ASSOC);
+        //return $query->debugDumpParams();
+    }
+
+    public function getUserWeeklyTotal(Record $recordInfo) {
+        $userUUID = $recordInfo->getUserUUID();
+
+        $pdo = $this->dbConnect();        
+
+        $sql = "SELECT t_login.ID_CHAR AS 'userUUID',
+            t_login.Utilisateur AS 'user',
+            SUM(t_saisie_heure.tps_travail) AS 'total'
+        FROM t_saisie_heure
+        LEFT JOIN t_login
+            ON t_saisie_heure.id_login = t_login.ID_CHAR
+        WHERE id_login = :userUUID
+        AND t_saisie_heure.semaine = (SELECT WEEK(CURDATE(), 3))";
+
+        $query = $pdo->prepare($sql);
+        $query->execute(array(
+            'userUUID' => $userUUID
+        ));
+
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserDataForCurrentWeek(Record $recordInfo) {
+        $userUUID = $recordInfo->getUserUUID();
+
+        $pdo = $this->dbConnect();
+
+        $sql = "SELECT DATE_FORMAT(date_releve, '%d/%m') AS 'date',
+            (SELECT DAYOFWEEK(date_releve)) AS 'day',
+            SUM(tps_travail) AS 'total'
+        FROM t_saisie_heure
+        INNER JOIN t_login
+            ON t_saisie_heure.id_login = t_login.ID_CHAR
+        WHERE id_login = :userUUID
+        AND semaine = (SELECT WEEK(CURDATE(), 3))
+        GROUP BY date_releve";
+
+        $query = $pdo->prepare($sql);
+        $query->execute(array(
+            'userUUID' => $userUUID
+        ));
+
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

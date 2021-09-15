@@ -1,3 +1,12 @@
+function getCurrentDate() {
+    const today = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    
+    currentDate = document.getElementById("currentDate");
+    currentDate.innerHTML = today.toLocaleDateString('fr-FR', options).substr(0,1).toUpperCase();
+    currentDate.innerHTML += today.toLocaleDateString('fr-FR', options).substr(1);
+}
+
 /** Incrémente ou décrémente les heures lorsqu'un palier de minutes est atteint (0 ou 60).
  * @param  {string} hoursInputSelector
  * @param  {string} minutesInputSelector

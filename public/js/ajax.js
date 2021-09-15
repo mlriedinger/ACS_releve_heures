@@ -232,3 +232,36 @@ function getEventsFromPlanning(userUUID) {
         displayEventsFromPlanning(response);
     })
 }
+
+
+function getUserWeeklyTotal(userUUID) {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getUserWeeklyTotal",
+        data: {
+            "userUUID": userUUID
+        },
+        dataType: "json"
+    })
+    .done((response) => {
+        displayWeeklyTotal(response);
+    })
+}
+
+
+function getUserDataForCurrentWeek(userUUID) {
+    $.ajax({
+        type: "POST",
+        url: "index.php?action=getUserDataForCurrentWeek",
+        data: {
+            "userUUID": userUUID
+        },
+        dataType: "json"
+    })
+    .done((response) => {
+        parseWeeklyDatas(response)
+        .then((parsedDatas) => {
+            displayWeeklyDatas(parsedDatas);
+        });
+    })
+}

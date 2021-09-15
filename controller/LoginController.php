@@ -26,6 +26,9 @@ class LoginController extends AbstractController {
         $userData = $this->_loginManager->getUserData($login, $password);
 
         if (!isset($password) || !$userData) {
+            header('HTTP/1.1 401 Unauthorized', true, 401);
+            http_response_code(401);
+            http_response_code();
             throw new AuthenticationException();
             
         } else if (!empty($userData)){

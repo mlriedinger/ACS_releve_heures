@@ -151,4 +151,25 @@ class RecordController extends AbstractController {
         header("Content-Type: text/json");
         echo json_encode($subCategories);
     }
+
+    public function getUserDailyTotal(Record $recordInfo) {
+        $dailyTotal = $this->_recordManager->getUserDailyTotal($recordInfo);
+
+        header("Content-Type: text/json");
+        echo json_encode($dailyTotal);
+    }
+
+    public function getUserWeeklyTotal(Record $recordInfo) {
+        $dailyTotal = $this->_recordManager->getUserWeeklyTotal($recordInfo);
+
+        header("Content-Type: text/json");
+        echo json_encode($dailyTotal);
+    }
+
+    public function getUserDataForCurrentWeek(Record $recordInfo) {
+        $weeklyDatas = $this->_recordManager->getUserDataForCurrentWeek($recordInfo);
+
+        header("Content-Type: text/json");
+        echo json_encode($weeklyDatas);
+    }
 }

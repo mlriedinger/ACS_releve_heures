@@ -271,19 +271,55 @@ if(isset($_GET['action'])) {
 
             // Récupérer les événements du planning
             case "getEventsFromPlanning":
-                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID'] ) && inputValidation($_POST['userUUID'] !== null)){
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID']) && inputValidation($_POST['userUUID'] !== null)){
                     $eventController->getEventsFromPlanning(inputValidation($_POST['userUUID']));
                 } else throw new AuthenticationException();
                 break;
+
+            // Récupérer le total des heures de la journée
+            case "getUserDailyTotal":
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID']) && inputValidation($_POST['userUUID'] !== null)){
+                    $recordInfo = new Record();
+                    $recordInfo->setUserUUID(inputValidation($_POST['userUUID']));
+
+                    $recordController->getUserDailyTotal($recordInfo);
+                }
+                break;
+
+            // Récupérer le total des heures hebdomadaires
+            case "getUserWeeklyTotal":
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID']) && inputValidation($_POST['userUUID'] !== null)){
+                    $recordInfo = new Record();
+                    $recordInfo->setUserUUID(inputValidation($_POST['userUUID']));
+
+                    $recordController->getUserWeeklyTotal($recordInfo);
+                }
+                break;
+            
+                // Récupérer tous les cumuls de la semaine en cours
+            case "getUserDataForCurrentWeek":
+                if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID']) && inputValidation($_POST['userUUID'] !== null)){
+                    $recordInfo = new Record();
+                    $recordInfo->setUserUUID(inputValidation($_POST['userUUID']));
+
+                    $recordController->getUserDataForCurrentWeek($recordInfo);
+                }
+                break;
         }
     } catch (PDOException $e){
+        header('HTTP/1.1 401 Unauthorized', true, 401);
+        http_response_code(401);
         $errorCode = $e->getCode();
         $loginController->displayView('login', $errorCode);
     } catch (AuthenticationException $e){
+        header('HTTP/1.1 401 Unauthorized', true, 401);
+        http_response_code(401);
         $errorCode = $e->getCode();
         $errorMessage = $e->getMessage();
         $loginController->displayView('login',$errorCode, $errorMessage);
 	} catch (InvalidParameterException $e){
+        header('HTTP/1.1 401 Unauthorized', true, 401);
+        http_response_code(401);
 		$errorCode = $e->getCode();
         $errorMessage = $e->getMessage();
 		$recordController->displayView('pendingRecordsLog', $errorCode, $errorMessage);
