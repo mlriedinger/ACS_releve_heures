@@ -265,3 +265,10 @@ function getUserDataForCurrentWeek(userUUID) {
         });
     })
 }
+
+
+function getWeeklyCounters(userUUID) {
+    displayCounterFields();
+    getUserDataForCurrentWeek(userUUID);
+    getUserWeeklyTotal(userUUID);
+}
