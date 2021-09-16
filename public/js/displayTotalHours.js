@@ -1,55 +1,64 @@
+/** Affiche le nombre total d'heures hebdomadaires effectuées par l'utilisateur.
+ * @param {object} userWeeklyStats
+ */
 function displayWeeklyTotal(userWeeklyStats) {
-    console.log(userWeeklyStats);
     let weeklyTotal = document.getElementById("weeklyTotal");
     let total = convertTimeToHoursAndMinutes(userWeeklyStats.total);
-
     let hours = total.hours;
     let minutes = total.minutes;
 
-    total !== null ? weeklyTotal.innerHTML = hours + 'h' + minutes : dailyTotal.innerHTML = '0';
+    userWeeklyStats.total !== null ? weeklyTotal.innerHTML = hours + 'h' + minutes : dailyTotal.innerHTML = '0';
 }
 
-function displayWeeklyDatas(parsedDatas){
+/** Affiche le cumul des heures réalisées par l'utilisateur pour chaque jour de la semaine en cours.
+ * @param {Array} parsedDatas
+ */
+function displayWeeklyDatas(parsedDatas) {
     parsedDatas.forEach(element => {
-        console.log(element);
         let hours = convertTimeToHoursAndMinutes(element.total).hours;
         let minutes = convertTimeToHoursAndMinutes(element.total).minutes;
+
         element.textTag.innerHTML = hours + "h" + minutes;
-        element.total >= 525 ? element.textTag.style = "fill: #007A36" : element.textTag.style = "fill: #C63527";
+        element.total >= 525 ? element.textTag.style = "fill: #007A36" : element.textTag.style = "fill: #C63527"; // 525 min = 8.75h/jour
     });
 }
 
+/** Fait correspondre les données issues de la requête Ajax et les balises <text> de la page "home". S'il y a des données, elles sont ajoutée, sinon on initialise à 0.
+ * @param {any} userWeeklyDatas
+ * @returns {Promise} un tableau de données associées à la balise <text> correspondante pour chaque jour de la semaine
+ */
 function parseWeeklyDatas(userWeeklyDatas) {
     return new Promise((resolve) => {
         let parsedDatas = [];
     
-        // Cibler tous les text tags
+        // On cible toutes les balises <text>
         let textTagsCollection = document.getElementsByClassName("textTag");
         
         for (let item of textTagsCollection) {
-            // Initialiser un tableau de data et les variables à insérer
+            // On initialise un tableau de résultats et les variables à y insérer
             let data = [];
             let date = "";
             let day = "0";
             let total = "0";
     
+            // On récupère l'attribut 'id' de la balise <text>
             let itemId = item.id;
     
             userWeeklyDatas.forEach(dailyData => {
                 // S'il y a une correspondance entre la fin de l'id du text tag et la valeur associée à la clé "day", on remplace les variables avec les données du jour
-                if(itemId.substring(itemId.lastIndexOf('_') +1) === dailyData.day) {
+                if(itemId.substring(itemId.lastIndexOf('_') + 1) === dailyData.day) {
                     date = dailyData.date;
                     day = dailyData.day;
                     total = dailyData.total;
                 }
             });
-            // On remplit le tableau de data avec les données
+            // On remplit le tableau de résultats
             data["textTag"] = item;
             data["date"] = date;
             data["day"] = day;
             data["total"] = total;
     
-            // On pousse le tableau de data dans le tableau général
+            // On pousse le tableau de résultats dans le tableau général
             parsedDatas.push(data);
         }
        resolve(parsedDatas);
@@ -60,10 +69,12 @@ function displayCounterFields() {
     let divUserStats = document.getElementById("divUserStats");
     let row = document.createElement("div");
     row.setAttribute("class", "row mb-5 text-center justify-content-evenly align-items-end");
+
     let today = new Date();
-    let week = getNumberOfWeek(today);
+    let week = getWeek(today);
     let daysOfWeek = getDaysOfWeek(today);
 
+    console.log(week);
     console.log(daysOfWeek);
     
     let html = [
@@ -122,32 +133,59 @@ function displayCounterFields() {
     divUserStats.appendChild(row);
 }
 
-function getNumberOfWeek(dt) {
-    // const today = new Date();
-    // const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
-    // const pastDaysOfYear = (today - firstDayOfYear) / 86400000;
-    // return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+/** Renvoie le numéro de semaine (entre 0 et 52-53) pour une date passée en paramètres.
+ * @param {Date} date
+ * @returns {number}
+ */
+function getWeek(date) {    
+    let dayOfYear = getDayOfYear(date);
+    console.log(dayOfYear);
+    let dayOfWeek = date.getDay();
 
-    var tdt = new Date(dt.valueOf());
-    var dayn = (dt.getDay() + 6) % 7;
-    tdt.setDate(tdt.getDate() - dayn + 3);
-    var firstThursday = tdt.valueOf();
-    tdt.setMonth(0, 1);
-    if (tdt.getDay() !== 4) {
-        tdt.setMonth(0, 1 + ((4 - tdt.getDay()) + 7) % 7);
-    }
-    return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+    return Math.trunc((10 + dayOfYear - dayOfWeek) / 7);
 }
 
-function getDaysOfWeek(currentDate) {
-    var week = [];
-    // Starting Monday not Sunday 
-    var first = currentDate.getDate() - currentDate.getDay() + 1;
-    currentDate.setDate(first);
-    for (var i = 0; i < 7; i++) {
-    var options = {day: "2-digit", month:"2-digit"};
-      week.push(new Date(+currentDate).toLocaleString('fr-FR', options));
-      currentDate.setDate(currentDate.getDate()+1);
+
+/** Renvoie le numéro du jour (entre 1 et 365-366) pour la date passée en paramètre.
+ * @param {Date} date
+ * @returns {number}
+ */
+function getDayOfYear(date) {
+    let year = date.getUTCFullYear();
+    let firstDayOfYear = new Date(Date.UTC(year, 0, 1)); // 1er jour de l'année passée en paramètre
+    
+    let millisecondsSinceFirstDayOfYear = date - firstDayOfYear; // Nb de ms écoulées entre la date passée en paramètre et le premier jour de l'année  
+    const millisecondsPerDay = 86400000; // Nombre de ms dans 24 heures
+
+    return Math.trunc(millisecondsSinceFirstDayOfYear / millisecondsPerDay);
+}
+
+/** Renvoie un tableau contenant les dates de la semaine correspondant à la date passée en paramètre.
+ * @param {Date} date
+ * @returns {Array}
+ */
+function getDaysOfWeek(date) {
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    let daysOfWeek = [];
+
+    // On récupère la date passée en paramètre ainsi que le nombre correspondant au jour de la semaine (0 = dimanche, 1 = lundi, etc.)
+    let currentDate = date.getDate();
+    let dayOfWeek = date.getDay();
+
+    // On calcule la date correspondant au lundi de la même semaine
+    let firstDayOfWeek = currentDate - dayOfWeek + 1;
+
+    // On crée un objet Date et on lui assigne la date du lundi
+    let monday = new Date(year, month, firstDayOfWeek);
+
+    const options = {day: "2-digit", month:"2-digit", year: "2-digit"}; // Renvoie une date au format '01/01'
+
+    // On ajoute le lundi au tableau, puis on boucle en décalant la date de +1 pour obtenir tous les jours de la semaine
+    for (let i = 0; i < 7; i++) {
+        daysOfWeek.push(new Date(monday).toLocaleString('fr-FR', options));
+        monday.setDate(monday.getDate()+1);
     }
-    return week;
+
+    return daysOfWeek;
   }
