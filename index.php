@@ -289,20 +289,14 @@ if(isset($_GET['action'])) {
             // Récupérer le total des heures hebdomadaires
             case "getUserWeeklyTotal":
                 if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID']) && inputValidation($_POST['userUUID'] !== null)){
-                    $recordInfo = new Record();
-                    $recordInfo->setUserUUID(inputValidation($_POST['userUUID']));
-
-                    $recordController->getUserWeeklyTotal($recordInfo);
+                    $recordController->getUserWeeklyTotal(inputValidation($_POST['userUUID']), inputValidation($_POST['weekNumber']));
                 }
                 break;
             
                 // Récupérer tous les cumuls de la semaine en cours
-            case "getUserDataForCurrentWeek":
+            case "getUserDailyTotals":
                 if(isset($_SESSION['userUUID']) && $_SESSION['isActive'] === "1" && isset($_POST['userUUID']) && inputValidation($_POST['userUUID'] !== null)){
-                    $recordInfo = new Record();
-                    $recordInfo->setUserUUID(inputValidation($_POST['userUUID']));
-
-                    $recordController->getUserDataForCurrentWeek($recordInfo);
+                    $recordController->getUserDailyTotals(inputValidation($_POST['userUUID']), inputValidation($_POST['weekNumber']));
                 }
                 break;
         }

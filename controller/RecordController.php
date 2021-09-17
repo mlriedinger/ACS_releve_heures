@@ -159,15 +159,15 @@ class RecordController extends AbstractController {
         echo json_encode($dailyTotal);
     }
 
-    public function getUserWeeklyTotal(Record $recordInfo) {
-        $dailyTotal = $this->_recordManager->getUserWeeklyTotal($recordInfo);
+    public function getUserWeeklyTotal(String $userUUID, String $weekNumber) {
+        $dailyTotal = $this->_recordManager->getUserWeeklyTotal($userUUID, $weekNumber);
 
         header("Content-Type: text/json");
         echo json_encode($dailyTotal);
     }
 
-    public function getUserDataForCurrentWeek(Record $recordInfo) {
-        $weeklyDatas = $this->_recordManager->getUserDataForCurrentWeek($recordInfo);
+    public function getUserDailyTotals(String $userUUID, String $weekNumber) {
+        $weeklyDatas = $this->_recordManager->getUserDailyTotals($userUUID, $weekNumber);
 
         header("Content-Type: text/json");
         echo json_encode($weeklyDatas);

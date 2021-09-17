@@ -234,12 +234,13 @@ function getEventsFromPlanning(userUUID) {
 }
 
 
-function getUserWeeklyTotal(userUUID) {
+function getUserWeeklyTotal(userUUID, weekNumber) {
     $.ajax({
         type: "POST",
         url: "index.php?action=getUserWeeklyTotal",
         data: {
-            "userUUID": userUUID
+            "userUUID": userUUID,
+            "weekNumber": weekNumber
         },
         dataType: "json"
     })
@@ -249,12 +250,13 @@ function getUserWeeklyTotal(userUUID) {
 }
 
 
-function getUserDataForCurrentWeek(userUUID) {
+function getUserDailyTotals(userUUID, weekNumber) {
     $.ajax({
         type: "POST",
-        url: "index.php?action=getUserDataForCurrentWeek",
+        url: "index.php?action=getUserDailyTotals",
         data: {
-            "userUUID": userUUID
+            "userUUID": userUUID,
+            "weekNumber": weekNumber
         },
         dataType: "json"
     })
@@ -267,8 +269,3 @@ function getUserDataForCurrentWeek(userUUID) {
 }
 
 
-function getWeeklyCounters(userUUID) {
-    displayCounterFields();
-    getUserDataForCurrentWeek(userUUID);
-    getUserWeeklyTotal(userUUID);
-}

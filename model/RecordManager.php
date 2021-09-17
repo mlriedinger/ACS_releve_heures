@@ -569,9 +569,7 @@ class RecordManager extends DatabaseConnection {
         //return $query->debugDumpParams();
     }
 
-    public function getUserWeeklyTotal(Record $recordInfo) {
-        $userUUID = $recordInfo->getUserUUID();
-
+    public function getUserWeeklyTotal(String $userUUID, String $weekNumber) {
         $pdo = $this->dbConnect();        
 
         $sql = "SELECT t_login.ID_CHAR AS 'userUUID',
@@ -581,19 +579,18 @@ class RecordManager extends DatabaseConnection {
         LEFT JOIN t_login
             ON t_saisie_heure.id_login = t_login.ID_CHAR
         WHERE id_login = :userUUID
-        AND t_saisie_heure.semaine = (SELECT WEEK(CURDATE(), 3))";
+        AND t_saisie_heure.semaine = :weekNumber";
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
-            'userUUID' => $userUUID
+            'userUUID' => $userUUID,
+            'weekNumber' => $weekNumber
         ));
 
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getUserDataForCurrentWeek(Record $recordInfo) {
-        $userUUID = $recordInfo->getUserUUID();
-
+    public function getUserDailyTotals(String $userUUID, String $weekNumber) {
         $pdo = $this->dbConnect();
 
         $sql = "SELECT DATE_FORMAT(date_releve, '%d/%m') AS 'date',
@@ -603,12 +600,13 @@ class RecordManager extends DatabaseConnection {
         INNER JOIN t_login
             ON t_saisie_heure.id_login = t_login.ID_CHAR
         WHERE id_login = :userUUID
-        AND semaine = (SELECT WEEK(CURDATE(), 3))
+        AND semaine = :weekNumber
         GROUP BY date_releve";
 
         $query = $pdo->prepare($sql);
         $query->execute(array(
-            'userUUID' => $userUUID
+            'userUUID' => $userUUID,
+            'weekNumber' => $weekNumber
         ));
 
         return $query->fetchAll(PDO::FETCH_ASSOC);
