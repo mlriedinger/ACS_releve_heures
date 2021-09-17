@@ -35,7 +35,7 @@ $iconSelector = "#homeIcon";
 
 <?php ob_start(); ?>
 getEventsFromPlanning('<?= $_SESSION['userUUID']?>');
-getWeeklyCounters('<?= $_SESSION['userUUID'] ?>', '<?= date("Y-m-d H:i:s") ?>');
+getWeeklyCounters('<?= $_SESSION['userUUID'] ?>', '<?= date("Y/m/d H:i:s") ?>');
 
 <?php $additionalOnloadScript = ob_get_clean(); ?>
 
