@@ -15,12 +15,12 @@ class Export {
     private $_userGroup;
 
     // Mutateurs (setters)
-    public function setUserUUID(int $userUUID){
+    public function setUserUUID(string $userUUID){
         $this->_userUUID = $userUUID;
         return $this;
     }
 
-    public function setManagerId(int $managerId){
+    public function setManagerId(string $managerId){
         $this->_managerId = $managerId;
         return $this;
     }
